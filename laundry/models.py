@@ -7,8 +7,8 @@ class User(models.Model):
     CUSTOMER = "cus"
     ROLES = {CUSTOMER: "customer", STAFF: "staff", MANAGER: "manager"}
     
-    first_name = models.CharField(max_lenght=50)
-    last_name = models.CharField(max_lenght=50)
+    first_name = models.CharField(max_length=50)
+    last_name = models.CharField(max_length=50)
     email = models.CharField(max_length=255)
     phone = models.CharField(max_length=10)
     password = models.TextField()
