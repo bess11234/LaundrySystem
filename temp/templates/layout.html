@@ -1,0 +1,23 @@
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}TEST{% endblock %}</title>
+</head>
+<body>
+{% block navbar %}{% include 'navbar.html' %}{% endblock %}
+
+{% block head %}{% endblock %}
+
+<main>
+{% block main %} {% endblock %}
+</main>
+
+{% block script %}
+    <script>
+
+    </script>
+{% endblock %}
+</body>
+</html>
