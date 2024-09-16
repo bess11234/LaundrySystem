@@ -10,8 +10,8 @@
 pip install django
 pip install psycopg2
 pip install python-dotenv
-pip install django-tailwind
-py manage.py install tailwind install
+pip install django-tailwind[reload]
+py manage.py tailwind install
 ```
 
 # RUN SERVER
