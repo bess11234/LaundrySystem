@@ -1,0 +1,9 @@
+{% extends 'layout.html' %}
+{% block titile %}Login{% endblock %}
+{% block main %}
+<form action="" method="post">
+{% csrf_token %}
+{{ form }}
+<button class="px-3 py-2 mt-3 bg-[#4c569b] text-[#eef7fc] rounded shadow-md">Login</button>
+</form>
+{% endblock %}

@@ -1,0 +1,59 @@
+{% extends 'layout.html' %}
+{% block title %}
+  Register
+{% endblock %}
+{% block main %}
+  <div class="w-fit m-auto">
+    <form class="m-3 bg-white/95 px-12 py-6 rounded-lg shadow w-full" action="" method="post">
+      <h1 class="text-3xl">สมัครสมาชิก</h1>
+      {% csrf_token %}
+      <div class="flex flex-row">
+        <div class="flex flex-col justify-stretch gap-6">
+          <div>
+            <div class="flex flex-row gap-3 justify-between place-items-center">{{ form.email.label_tag }}
+                <input class="rounded shadow-md border-1 border-black/5 focus:ring-1 focus:ring-[#4c569b]" type="email" name="email" id="{{ form.email.id_for_label }}" required>
+            </div>
+            {{ form.email.errors }}
+          </div>
+
+          <div>
+            <div class="flex flex-row gap-3 justify-between place-items-center">{{ form.first_name.label_tag }}
+                <input class="rounded shadow-md border-1 border-black/5 focus:ring-1 focus:ring-[#4c569b]" type="text" name="first_name" id="{{ form.first_name.id_for_label }}" required>
+            </div>
+            {{ form.first_name.errors }}
+          </div>
+
+          <div>
+            <div class="flex flex-row gap-3 justify-between place-items-center">{{ form.last_name.label_tag }}
+                <input class="rounded shadow-md border-1 border-black/5 focus:ring-1 focus:ring-[#4c569b]" type="text" name="last_name" id="{{ form.last_name.id_for_label }}" required>
+            </div>
+            {{ form.last_name.errors }}
+          </div>
+
+          <div>
+            <div class="flex flex-row gap-3 justify-between place-items-center">{{ form.phone.label_tag }}
+                <input class="rounded shadow-md border-1 border-black/5 focus:ring-1 focus:ring-[#4c569b]" type="text" name="phone" maxlength="10" minlength="10" id="{{ form.phone.id_for_label }}" required>
+            </div>
+            {{ form.phone.errors }}
+          </div>
+
+          <div>
+            <div class="flex flex-row gap-3 justify-between place-items-center">{{ form.password1.label_tag }}
+                <input class="rounded shadow-md border-1 border-black/5 focus:ring-1 focus:ring-[#4c569b]" type="password" name="password1" id="{{ form.password1.id_for_label }}" required>
+            </div>
+            {{ form.password1.errors }}
+          </div>
+
+          <div>
+            <div class="flex flex-row gap-3 justify-between place-items-center">{{ form.password2.label_tag }}
+                <input class="rounded shadow-md border-1 border-black/5 focus:ring-1 focus:ring-[#4c569b]" type="password" name="password2" id="{{ form.password2.id_for_label }}" required>
+            </div>
+            {{ form.password2.errors }}
+          </div>
+        </div>
+
+      </div>
+      <button class="px-3 py-2 mt-3 bg-[#4c569b] text-[#eef7fc] rounded shadow-md">Register</button>
+    </form>
+  </div>
+{% endblock %}
