@@ -8,3 +8,16 @@ from django.views import View
 class Index(View):
     def get(self, request):
         return render(request, "index.html")
+
+
+class ReportView(View):
+    def get(self, request):
+        return render(request, "manager/report.html")
+    
+class AddMachineView(View):
+    def get(self, request):
+        return render(request, "manager/addmachine.html")
+    
+class AddSizeView(View):
+    def get(self, request):
+        return render(request, "manager/addsize.html")
