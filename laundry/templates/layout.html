@@ -8,7 +8,7 @@
         TEST
       {% endblock %}
     </title>
-    <link rel="stylesheet" href="{% static 'output.css' %}">
+    <link rel="stylesheet" href="{% static 'output.css' %}" />
     {% block css %}
 
     {% endblock %}
@@ -19,9 +19,49 @@
         margin-left: 10px;
         margin-top: 5px;
       }
+      @media (prefers-color-scheme: dark) {
+        .navbar {
+          background: #4c569b0f;
+          box-shadow: rgba(17, 12, 46, 0.15) 0px 48px 100px 0px;
+          backdrop-filter: blur(4px);
+          -webkit-backdrop-filter: blur(4px);
+          border-radius: 5px;
+        }
+        body {
+          background-color: black;
+          background-image: radial-gradient(white, rgba(255, 255, 255, 0.1) 2px, transparent 5px), radial-gradient(white, rgba(255, 255, 255, 0.15) 1px, transparent 5px), radial-gradient(white, rgba(255, 255, 255, 0.1) 2px, transparent 5px), radial-gradient(rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.1) 2px, transparent 5px);
+          background-size: 550px 550px, 350px 350px, 250px 250px, 150px 150px;
+          background-position: 0 0, 40px 60px, 130px 270px, 70px 100px;
+          animation: animateBackground 120s linear infinite;
+        }
+      }
+      @media (prefers-color-scheme: light) {
+        .navbar {
+          background: rgba(255, 255, 255, 0.1);
+          box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+          backdrop-filter: blur(4px);
+          -webkit-backdrop-filter: blur(4px);
+          border-radius: 5px;
+        }
+        body {
+          background-color: white;
+          background-image: radial-gradient(blue, rgba(255, 255, 255, 0.1) 2px, transparent 50px), radial-gradient(blue, rgba(255, 255, 255, 0.15) 1px, transparent 50px), radial-gradient(blue, rgba(255, 255, 255, 0.1) 2px, transparent 50px), radial-gradient(rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.1) 2px, transparent 50px);
+          background-size: 550px 550px, 350px 350px, 250px 250px, 150px 150px;
+          background-position: 0 0, 40px 60px, 130px 270px, 70px 100px;
+          animation: animateBackground 120s linear infinite;
+        }
+      }
+      @keyframes animateBackground {
+        0% {
+          background-position: 0 0, 40px 60px, 130px 270px, 70px 100px;
+        }
+        100% {
+          background-position: -500px -500px, -300px -300px, -250px -250px, -150px -150px;
+        }
+      }
     </style>
   </head>
-  <body class="bg-[#eef7fc] text-[#1b1e36] dark:bg-[#1b1e36] dark:text-[#eef7fc]">
+  <body class="bg-[#fafdff] text-[#1b1e36] dark:bg-[#1b1e36] dark:text-[#eef7fc]">
     {% block navbar %}
       {% include 'navbar.html' %}
     {% endblock %}
@@ -35,10 +75,24 @@
 
       {% endblock %}
     </main>
-
     {% block script %}
-      <script>
-      </script>
+      <script></script>
     {% endblock %}
+    <script>
+      // Theme mode change logo
+      const theme = window.matchMedia('(prefers-color-scheme: dark)')
+      if (theme.matches) {
+        document.getElementById('logo').src = "{% static 'images/washing-machine-white.svg' %}"
+      } else document.getElementById('logo').src = "{% static 'images/washing-machine.svg' %}"
+      
+      theme.addEventListener('change', (event) => {
+        const newColorScheme = event.matches ? 'dark' : 'light'
+        if (newColorScheme == 'dark') {
+          document.getElementById('logo').src = "{% static 'images/washing-machine-white.svg' %}"
+        } else {
+          document.getElementById('logo').src = "{% static 'images/washing-machine.svg' %}"
+        }
+      })
+    </script>
   </body>
 </html>

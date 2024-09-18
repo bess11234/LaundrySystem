@@ -3,57 +3,57 @@
   Register
 {% endblock %}
 {% block main %}
-  <div class="w-fit m-auto">
-    <form class="m-3 bg-white/95 dark:bg-[#272c4f] px-12 py-6 my-12 rounded-lg shadow w-full" action="" method="post">
-      <h1 class="text-3xl mb-8">สมัครสมาชิก</h1>
+  <div class="min-w-1/2 m-auto">
+    <form class="m-3 bg-white/95 dark:bg-[#272c4f] px-12 py-8 my-12 rounded-xl shadow-lg max-w-lg mx-auto" action="" method="post">
+      <h1 class="text-4xl font-bold mb-8 text-center text-[#4c569b] dark:text-white">Laundry System</h1>
       {% csrf_token %}
-      <div class="flex flex-row">
-        <div class="flex flex-col justify-stretch gap-6">
-          <div>
-            <div class="flex flex-row gap-3 justify-between place-items-center">{{ form.email.label_tag }}
-                <input class="rounded shadow-md border-1 border-black/5 focus:ring-1 focus:ring-[#4c569b] dark:bg-[#4c569b] py-1 px-1 " type="email" name="email" id="{{ form.email.id_for_label }}" required>
-            </div>
-            {{ form.email.errors }}
+      <div class="flex flex-col gap-6">
+        <!-- Email -->
+        <div class="flex flex-col">
+          <label for="{{ form.email.id_for_label }}" class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ form.email.label_tag }}</label>
+          <input class="rounded-lg shadow-sm bg-[#f9fbfc] dark:bg-[#353a55] border border-gray-300 dark:border-gray-600 focus:border-[#4c569b] focus:ring-1 focus:ring-[#4c569b] py-2 px-3 text-gray-900 dark:text-white transition" type="email" name="email" id="{{ form.email.id_for_label }}" required placeholder="e@mail.com" />
+          <p class="text-red-500 text-sm mt-1">{{ form.email.errors }}</p>
+        </div>
+
+        <!-- First Name -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <div class="flex flex-col">
+            <label for="{{ form.first_name.id_for_label }}" class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ form.first_name.label_tag }}</label>
+            <input class="rounded-lg shadow-sm bg-[#f9fbfc] dark:bg-[#353a55] border border-gray-300 dark:border-gray-600 focus:border-[#4c569b] focus:ring-1 focus:ring-[#4c569b] py-2 px-3 text-gray-900 dark:text-white transition" type="text" name="first_name" id="{{ form.first_name.id_for_label }}" required placeholder="John" />
+            <p class="text-red-500 text-sm mt-1">{{ form.first_name.errors }}</p>
           </div>
 
-          <div>
-            <div class="flex flex-row gap-3 justify-between place-items-center">{{ form.first_name.label_tag }}
-                <input class="rounded shadow-md border-1 border-black/5 focus:ring-1 focus:ring-[#4c569b] dark:bg-[#4c569b] py-1 px-1 " type="text" name="first_name" id="{{ form.first_name.id_for_label }}" required>
-            </div>
-            {{ form.first_name.errors }}
-          </div>
-
-          <div>
-            <div class="flex flex-row gap-3 justify-between place-items-center">{{ form.last_name.label_tag }}
-                <input class="rounded shadow-md border-1 border-black/5 focus:ring-1 focus:ring-[#4c569b] dark:bg-[#4c569b] py-1 px-1 " type="text" name="last_name" id="{{ form.last_name.id_for_label }}" required>
-            </div>
-            {{ form.last_name.errors }}
-          </div>
-
-          <div>
-            <div class="flex flex-row gap-3 justify-between place-items-center">{{ form.phone.label_tag }}
-                <input class="rounded shadow-md border-1 border-black/5 focus:ring-1 focus:ring-[#4c569b] dark:bg-[#4c569b] py-1 px-1 " type="text" name="phone" maxlength="10" minlength="10" id="{{ form.phone.id_for_label }}" required>
-            </div>
-            {{ form.phone.errors }}
-          </div>
-
-          <div>
-            <div class="flex flex-row gap-3 justify-between place-items-center">{{ form.password1.label_tag }}
-                <input class="rounded shadow-md border-1 border-black/5 focus:ring-1 focus:ring-[#4c569b] dark:bg-[#4c569b] py-1 px-1 " type="password" name="password1" id="{{ form.password1.id_for_label }}" required>
-            </div>
-            {{ form.password1.errors }}
-          </div>
-
-          <div>
-            <div class="flex flex-row gap-3 justify-between place-items-center">{{ form.password2.label_tag }}
-                <input class="rounded shadow-md border-1 border-black/5 focus:ring-1 focus:ring-[#4c569b] dark:bg-[#4c569b] py-1 px-1 " type="password" name="password2" id="{{ form.password2.id_for_label }}" required>
-            </div>
-            {{ form.password2.errors }}
+          <!-- Last Name -->
+          <div class="flex flex-col">
+            <label for="{{ form.last_name.id_for_label }}" class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ form.last_name.label_tag }}</label>
+            <input class="rounded-lg shadow-sm bg-[#f9fbfc] dark:bg-[#353a55] border border-gray-300 dark:border-gray-600 focus:border-[#4c569b] focus:ring-1 focus:ring-[#4c569b] py-2 px-3 text-gray-900 dark:text-white transition" type="text" name="last_name" id="{{ form.last_name.id_for_label }}" required placeholder="Doe" />
+            <p class="text-red-500 text-sm mt-1">{{ form.last_name.errors }}</p>
           </div>
         </div>
 
+        <!-- Phone -->
+        <div class="flex flex-col">
+          <label for="{{ form.phone.id_for_label }}" class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ form.phone.label_tag }}</label>
+          <input class="rounded-lg shadow-sm bg-[#f9fbfc] dark:bg-[#353a55] border border-gray-300 dark:border-gray-600 focus:border-[#4c569b] focus:ring-1 focus:ring-[#4c569b] py-2 px-3 text-gray-900 dark:text-white transition" type="text" name="phone" maxlength="10" minlength="10" id="{{ form.phone.id_for_label }}" placeholder="0893335555" required />
+          <p class="text-red-500 text-sm mt-1">{{ form.phone.errors }}</p>
+        </div>
+
+        <!-- Password -->
+        <div class="flex flex-col">
+          <label for="{{ form.password1.id_for_label }}" class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ form.password1.label_tag }}</label>
+          <input class="rounded-lg shadow-sm bg-[#f9fbfc] dark:bg-[#353a55] border border-gray-300 dark:border-gray-600 focus:border-[#4c569b] focus:ring-1 focus:ring-[#4c569b] py-2 px-3 text-gray-900 dark:text-white transition" type="password" name="password1" id="{{ form.password1.id_for_label }}" required placeholder="Must have at least 8 characters" />
+          <p class="text-red-500 text-sm mt-1">{{ form.password1.errors }}</p>
+        </div>
+
+        <!-- Confirm Password -->
+        <div class="flex flex-col">
+          <label for="{{ form.password2.id_for_label }}" class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ form.password2.label_tag }}</label>
+          <input class="rounded-lg shadow-sm bg-[#f9fbfc] dark:bg-[#353a55] border border-gray-300 dark:border-gray-600 focus:border-[#4c569b] focus:ring-1 focus:ring-[#4c569b] py-2 px-3 text-gray-900 dark:text-white transition" type="password" name="password2" id="{{ form.password2.id_for_label }}" required placeholder="Confirm Password" />
+          <p class="text-red-500 text-sm mt-1">{{ form.password2.errors }}</p>
+        </div>
       </div>
-      <button class="px-3 py-2 mt-3 bg-[#4c569b] text-[#eef7fc] rounded shadow-md">Register</button>
+
+      <button class="w-full mt-6 bg-[#4c569b] hover:bg-[#3b4682] text-white font-semibold py-3 px-4 rounded-lg shadow-md transition-all duration-300">Register</button>
     </form>
   </div>
 {% endblock %}
