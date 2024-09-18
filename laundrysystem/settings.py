@@ -41,11 +41,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'tailwind',
     'laundry',
     'laundry_model',
+    'laundry_user',
     'django_browser_reload'
 ]
+
 NPM_BIN_PATH = os.getenv("NPM_BIN_PATH")
 
 TAILWIND_APP_NAME = 'laundry'
@@ -59,8 +60,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    
-    "django_browser_reload.middleware.BrowserReloadMiddleware",
 ]
 
 ROOT_URLCONF = 'laundrysystem.urls'
