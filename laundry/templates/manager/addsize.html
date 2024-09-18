@@ -30,7 +30,7 @@
                </div>
        
                <div class="sm:col-span-2">
-                 <div class="mt-6 flex items-center justify-end gap-x-6">
+                 <div class="mt-6 flex items-center gap-x-6 py-2">
                     <button type="submit" class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Add</button>
                     <button type="button" class="text-sm font-semibold leading-6 text-gray-900">Cancel</button>
                   </div>
@@ -59,46 +59,22 @@
                             </svg></a>
                         </div>
                     </th>
-    
-                    <th scope="col" class="px-6 py-3">
-                        <span class="sr-only">Edit</span>
-                    </th>
                 </tr>
             </thead>
             <tbody>
-                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                        S
-                    </th>
-                    <td class="px-6 py-4">
-                        10 KG
-                    </td>
-                    <td class="px-6 py-4 text-right">
-                        <a href="#" class="font-medium text-red-500  hover:underline">Delete</a>
-                    </td>
-                </tr>
-                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                        M
-                    </th>
-                    <td class="px-6 py-4">
-                        16 KG
-                    </td>
-                    <td class="px-6 py-4 text-right">
-                        <a href="#" class="font-medium text-red-500  hover:underline">Delete</a>
-                    </td>
-                </tr>
-                <tr class="bg-white dark:bg-gray-800">
-                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                        L
-                    </th>
-                    <td class="px-6 py-4">
-                        16 KG
-                    </td>
-                    <td class="px-6 py-4 text-right">
-                        <a href="#" class="font-medium text-red-500  hover:underline">Delete</a>
-                    </td>
-                </tr>
+                {% for size in sizes %}
+                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                            {{size.size}}
+                        </th>
+                        <td class="px-6 py-4">
+                            {{size.capacity}}
+                        </td>
+                        <td class="px-6 py-4 text-right">
+                            <a href="#" class="font-medium text-red-500  hover:underline">Delete</a>
+                        </td>
+                    </tr>
+                {% endfor %}
             </tbody>
         </table>
     </div>
