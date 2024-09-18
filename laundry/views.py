@@ -29,3 +29,15 @@ class RegisterView(View):
 def user_logout(request):
     logout(request)
     return redirect("index")
+
+class ReportView(View):
+    def get(self, request):
+        return render(request, "manager/report.html")
+    
+class AddMachineView(View):
+    def get(self, request):
+        return render(request, "manager/addmachine.html")
+    
+class AddSizeView(View):
+    def get(self, request):
+        return render(request, "manager/addsize.html")
