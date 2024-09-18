@@ -50,11 +50,11 @@ class Service(models.Model):
 
 class Machine_Size(models.Model):
     size = models.CharField(max_length=15)
+    capacity = models.IntegerField()
 
 class Machine(models.Model):
     machine_size = models.ForeignKey(Machine_Size, on_delete=models.CASCADE)
     code = models.CharField(max_length=10)
-    capacity = models.IntegerField()
     cost = models.IntegerField()
     duration = models.IntegerField()
     status_available = models.IntegerField()

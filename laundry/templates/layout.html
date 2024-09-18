@@ -8,7 +8,7 @@
         TEST
       {% endblock %}
     </title>
-    <link rel="stylesheet" href="{% static 'output.css' %}">
+    <link rel="stylesheet" href="{% static 'output.css' %}" />
     {% block css %}
 
     {% endblock %}
@@ -37,8 +37,17 @@
     </main>
 
     {% block script %}
-      <script>
-      </script>
+      <script></script>
     {% endblock %}
+    <script>
+      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (event) => {
+        const newColorScheme = event.matches ? 'dark' : 'light'
+        if (newColorScheme == "dark"){
+          document.getElementById('logo').src = "{% static 'images/washing-machine-white.svg' %}"
+        }else{
+          document.getElementById('logo').src = "{% static 'images/washing-machine.svg' %}"
+        }
+      })
+    </script>
   </body>
 </html>
