@@ -19,3 +19,11 @@ class RegisterForm(UserCreationForm):
                 "Phone should start with '02', '06', '08', '09'"
             )
         return phone
+    
+class ProfileForm(forms.ModelForm):
+    class Meta:
+        model = Users
+        fields = [
+            "first_name",
+            "last_name"
+        ]

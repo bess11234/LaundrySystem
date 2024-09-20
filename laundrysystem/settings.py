@@ -147,5 +147,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGOUT_REDIRECT_URL = "index"
 LOGIN_REDIRECT_URL = "index"
+LOGIN_URL = "login" # หากยังไม่ได้ Login จะเข้าไปหน้านี้
 
 AUTH_USER_MODEL = "laundry_model.Users"
