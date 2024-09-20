@@ -8,8 +8,9 @@ urlpatterns = [
     path("manager/report/", views.ReportView.as_view(), name="report"),
     path("manager/addmachine/", views.AddMachineView.as_view(), name="add_machine"),
     path("manager/addsize/", views.AddSizeView.as_view(), name="add_size"),
-    path("manager/addoptions/", views.AddOptionView.as_view(), name="add_option"),
+    path("manager/addoption/", views.AddOptionView.as_view(), name="add_option"),
 
     #delete data
-    path("manager/delete/size/<int:size_id>", views.DeleteSizeView.as_view(), name="delete_size")
+    path("manager/delete/size/<int:size_id>", views.DeleteSizeView.as_view(), name="delete_size"),
+    path("manager/delete/option/<int:option_id>", views.DeleteOptionView.as_view(), name="delete_option")
 ]
