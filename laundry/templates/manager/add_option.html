@@ -1,0 +1,99 @@
+{% extends 'layout.html' %}
+{% load static %}
+
+{% block title %}Option{% endblock %}
+
+{% block navbar %}{%include 'managerbar.html'%}{% endblock %}
+
+{% block main %}
+{% include 'manager/sidebar.html' with count_size=count_size count_service=count_service %}
+<div class="p-4 sm:ml-64">
+    <!-- border -->
+    <div class="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700">
+        
+        <!-- insert new service  -->
+        <form id="option-form" method="POST">
+            {% csrf_token %}
+            <!-- introduction -->
+            <div class="space-y-12">
+                <div class="border-b border-gray-900/10 pb-7">
+                    <h2 class="text-base font-semibold leading-7 text-gray-900">Manage Option Machine</h2>
+                    <p class="mt-1 text-sm leading-6 text-gray-600">Customer and Staff will see this information and you can use this information for adding machine.</p>
+                </div>
+           </div>
+            
+           <div class="mt-5 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+                <!-- service name  -->
+                <div class="sm:col-span-2 sm:col-start-1">
+                    <label for="{{ form.name.id_for_label }}" class="block text-sm font-medium leading-6 text-gray-900">Option Name</label>
+                    <div class="mt-2">
+                        <input type="text" name="name" id="{{form.name.id_for_label}}" class="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" required>
+                      </div>
+                </div>
+                
+                <!-- price  -->
+                <div class="sm:col-span-2">
+                    <label for="{{form.price.id_for_label}}" class="block text-sm font-medium leading-6 text-gray-900">Price</label>
+                    <div class="mt-2">
+                        <input type="Number" min = "0" name="price" id="{{form.price.id_for_label}}" class="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" required>
+                    </div>
+                </div>
+                
+                <!-- submit and cancel  -->
+                <div class="sm:col-span-2">
+                    <div class="mt-6 flex items-center gap-x-6 py-2">
+                        <button type="submit" class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Add</button>
+                        <button type="button" class="text-sm font-semibold leading-6 text-gray-900" onclick="clearForm('option-form')">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+       <!-- show added service option  -->
+       <div class="w-full relative overflow-x-auto shadow-md sm:rounded-lg">
+        <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                <tr>
+                    <!-- column name : Service Name  -->
+                    <th scope="col" class="px-6 py-3">
+                        <div class="flex items-center">
+                          Option Name
+                        </div>
+                    </th>
+                    
+                    <!-- column name : Price  -->
+                    <th scope="col" class="px-6 py-3">
+                        <div class="flex items-center">
+                            Price
+                            <a href="?order={% if request.GET.order == 'asc' %}desc
+                            {% else %}asc{% endif %}">
+                              <svg class="w-3 h-3 ms-1.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M8.574 11.024h6.852a2.075 2.075 0 0 0 1.847-1.086 1.9 1.9 0 0 0-.11-1.986L13.736 2.9a2.122 2.122 0 0 0-3.472 0L6.837 7.952a1.9 1.9 0 0 0-.11 1.986 2.074 2.074 0 0 0 1.847 1.086Zm6.852 1.952H8.574a2.072 2.072 0 0 0-1.847 1.087 1.9 1.9 0 0 0 .11 1.985l3.426 5.05a2.123 2.123 0 0 0 3.472 0l3.427-5.05a1.9 1.9 0 0 0 .11-1.985 2.074 2.074 0 0 0-1.846-1.087Z"/>
+                            </svg></a>
+                        </div>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- show service data -->
+                {% for option in options %}
+                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                            {{option.name}}
+                        </th>
+                        <td class="px-6 py-4">
+                            {{option.price}}
+                        </td>
+                        <td class="px-6 py-4 text-right">
+                            <a href="{% url 'delete_option' option.id %}" class="font-medium text-red-500  hover:underline">Delete</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    </div>
+ </div>
+{% endblock %}
+
+{% block script %}{% static "clear_form.js" %}{% endblock %}

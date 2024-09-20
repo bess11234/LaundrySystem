@@ -75,9 +75,9 @@
 
       {% endblock %}
     </main>
-    {% block script %}
-      <script></script>
-    {% endblock %}
+    
+    <script src="{% block script %}{% endblock %}"></script>
+    
     <script>
       // Theme mode change logo
       const theme = window.matchMedia('(prefers-color-scheme: dark)')
