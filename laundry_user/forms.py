@@ -14,7 +14,7 @@ class RegisterForm(UserCreationForm):
     
     def clean_phone(self):
         phone = self.cleaned_data.get("phone")
-        if phone[2] not in ("02","06","08","09"):
+        if phone[:2] not in ("02","06","08","09"):
             raise ValidationError(
                 "Phone should start with '02', '06', '08', '09'"
             )
