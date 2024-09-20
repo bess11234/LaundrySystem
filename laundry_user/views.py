@@ -7,7 +7,7 @@ from django.shortcuts import render, redirect
 from django.views import View
 
 from laundry_model.models import Users
-from .forms import RegisterForm
+from .forms import RegisterForm, ProfileForm
 
 class RegisterView(View):
     def get(self, request):
@@ -29,5 +29,5 @@ class ProfileView(View):
     @method_decorator(login_required)
     def get(self, request):
         profile = Users.objects.get(email=request.user)
-        
-        return render(request, "profile.html")
+        form = ProfileForm(instance=profile)
+        return render(request, "profile.html", {"form": form})
