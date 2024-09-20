@@ -4,6 +4,8 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.views import View
 
+from django.utils.decorators import method_decorator
+
 #import model form laundry_model app
 from laundry_model.models import *
 
@@ -32,26 +34,26 @@ def count_all_data():
 
 ## Report
 class ReportView(View):
-    @login_required
+    # @method_decorator(login_required)
     def get(self, request):
         return render(request, "manager/report.html")
 
 ## Machine
 class AddMachineView(View):
-    @login_required
+    # @method_decorator(login_required)
     def get(self, request):
         return render(request, "manager/add_machine.html")
 
 ## Size
 class AddSizeView(View):
-    @login_required
+    # @method_decorator(login_required)
     def get(self, request):
         # check order (asc, desc) request
-        order = request.GET.get('order', 'desc') # set first click to desc
-        if order == "desc":
-            getSizes = Machine_Size.objects.order_by("-capacity") # order by asc
+        order = request.GET.get('order', 'asc') # first order
+        if order == "asc":
+            getSizes = Machine_Size.objects.order_by("capacity") # order by asc
         else:
-            getSizes = Machine_Size.objects.order_by("capacity") # order by desc
+            getSizes = Machine_Size.objects.order_by("-capacity") # order by desc
 
         count_data = count_all_data()
 
@@ -62,6 +64,7 @@ class AddSizeView(View):
                 }
         return render(request, "manager/add_size.html", show)
     
+    # @method_decorator(login_required)
     def post(self, request):
         form = AddSizeForm(request.POST)
         if form.is_valid():
@@ -72,6 +75,7 @@ class AddSizeView(View):
 
 ## Delete Size
 class DeleteSizeView(View):
+    # @method_decorator(login_required)
     def get(self, request, size_id):
         getSize = Machine_Size.objects.get(pk=size_id)
         getSize.delete()
@@ -79,13 +83,14 @@ class DeleteSizeView(View):
     
 ## Option
 class AddOptionView(View):
+    # @method_decorator(login_required)
     def get(self, request):
         # check order (asc, desc) request
-        order = request.GET.get('order', 'desc') # set first click to desc
-        if order == 'desc':
-            getOptions = Service.objects.order_by("-price") # order by asc
-        else:
+        order = request.GET.get('order', 'asc') # first order
+        if order == 'asc':
             getOptions = Service.objects.order_by("price") # order by desc
+        else:
+            getOptions = Service.objects.order_by("-price") # order by asc
 
         count_data = count_all_data()
         show = {
@@ -96,6 +101,7 @@ class AddOptionView(View):
             } 
         return render(request, "manager/add_option.html", show)
     
+    # @method_decorator(login_required)
     def post(self, request):
         form = AddOptionForm(request.POST)
         if form.is_valid():
@@ -107,6 +113,7 @@ class AddOptionView(View):
     # def put(self, request, option_id, price) using with javascript
 
 class DeleteOptionView(View):
+    # @method_decorator(login_required)
     def get(self, request, option_id):
         getOption = Service.objects.get(pk=option_id)
         getOption.delete()
