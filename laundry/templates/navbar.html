@@ -1,5 +1,5 @@
 {% load static %}
-<nav class="border-gray-200 navbar flex flex-row justify-between place-items-center py-4 px-3">
+<nav class="border-gray-200 navbar flex flex-row justify-between place-items-center py-4 px-3 font-medium">
   {% comment %} LOGO {% endcomment %}
   <div class="">
     <a href="{% url 'index' %}" class="flex items-center space-x-3 rtl:space-x-reverse">
@@ -18,20 +18,20 @@
     </button>
     
     <div class="hidden w-full md:block md:w-auto" id="navbar-default">
-      <ul id="link" class="font-medium flex flex-col p-4 md:p-0 mt-4 border border-gray-100 rounded-md bg-gray-50 md:flex-row md:space-x-8 rtl:space-x-reverse md:mt-0 md:border-0 md:bg-transparent dark:bg-[#1b1e36] md:dark:bg-transparent">
+      <ul id="link" class="flex flex-col p-4 md:p-0 mt-4 border border-gray-100 rounded-md bg-gray-50 md:flex-row md:space-x-8 rtl:space-x-reverse md:mt-0 md:border-0 md:bg-transparent dark:bg-[#1b1e36] md:dark:bg-transparent">
         <li>
-          <a href="{% url 'index' %}" class="block py-2 px-3 transition-colors duration-300 text-[#1b1e36] bg-blue-700 rounded md:bg-transparent md:text-[#4c569b] md:hover:text-[#4c569b] md:dark:hover:text-[#4c569b] md:p-0 dark:text-white md:dark:text-[#4c569b]" aria-current="page">Home</a>
+          <a href="{% url 'index' %}" class="block py-2 px-3 transition-colors duration-300 text-[#1b1e36] md:text-[#1b1e36] md:hover:text-[#4c569b] bg-blue-700 rounded md:bg-transparent md:p-0 dark:text-[#4c569b] md:dark:text-[#4c569b] md:dark:hover:text-white" aria-current="page">Home</a>
         </li>
         {% if not user.is_authenticated %}
           <li>
-            <a href="{% url 'login' %}" class="block py-2 px-3 transition-colors duration-300 text-[#1b1e36] rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-[#4c569b] md:p-0 dark:text-white md:dark:hover:text-[#4c569b] dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Sign in</a>
+            <a href="{% url 'login' %}" class="block py-2 px-3 transition-colors duration-300 text-[#1b1e36] md:text-[#1b1e36] md:hover:text-[#4c569b] bg-blue-700 rounded md:bg-transparent md:p-0 dark:text-[#4c569b] md:dark:text-[#4c569b] md:dark:hover:text-white">Sign in</a>
           </li>
           <li class="transition-colors duration-300 bg-[#4c569b] hover:bg-[#3b4682] rounded px-2">
             <a href="{% url 'register' %}" class="block py-2 px-3 transition-colors duration-300 text-white rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:p-0 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Sign up</a>
           </li>
         {% else %}
           <li>
-            <a href="#" class="block py-2 px-3 transition-colors duration-300 text-[#1b1e36] rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-[#4c569b] md:p-0 dark:text-white md:dark:hover:text-[#4c569b] dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">{{ user.email }}</a>
+            <a href="{% url 'profile' %}" class="block py-2 px-3 transition-colors duration-300 text-[#1b1e36] md:text-[#1b1e36] md:hover:text-[#4c569b] bg-blue-700 rounded md:bg-transparent md:p-0 dark:text-[#4c569b] md:dark:text-[#4c569b] md:dark:hover:text-white">{{ user.email }}</a>
           </li>
           <li class="transition-colors duration-300 bg-[#4c569b] hover:bg-[#3b4682] rounded px-2">
             {% comment %}Logout ต้องใช้ Method post{% endcomment %}
@@ -52,9 +52,9 @@
   const exclude = ["Sign up", "Logout"]
   for (let i=0;i<a.length;i++){
     if (a[i].href == location.href && !exclude.includes(a[i].text)){
-      a[i].classList.remove("md:dark:hover:text-[#4c569b]", "dark:text-white", "text-white", "dark:hover:text-white")
-      a[i].classList.add("md:text-[#4c569b]", "dark:text-[#4c569b]")
+      a[i].classList.remove("md:dark:text-[#4c569b]", "md:text-[#1b1e36]")
+      a[i].classList.add("md:dark:text-white", "md:text-[#4c569b]", "font-bold")
       break;
-    }else a[i].classList.remove("md:text-[#4c569b]", "dark:text-[#4c569b]", "md:dark:text-[#4c569b]")
+    }
   }
 </script>

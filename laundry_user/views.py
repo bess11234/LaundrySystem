@@ -1,7 +1,12 @@
-from django.contrib.auth import login, logout
+from django.contrib.auth import login
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
+
 from django.shortcuts import render, redirect
+
 from django.views import View
 
+from laundry_model.models import Users
 from .forms import RegisterForm
 
 class RegisterView(View):
@@ -19,3 +24,10 @@ class RegisterView(View):
         return render(request, "register.html", {
             "form": form
         })
+        
+class ProfileView(View):
+    @method_decorator(login_required)
+    def get(self, request):
+        profile = Users.objects.get(email=request.user)
+        
+        return render(request, "profile.html")

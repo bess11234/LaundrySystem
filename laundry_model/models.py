@@ -53,7 +53,7 @@ class Machine_Size(models.Model):
     capacity = models.IntegerField()
 
 class Machine(models.Model):
-    machine_size = models.ForeignKey(Machine_Size, on_delete=models.CASCADE)
+    machine_size = models.ForeignKey(Machine_Size, null=True, on_delete=models.SET_NULL)
     code = models.CharField(max_length=10)
     cost = models.IntegerField()
     duration = models.IntegerField()
@@ -67,7 +67,7 @@ class Reserve_Machine(models.Model):
     
     user = models.ForeignKey(Users, on_delete=models.CASCADE)
     machine = models.ForeignKey(Machine, on_delete=models.CASCADE)
-    machine_size = models.ForeignKey(Machine_Size, on_delete=models.CASCADE)
+    machine_size = models.ForeignKey(Machine_Size, null=True, on_delete=models.SET_NULL)
     code = models.CharField(max_length=6)
     cost = models.IntegerField()
     arrive_at = models.DateTimeField()
