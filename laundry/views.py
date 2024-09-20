@@ -19,9 +19,9 @@ class Index(View):
 def count_all_data():
     count_data = {
         "count_staff": Users.objects.filter(role="staff").count(),
-        "count_machine": Machine.objects.all().count(),
-        "count_size": Machine_Size.objects.all().count(),
-        "count_service": Service.objects.all().count()
+        "count_machine": Machine.objects.count(),
+        "count_size": Machine_Size.objects.count(),
+        "count_service": Service.objects.count()
         }
     return count_data
 
@@ -93,9 +93,10 @@ class AddOptionView(View):
         if form.is_valid():
             form.save()
             return redirect("add_option")
-        print("Oh no!")
         print(form.errors)
         return render(request, "manager/add_option.html", {"form": form})
+    
+    # def put(self, request, option_id, price) using with javascript
 
 class DeleteOptionView(View):
     def get(self, request, option_id):

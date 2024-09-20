@@ -6,7 +6,7 @@
 {% block navbar %}{%include 'managerbar.html'%}{% endblock %}
 
 {% block main %}
-{% include 'manager/sidebar.html' with count_size=count_size count_service=count_service %}
+{% include 'manager/sidebar.html' with sidebar_size=count_size sidebar_service=count_service %}
 <div class="p-4 sm:ml-64">
     <!-- border -->
     <div class="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700">
@@ -83,6 +83,9 @@
                         </th>
                         <td class="px-6 py-4">
                             {{option.price}}
+                            {% comment %} <form>
+                                <input class="bg-black" value={{option.price}}>
+                            </form> {% endcomment %}
                         </td>
                         <td class="px-6 py-4 text-right">
                             <a href="{% url 'delete_option' option.id %}" class="font-medium text-red-500  hover:underline">Delete</a>
