@@ -4,7 +4,8 @@
 {% block title %}Size{% endblock %}
 {% block navbar %}{%include 'managerbar.html'%}{% endblock %}
 {% block main %}
-{% include 'manager/sidebar.html' with sidebar_size=count_size sidebar_service=count_service %}
+{% include 'manager/sidebar.html' with sidebar_size=count_size sidebar_service=count_service sidebar_machine=count_machine sidebar_staff=count_staff%}
+
 <div class="p-4 sm:ml-64">
     <!-- border -->
     <div class="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700">
@@ -48,6 +49,7 @@
         </form>
 
        <!-- show added size  -->
+       {% if sizes %}
        <div class="w-full relative overflow-x-auto shadow-md sm:rounded-lg">
         <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -80,13 +82,14 @@
                             {{size.size}}
                         </th>
                         <td class="px-6 py-4">
-                            {{size.capacity}}
+                            {{size.capacity}} KG
                         </td>
                         <td class="px-6 py-4 text-right">
                             <a href="{% url 'delete_size' size.id %}" class="font-medium text-red-500  hover:underline">Delete</a>
                         </td>
                     </tr>
                 {% endfor %}
+                {% endif %}
             </tbody>
         </table>
     </div>
@@ -94,4 +97,4 @@
  </div>
 {% endblock %}
 
-{% block script %}{% static "clear_form.js" %}{% endblock %}
+{% block script %}<script src="{% static 'clear_form.js' %}"></script>{% endblock %}

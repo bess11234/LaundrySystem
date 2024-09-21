@@ -1,0 +1,70 @@
+{% extends 'layout.html' %}
+{% load static %}
+
+{% block title %}Staff{% endblock %}
+{% block navbar%}{% include 'managerbar.html'%}{% endblock %}
+
+{% block main %}
+{% include 'manager/sidebar.html' with sidebar_size=count_size sidebar_service=count_service sidebar_machine=count_machine sidebar_staff=count_staff%}
+<div class="p-4 sm:ml-64">
+    <!-- border -->
+    <div class="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700">
+       <div class="w-full relative overflow-x-auto shadow-md sm:rounded-lg">
+        <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                <tr>
+                    <!-- column name : Size Name  -->
+                    <th scope="col" class="px-6 py-3">
+                        <div class="flex items-center">
+                            Email
+                        </div>
+                    </th>
+                    
+                    <!-- column name : Capacity  -->
+                    <th scope="col" class="px-6 py-3">
+                        <div class="flex items-center">
+                            Phone
+                        </div>
+                    </th>
+
+                    <th scope="col" class="px-6 py-3">
+                        <div class="flex items-center">
+                            Role
+                        </div>
+                    </th>
+
+                    <th scope="col" class="px-6 py-3">
+                        <div class="flex items-center">
+                            Status
+                        </div>
+                    </th>
+
+                </tr>
+            </thead>
+            <tbody>
+                <!-- show size data -->
+                {% for user in users %}
+                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                            {{user.email}}
+                        </th>
+                        <td class="px-6 py-4">
+                            {{user.phone}}
+                        </td>
+                        <td class="px-6 py-4">
+                            {{user.role}}
+                        </td>
+                        <td class="px-6 py-4">
+                            {{user.status}}
+                        </td>
+                        <td class="px-6 py-4 text-right">
+                            <a href="#" class="font-medium text-red-500  hover:underline">Delete</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    </div>
+</div>
+{% endblock %}

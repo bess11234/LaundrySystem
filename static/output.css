@@ -590,10 +590,6 @@ video {
   z-index: 40;
 }
 
-.col-span-full {
-  grid-column: 1 / -1;
-}
-
 .m-0 {
   margin: 0px;
 }
@@ -923,11 +919,6 @@ video {
 .bg-\[\#fafdff\] {
   --tw-bg-opacity: 1;
   background-color: rgb(250 253 255 / var(--tw-bg-opacity));
-}
-
-.bg-black {
-  --tw-bg-opacity: 1;
-  background-color: rgb(0 0 0 / var(--tw-bg-opacity));
 }
 
 .bg-blue-100 {
