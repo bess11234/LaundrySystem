@@ -64,6 +64,7 @@ class AddMachineView(View):
 
     def get(self, request):
         getMachines = Machine.objects.all()
+
         form = AddMachineForm()
         show = self.show_data(getMachines, form)
 
