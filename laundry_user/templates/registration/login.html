@@ -8,22 +8,28 @@
       <div class="flex flex-col gap-6">
         <!-- Email(username) -->
         <div class="flex flex-col">
-          <label for="{{ form.username.id_for_label }}" class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ form.username.label_tag }}</label>
-          <input class="rounded-lg shadow-sm bg-[#f9fbfc] dark:bg-[#353a55] border border-gray-300 dark:border-gray-600 focus:border-[#4c569b] focus:ring-1 focus:ring-[#4c569b] py-2 px-3 text-gray-900 dark:text-white transition" type="email" name="username" id="{{ form.email.id_for_label }}" required placeholder="e@mail.com" />
+          <label for="{{ form.username.id_for_label }}" class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ form.username.label }}</label>
+          <input class="rounded-lg shadow-sm bg-[#f9fbfc] dark:bg-[#353a55] border border-gray-300 dark:border-gray-600 focus:border-[#4c569b] focus:ring-1 focus:ring-[#4c569b] py-2 px-3 text-gray-900 dark:text-white transition" type="email" name="username" id="{{ form.username.id_for_label }}" value="{{ form.username.value|default_if_none:'' }}" required placeholder="e@mail.com" />
           <p class="text-red-500 text-sm mt-1">{{ form.username.errors }}</p>
         </div>
 
         <!-- Password(password)-->
         <div class="flex flex-col">
-            <label for="{{ form.password.id_for_label }}" class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ form.password.label_tag }}</label>
+            <label for="{{ form.password.id_for_label }}" class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ form.password.label }}</label>
             <input class="rounded-lg shadow-sm bg-[#f9fbfc] dark:bg-[#353a55] border border-gray-300 dark:border-gray-600 focus:border-[#4c569b] focus:ring-1 focus:ring-[#4c569b] py-2 px-3 text-gray-900 dark:text-white transition" type="password" name="password" id="{{ form.password.id_for_label }}" required placeholder="Must have at least 8 characters" />
             <p class="text-red-500 text-sm mt-1">{{ form.password.errors }}</p>
           </div>
-
-    
       </div>
-
+      {{ form.errors|cut:"__all__" }}
       <button class="w-full mt-6 bg-[#4c569b] hover:bg-[#3b4682] text-white font-semibold py-3 px-4 rounded-lg shadow-md transition-all duration-300">Sign in</button>
     </form>
   </div>
+{% endblock %}
+
+{% block script %}
+{% if user.is_authenticated %}
+<script>
+  window.location.href = "/"
+</script>
+{% endif %}
 {% endblock %}

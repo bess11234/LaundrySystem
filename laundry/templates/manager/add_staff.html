@@ -2,10 +2,9 @@
 {% load static %}
 
 {% block title %}Staff{% endblock %}
-{% block navbar%}{% include 'managerbar.html'%}{% endblock %}
 
 {% block main %}
-{% include 'manager/sidebar.html' with sidebar_size=count_size sidebar_service=count_service sidebar_machine=count_machine sidebar_staff=count_staff%}
+{% include 'sidebar.html' with sidebar_size=count_size sidebar_service=count_service sidebar_machine=count_machine sidebar_staff=count_staff%}
 <div class="p-4 sm:ml-64">
     <!-- border -->
     <div class="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700">

@@ -73,9 +73,10 @@
 
       {% endblock %}
     </main>
-    
-    {% block script %}{% endblock %}
-    
+
+    {% block script %}
+    {% endblock %}
+
     <script>
       // Theme mode change logo
       const theme = window.matchMedia('(prefers-color-scheme: dark)')
@@ -89,6 +90,26 @@
           document.getElementById('logo').src = "{% static 'images/washing-machine-white.svg' %}"
         } else {
           document.getElementById('logo').src = "{% static 'images/washing-machine.svg' %}"
+        }
+      })
+    </script>
+
+    <script>
+      const sidebar = document.getElementById('sidebar')
+      const sidebar_btn = document.getElementById('sidebar_btn')
+      
+      if (sidebar != null) {
+        sidebar_btn.addEventListener('click', () => {
+          sidebar.classList.toggle('-translate-x-full')
+        })
+      } else sidebar_btn.classList.add('hidden')
+      
+      // Close sidebar if clicking outside
+      document.addEventListener('click', (event) => {
+        const isClickInside = sidebar.contains(event.target) || sidebar_btn.contains(event.target)
+      
+        if (!isClickInside && !sidebar.classList.contains('-translate-x-full')) {
+          sidebar.classList.add('-translate-x-full')
         }
       })
     </script>

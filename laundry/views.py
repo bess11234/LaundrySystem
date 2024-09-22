@@ -27,10 +27,11 @@ class Index(View):
 ## count all data (use in sidebar)
 def count_all_data():
     count_data = {
-        "count_staff": Users.objects.filter(role="staff").count(),
+        "count_staff": Users.objects.filter(role="stf").count(),
         "count_machine": Machine.objects.count(),
         "count_size": Machine_Size.objects.count(),
-        "count_service": Service.objects.count()
+        "count_service": Service.objects.count(),
+        "sidebar": "sidebar_item/manager.html"
         }
     return count_data
 
@@ -78,14 +79,11 @@ class AddMachineView(View):
     
     def post(self, request):
         form = AddMachineForm(request.POST)
-        print(form)
         if form.is_valid():
-            print("It comming!")
             form.save()
             return redirect("add_machine")
-        print("not valid")
+
         show = self.show_data(Machine.objects.all(), form)
-        print(form.errors)
         return render(request, "manager/add_machine.html", show)
     
     

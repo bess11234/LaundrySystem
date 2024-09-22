@@ -1,25 +1,24 @@
 {% extends 'layout.html' %}
 {% load static %}
 
-{% block title %}Machine{% endblock %}
-
-{% block navbar%}{% include 'managerbar.html' %}{% endblock %}
+{% block title %}
+  Machine
+{% endblock %}
 
 {% block main %}
-{% include 'manager/sidebar.html' with sidebar_size=count_size sidebar_service=count_service sidebar_machine=count_machine sidebar_staff=count_staff%}
+{% include 'sidebar.html' with count_size=count_size count_service=count_service count_machine=count_machine count_staff=count_staff %}
 
 <div class="p-4 sm:ml-64">
+  <div class="p-4 border-2 border-[#3b4682]/50 dark:border-[#3b4682] bg-[#4c579b0b] dark:bg-[#4c569b]/20 border-dashed rounded-lg">
+    <form method="POST" id="machine-form">
+      {% csrf_token %}
 
-    <div class="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700">
-      
-      <form method="POST" id="machine-form">
-        {% csrf_token %}
-         <div class="space-y-12">
-           <div class="border-b border-gray-900/10 pb-7">
-             <h2 class="text-base font-semibold leading-7 text-gray-900">Manage Machine</h2>
-             <p class="mt-1 text-sm leading-6 text-gray-600">This information will be displayed publicly so be careful what you share.</p>
-             </div>
-           </div>
+      <div class="space-y-12">
+        <div class="border-b border-gray-900/10 pb-7">
+          <h2 class="text-base font-semibold leading-7">Manage Machine</h2>
+          <p class="mt-1 text-sm leading-6 text-[#4c569b]">This information will be displayed publicly so be careful what you share.</p>
+        </div>
+      </div>
 
            <div class="pt-3 border-b border-gray-900/10 pb-6">
 
@@ -42,7 +41,7 @@
                </div>
 
               <div class="sm:col-span-2">
-               <label for="machine-code" class="block text-sm font-medium leading-6 text-gray-900">Default Duration (minutes)</label>
+               <label for="machine-code" class="block text-sm font-medium leading-6 text-gray-900">Duration (minutes)</label>
                <div class="mt-2">
                  {{form.duration}}
                  <p class="text-red-500 text-sm mt-1">{{ form.duration.errors }}</p>
@@ -57,8 +56,8 @@
            </div>
           </form>
 
-      {% if machines %}
-       <div class="w-full relative overflow-x-auto shadow-md sm:rounded-lg">
+    {% if machines %}
+      <div class="w-full relative overflow-x-auto shadow-md sm:rounded-lg">
         <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                 <tr>
@@ -78,9 +77,10 @@
                     <!-- column name : Duration  -->
                     <th scope="col" class="px-6 py-3">
                       <div class="flex items-center">
-                        Default Duration
+                        Duration
                       </div>
                     </th>
+
                 </tr>
             </thead>
             <tbody>
@@ -95,24 +95,21 @@
                            {{machine.machine_size}}
                         </td>
 
-                       <td class="px-6">
-                        {{machine.duration}}
-                      </td>
+                        <td class="px-6">
+                          {{machine.duration}}
+                       </td>
 
-                        <td class="px-6 py-4 text-right">
-                            <a href="{% url 'delete_machine' machine.id %}" class="font-medium text-red-500  hover:underline">Delete</a>
-                        </td>
-                    </tr>
-                {% endfor %}
-                {% endif %}
-            </tbody>
+                <td class="px-6 py-4 text-right">
+                  <a href="{% url 'delete_machine' machine.id %}" class="font-medium text-red-500 hover:underline">Delete</a>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
         </table>
-    </div>
-
-        </div>
-    </div>
- </div>
-  
+      </div>
+    {% endif %}
+  </div>
+</div>
 {% endblock %}
 {% block script %}
 <script src="{% static 'edit_machine.js' %}"></script>

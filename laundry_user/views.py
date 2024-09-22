@@ -11,8 +11,11 @@ from .forms import RegisterForm, ProfileForm
 
 class RegisterView(View):
     def get(self, request):
+        if (request.user.is_authenticated):
+            return redirect("index")
+        form = RegisterForm()
         return render(request, "register.html", {
-            "form": RegisterForm()
+            "form": form
         })
     
     def post(self, request):
@@ -20,7 +23,7 @@ class RegisterView(View):
         if form.is_valid():
             user = form.save()
             login(request, user)
-            return render(request, "index.html") # กลับไปหน้าหลัก
+            return redirect("index") # กลับไปหน้าหลัก มีการ Setting.py อยู่แล้วจึงไม่จำเป็นต้อง Redirect อีก
         return render(request, "register.html", {
             "form": form
         })
@@ -30,4 +33,14 @@ class ProfileView(View):
     def get(self, request):
         profile = Users.objects.get(email=request.user)
         form = ProfileForm(instance=profile)
-        return render(request, "profile.html", {"form": form})
+        return render(request, "profile.html", {"form": form, "sidebar": "sidebar_item/profile.html"})
+    
+    @method_decorator(login_required)
+    def post(self, request):
+        profile = Users.objects.get(email=request.user)
+        form = ProfileForm(request.POST, instance=profile)
+        if form.is_valid() and request.user.email == request.POST.get("email") and request.user.phone == request.POST.get("phone"):
+            form.save()
+            return redirect("profile")
+        return render(request, "profile.html", {"form": form, "sidebar": "sidebar_item/profile.html"})
+

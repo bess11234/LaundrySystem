@@ -43,6 +43,9 @@ class Users(AbstractUser):
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['first_name', 'last_name']
+    
+    def display_role(self):
+        return self.ROLES[self.role]
 
 class Service(models.Model):
     name = models.CharField(max_length=50)

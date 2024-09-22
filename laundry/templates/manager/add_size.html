@@ -2,24 +2,24 @@
 {% load static %}
 
 {% block title %}Size{% endblock %}
-{% block navbar %}{%include 'managerbar.html'%}{% endblock %}
 {% block main %}
-{% include 'manager/sidebar.html' with sidebar_size=count_size sidebar_service=count_service sidebar_machine=count_machine sidebar_staff=count_staff%}
+{% include 'sidebar.html' with count_size=count_size count_service=count_service count_machine=count_machine count_staff=count_staff %}
 
 <div class="p-4 sm:ml-64">
     <!-- border -->
-    <div class="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700">
+    <div class="p-4 border-2 border-[#3b4682]/50 dark:border-[#3b4682] bg-[#4c579b0b] dark:bg-[#4c569b]/20 border-dashed rounded-lg">
         
         <!-- insert new size  -->
         <form id="size-form" method="POST">
             {% csrf_token %}
             <!-- introduction -->
-            <div class="space-y-12">
-                <div class="border-b border-gray-900/10 pb-7">
-                    <h2 class="text-base font-semibold leading-7 text-gray-900">Manage Size Machine</h2>
-                    <p class="mt-1 text-sm leading-6 text-gray-600">Customer and Staff will see this information and you can use this information for adding machine.</p>
-                </div>
-           </div>
+
+           <div class="space-y-12">
+            <div class="border-b border-gray-900/10 pb-7">
+              <h2 class="text-base font-semibold leading-7">Manage Size Machine</h2>
+              <p class="mt-1 text-sm leading-6 text-[#4c569b]">Customer and Staff will see this information and you can use this information for adding machine.</p>
+            </div>
+          </div>
             
            <div class="mt-5 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
                 <!-- size  -->
@@ -32,26 +32,20 @@
                 
                 <!-- capacity  -->
                 <div class="sm:col-span-2">
-                    <label for="{{form.capacity.id_for_label}}" class="block text-sm font-medium leading-6 text-gray-900">Capacity (KG)</label>
+                    <label for="{{form.capacity.id_for_label}}" class="block text-sm font-medium leading-6 text-gray-900">Capacity</label>
                     <div class="mt-2">
                         <input type="Number" min = "0" name="capacity" id="{{form.capacity.id_for_label}}" class="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" required>
                     </div>
                 </div>
-
+                
+                <!-- submit and cancel  -->
                 <div class="sm:col-span-2">
-                    <label for="{{form.cost.id_for_label}}" class="block text-sm font-medium leading-6 text-gray-900">Cost (Baht)</label>
-                    <div class="mt-2">
-                        <input type="Number" min = "0" name="cost" id="{{form.cost.id_for_label}}" class="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" required>
+                    <div class="mt-6 flex items-center gap-x-6 py-2">
+                        <button type="submit" class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Add</button>
+                        <button type="button" class="text-sm font-semibold leading-6 text-gray-900" onclick="clearForm('size-form')">Cancel</button>
                     </div>
                 </div>  
             </div> <!-- end of inline  -->
-            <!-- submit and cancel  -->
-            <div>
-                <div class="mt-6 flex items-center justify-end gap-x-6">
-                    <button type="submit" class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Add</button>
-                    <button type="reset" class="text-sm font-semibold leading-6 text-gray-900" onclick="clearForm('size-form')">Cancel</button>
-                </div>
-            </div>
         </form>
 
        <!-- show added size  -->
@@ -112,3 +106,5 @@
     </div>
  </div>
 {% endblock %}
+
+{% block script %}<script src="{% static 'clear_form.js' %}"></script>{% endblock %}
