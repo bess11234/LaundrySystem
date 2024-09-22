@@ -43,6 +43,9 @@ class Users(AbstractUser):
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['first_name', 'last_name']
+    
+    def display_role(self):
+        return self.ROLES[self.role]
 
 class Service(models.Model):
     name = models.CharField(max_length=50)
@@ -57,8 +60,8 @@ class Machine(models.Model):
     code = models.CharField(max_length=10)
     cost = models.IntegerField()
     duration = models.IntegerField()
-    status_available = models.IntegerField()
-    status_health = models.IntegerField()
+    status_available = models.IntegerField(default=1)
+    status_health = models.IntegerField(default=1)
     create_at = models.DateTimeField(auto_now_add=True)
 
 class Reserve_Machine(models.Model):
@@ -71,7 +74,7 @@ class Reserve_Machine(models.Model):
     code = models.CharField(max_length=6)
     cost = models.IntegerField()
     arrive_at = models.DateTimeField()
-    status = models.IntegerField(choices=STATUS)
+    status = models.IntegerField(choices=STATUS, default=0)
     create_at = models.DateTimeField(auto_now_add=True)
     arrive_arrive = models.DateTimeField(null=True)
     work_at = models.DateTimeField(null=True)
@@ -80,5 +83,5 @@ class Reserve_Machine(models.Model):
 class Review_Reserve(models.Model):
     RATING = ((1,1), (2,2), (3,3), (4,4), (5,5))
     rating = models.IntegerField(choices=RATING)
-    description = models.TextField()
+    description = models.TextField(null=True, blank=True)
     create_at = models.DateTimeField(auto_now_add = True)

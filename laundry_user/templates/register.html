@@ -1,0 +1,59 @@
+{% extends 'layout.html' %}
+{% block title %}
+  Register
+{% endblock %}
+{% block main %}
+  <div class="min-w-1/2 m-auto">
+    <form class="m-3 bg-white/95 dark:bg-[#272c4f]/90 px-12 py-8 my-12 rounded-xl shadow-lg max-w-lg mx-auto" method="post">
+      <h1 class="text-4xl font-bold mb-8 text-center text-[#4c569b] dark:text-white">Laundry System</h1>
+      {% csrf_token %}
+      <div class="flex flex-col gap-6">
+        <!-- Email -->
+        <div class="flex flex-col">
+          <label for="{{ form.email.id_for_label }}" class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ form.email.label }}</label>
+          <input class="rounded-lg shadow-sm bg-[#f9fbfc] dark:bg-[#353a55] border border-gray-300 dark:border-gray-600 focus:border-[#4c569b] focus:ring-1 focus:ring-[#4c569b] py-2 px-3 text-gray-900 dark:text-white transition" type="email" name="email" id="{{ form.email.id_for_label }}" value="{{ form.email.value|default_if_none:"" }}" required placeholder="e@mail.com" />
+          <p class="text-red-500 text-sm mt-1">{{ form.email.errors }}</p>
+        </div>
+
+        <!-- First Name -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <div class="flex flex-col">
+            <label for="{{ form.first_name.id_for_label }}" class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ form.first_name.label }}</label>
+            <input class="rounded-lg shadow-sm bg-[#f9fbfc] dark:bg-[#353a55] border border-gray-300 dark:border-gray-600 focus:border-[#4c569b] focus:ring-1 focus:ring-[#4c569b] py-2 px-3 text-gray-900 dark:text-white transition" type="text" name="first_name" id="{{ form.first_name.id_for_label }}" value="{{ form.first_name.value|default_if_none:"" }}" required placeholder="John" />
+            <p class="text-red-500 text-sm mt-1">{{ form.first_name.errors }}</p>
+          </div>
+
+          <!-- Last Name -->
+          <div class="flex flex-col">
+            <label for="{{ form.last_name.id_for_label }}" class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ form.last_name.label }}</label>
+            <input class="rounded-lg shadow-sm bg-[#f9fbfc] dark:bg-[#353a55] border border-gray-300 dark:border-gray-600 focus:border-[#4c569b] focus:ring-1 focus:ring-[#4c569b] py-2 px-3 text-gray-900 dark:text-white transition" type="text" name="last_name" id="{{ form.last_name.id_for_label }}" value="{{ form.last_name.value|default_if_none:"" }}" required placeholder="Doe" />
+            <p class="text-red-500 text-sm mt-1">{{ form.last_name.errors }}</p>
+          </div>
+        </div>
+
+        <!-- Phone -->
+        <div class="flex flex-col">
+          <label for="{{ form.phone.id_for_label }}" class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ form.phone.label }}</label>
+          <input class="rounded-lg shadow-sm bg-[#f9fbfc] dark:bg-[#353a55] border border-gray-300 dark:border-gray-600 focus:border-[#4c569b] focus:ring-1 focus:ring-[#4c569b] py-2 px-3 text-gray-900 dark:text-white transition" type="text" name="phone" maxlength="10" minlength="10" id="{{ form.phone.id_for_label }}" value="{{ form.phone.value|default_if_none:"" }}" placeholder="phone number" required />
+          <p class="text-red-500 text-sm mt-1">{{ form.phone.errors }}</p>
+        </div>
+
+        <!-- Password -->
+        <div class="flex flex-col">
+          <label for="{{ form.password1.id_for_label }}" class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ form.password1.label }}</label>
+          <input class="rounded-lg shadow-sm bg-[#f9fbfc] dark:bg-[#353a55] border border-gray-300 dark:border-gray-600 focus:border-[#4c569b] focus:ring-1 focus:ring-[#4c569b] py-2 px-3 text-gray-900 dark:text-white transition" type="password" name="password1" id="{{ form.password1.id_for_label }}" required placeholder="Must have at least 8 characters" />
+          <p class="text-red-500 text-sm mt-1">{{ form.password1.errors }}</p>
+        </div>
+
+        <!-- Confirm Password -->
+        <div class="flex flex-col">
+          <label for="{{ form.password2.id_for_label }}" class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ form.password2.label }}</label>
+          <input class="rounded-lg shadow-sm bg-[#f9fbfc] dark:bg-[#353a55] border border-gray-300 dark:border-gray-600 focus:border-[#4c569b] focus:ring-1 focus:ring-[#4c569b] py-2 px-3 text-gray-900 dark:text-white transition" type="password" name="password2" id="{{ form.password2.id_for_label }}" required placeholder="Repeat password" />
+          <p class="text-red-500 text-sm mt-1">{{ form.password2.errors }}</p>
+        </div>
+      </div>
+
+      <button class="w-full mt-6 bg-[#4c569b] hover:bg-[#3b4682] text-white font-semibold py-3 px-4 rounded-lg shadow-md transition-all duration-300">Register</button>
+    </form>
+  </div>
+{% endblock %}

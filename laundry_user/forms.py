@@ -24,6 +24,9 @@ class ProfileForm(forms.ModelForm):
     class Meta:
         model = Users
         fields = [
+            "email",
             "first_name",
-            "last_name"
+            "last_name",
+            "phone"
         ]
+    phone = forms.CharField(max_length=10, min_length=10)

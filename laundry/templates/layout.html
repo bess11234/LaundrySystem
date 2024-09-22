@@ -92,5 +92,16 @@
         }
       })
     </script>
+
+    <script>
+      const sidebar = document.getElementById("sidebar")
+      const sidebar_btn = document.getElementById("sidebar_btn")
+      
+      if (sidebar != null){
+        sidebar_btn.addEventListener("click", ()=>{
+          sidebar.classList.toggle("-translate-x-full")
+        })
+      }else sidebar_btn.classList.add("hidden")
+    </script>
   </body>
 </html>
