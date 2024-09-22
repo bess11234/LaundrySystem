@@ -3,7 +3,7 @@
   Profile
 {% endblock %}
 {% block main %}
-  {% include 'sidebar_user.html' %}
+  {% include 'sidebar.html' %}
 
   <div class="p-4 sm:ml-64">
     <!-- border -->
@@ -34,7 +34,7 @@
 
             <div class="flex flex-col">
               <label for="role">Role</label>
-              <input class="mt-2 rounded-lg shadow-sm bg-[#f9fbfc] dark:bg-[#353a55] border border-gray-300 dark:border-gray-600 focus:border-[#4c569b] focus:ring-1 focus:ring-[#4c569b] py-2 px-3 text-gray-900 dark:text-white transition read-only:border-opacity-50 read-only:bg-opacity-50 read-only:text-opacity-70" type="text" name="phone" id="role" value="{{ user.display_role|title }}" readonly />
+              <input class="mt-2 rounded-lg shadow-sm bg-[#f9fbfc] dark:bg-[#353a55] border border-gray-300 dark:border-gray-600 focus:border-[#4c569b] focus:ring-1 focus:ring-[#4c569b] py-2 px-3 text-gray-900 dark:text-white transition read-only:border-opacity-50 read-only:bg-opacity-50 read-only:text-opacity-70" type="text" id="role" value="{{ user.display_role|title }}" readonly />
             </div>
           </div>
 
@@ -43,10 +43,12 @@
             <div class="flex flex-col grow">
               <label for="{{ form.first_name.id_for_label }}">First name</label>
               <input class="mt-2 rounded-lg shadow-sm bg-[#f9fbfc] dark:bg-[#353a55] border border-gray-300 dark:border-gray-600 focus:border-[#4c569b] focus:ring-1 focus:ring-[#4c569b] py-2 px-3 text-gray-900 dark:text-white transition read-only:border-opacity-50 read-only:bg-opacity-50 read-only:text-opacity-70" type="text" name="first_name" id="{{ form.first_name.id_for_label }}" value="{{ form.first_name.value }}" />
+              {{ form.first_name.errors }}
             </div>
             <div class="flex flex-col grow">
               <label for="{{ form.last_name.id_for_label }}">Last name</label>
               <input class="mt-2 rounded-lg shadow-sm bg-[#f9fbfc] dark:bg-[#353a55] border border-gray-300 dark:border-gray-600 focus:border-[#4c569b] focus:ring-1 focus:ring-[#4c569b] py-2 px-3 text-gray-900 dark:text-white transition read-only:border-opacity-50 read-only:bg-opacity-50 read-only:text-opacity-70" type="text" name="last_name" id="{{ form.last_name.id_for_label }}" value="{{ form.last_name.value }}" />
+              {{ form.last_name.errors }}
             </div>
           </div>
           <button class="w-full mt-6 bg-[#4c569b] hover:bg-[#3b4682] text-white font-semibold py-3 px-4 rounded-lg shadow-md transition-all duration-300">Update profile</button>

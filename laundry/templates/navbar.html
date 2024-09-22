@@ -47,18 +47,18 @@
       {% endif %}
 
       <ul id="link" class="py-1">
-        <li>
-          <a href="{% url 'index' %}" class="block py-2 pl-3 pr-6 md:pr-3 transition-colors duration-300 text-[#1b1e36] hover:bg-[#eef7fc]/70 dark:hover:bg-[#272c4f] md:text-[#1b1e36] md:dark:text-[#4c569b] md:hover:text-[#4c569b] rounded md:bg-transparent dark:text-[#4c569b] md:dark:hover:text-white" aria-current="page">Home</a>
-        </li>
         {% if not user.is_authenticated %}
           {% include 'nav_item/guest.html' %}
-        {% endif %}
+        {% else %}
         {% comment %} Customer {% endcomment %}
 
         {% comment %} Staff {% endcomment %}
 
         {% comment %} Manager {% endcomment %}
-        {% if user.is_authenticated %}
+          {% if user.role == "mgr" %}
+            {% include 'nav_item/manager.html' %}
+          {% endif %}
+
           {% include 'nav_item/user.html' %}
         {% endif %}
       </ul>
@@ -69,10 +69,7 @@
   {% if not user.is_authenticated %}
   <div class="hidden w-full md:block md:w-auto" id="navbar-default2">
     <div class="flex flex-col border p-4 md:p-0 mt-4 border-gray-100 md:flex-row md:space-x-8 md:mt-0 md:border-0 border-[#3b4682]/50 dark:border-[#3b4682] rounded-md rtl:space-x-reverse ">
-      <ul id="link2" class="flex flex-row">
-        <li>
-          <a href="{% url 'index' %}" class="block py-2 pl-3 pr-6 md:pr-3 transition-colors duration-300 text-[#1b1e36] hover:bg-[#eef7fc]/70 dark:hover:bg-[#272c4f] md:text-[#1b1e36] md:dark:text-[#4c569b] md:hover:text-[#4c569b] rounded md:bg-transparent dark:text-[#4c569b] md:dark:hover:text-white" aria-current="page">Home</a>
-        </li>
+      <ul id="link2" class="flex flex-row gap-2">
         {% include 'nav_item/guest.html' %}
       </ul>
   </div>
@@ -83,11 +80,22 @@
 </nav>
 
 <script>
+  // Toggle navbar
   const navbar_btn = document.getElementById("navbar_btn")
   const navbar_display = document.getElementById("navbar-default")
+
   navbar_btn.addEventListener("click", ()=>{
     navbar_display.classList.toggle("hidden")
   })
+
+  // Close navbar if clicking outside
+  document.addEventListener("click", (event) => {
+    const isClickInside = navbar_display.contains(event.target) || navbar_btn.contains(event.target);
+    
+    if (!isClickInside && !navbar_display.classList.contains("hidden")) {
+      navbar_display.classList.add("hidden");
+    }
+  });
 </script>
 
 <script>

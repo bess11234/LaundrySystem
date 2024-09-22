@@ -1,137 +1,102 @@
 {% extends 'layout.html' %}
 {% load static %}
 
-{% block title %}Machine{% endblock %}
-
-{% block navbar%}{% include 'managerbar.html' %}{% endblock %}
+{% block title %}
+  Machine
+{% endblock %}
 
 {% block main %}
-{% include 'manager/sidebar.html' with sidebar_size=count_size sidebar_service=count_service sidebar_machine=count_machine sidebar_staff=count_staff%}
+{% include 'sidebar.html' with count_size=count_size count_service=count_service count_machine=count_machine count_staff=count_staff %}
 
 <div class="p-4 sm:ml-64">
+  <div class="p-4 border-2 border-[#3b4682]/50 dark:border-[#3b4682] bg-[#4c579b0b] dark:bg-[#4c569b]/20 border-dashed rounded-lg">
+    <form method="POST" id="machine-form">
+      {% csrf_token %}
 
-    <div class="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700">
-      
-      <form method="POST" id="machine-form">
-        {% csrf_token %}
-         <div class="space-y-12">
-           <div class="border-b border-gray-900/10 pb-7">
-             <h2 class="text-base font-semibold leading-7 text-gray-900">Manage Machine</h2>
-             <p class="mt-1 text-sm leading-6 text-gray-600">This information will be displayed publicly so be careful what you share.</p>
-             </div>
-           </div>
-
-           <div class="pt-3 border-b border-gray-900/10 pb-6">
-
-             <div class="mt-1 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-
-              <div class="sm:col-span-3">
-                <label for="{{ form.code.id_for_label }}" class="block text-sm font-medium leading-6 text-gray-900">Machine Code</label>
-                <div class="mt-2">
-                  {{form.code}}
-                  <p class="text-red-500 text-sm mt-1">{{ form.code.errors }}</p>
-                </div>
-              </div>
-              
-               <div class="sm:col-span-3">
-                 <label for="size" class="block text-sm font-medium leading-6 text-gray-900">Size</label>
-                 <div class="mt-2">
-                    {{form.machine_size}}
-                    <p class="text-red-500 text-sm mt-1">{{ form.machine_size.errors }}</p>
-                 </div>
-               </div>
-
-              <div class="sm:col-span-3">
-                <label for="size" class="block text-sm font-medium leading-6 text-gray-900">Price</label>
-                <div class="mt-2">
-                  {{form.cost}}
-                  <p class="text-red-500 text-sm mt-1">{{ form.cost.errors }}</p>
-                </div>
-              </div> 
-
-              <div class="sm:col-span-3">
-               <label for="machine-code" class="block text-sm font-medium leading-6 text-gray-900">Duration (minutes)</label>
-               <div class="mt-2">
-                 {{form.duration}}
-                 <p class="text-red-500 text-sm mt-1">{{ form.duration.errors }}</p>
-               </div>
-             </div>
-
-            </div>
-             <div class="mt-6 flex items-center justify-end gap-x-6">
-              <button type="submit" class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Save</button>
-              <button type="button" class="text-sm font-semibold leading-6 text-gray-900" onclick="clearForm('machine-form')">Cancel</button>
-            </div>
-           </div>
-          </form>
-
-      {% if machines %}
-       <div class="w-full relative overflow-x-auto shadow-md sm:rounded-lg">
-        <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                <tr>
-                  <!-- column name : Machine Code  -->
-                    <th scope="col" class="px-6 py-3">
-                      <div class="flex items-center">
-                        Machine Code
-                      </div>
-                    </th>
-                    <!-- column name : Size  -->
-                    <th scope="col" class="px-6 py-3">
-                      <div class="flex items-center">
-                        Size
-                      </div>
-                    </th>
-
-                    <!-- column name : Price  -->
-                    <th scope="col" class="px-6 py-3">
-                      <div class="flex items-center">
-                        Price
-                      </div>
-                    </th>
-
-                    <!-- column name : Duration  -->
-                    <th scope="col" class="px-6 py-3">
-                      <div class="flex items-center">
-                        Duration
-                      </div>
-                    </th>
-
-                </tr>
-            </thead>
-            <tbody>
-                <!-- show machine data -->
-                {% for machine in machines %}
-                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                            {{machine.code}}
-                        </th>
-
-                        <td class="px-6">
-                           {{machine.machine_size}}
-                        </td>
-
-                        <td class="px-6">
-                          {{machine.cost}}
-                       </td>
-
-                       <td class="px-6">
-                        {{machine.duration}}
-                      </td>
-
-                        <td class="px-6 py-4 text-right">
-                            <a href="{% url 'delete_machine' machine.id %}" class="font-medium text-red-500  hover:underline">Delete</a>
-                        </td>
-                    </tr>
-                {% endfor %}
-                {% endif %}
-            </tbody>
-        </table>
-    </div>
-
+      <div class="space-y-12">
+        <div class="border-b border-gray-900/10 pb-7">
+          <h2 class="text-base font-semibold leading-7">Manage Machine</h2>
+          <p class="mt-1 text-sm leading-6 text-[#4c569b]">This information will be displayed publicly so be careful what you share.</p>
         </div>
-    </div>
- </div>
-  
+      </div>
+
+      <div class="mt-5 flex flex-col gap-x-6 gap-y-8 px-6 md:px-16 lg:px-52">
+        <div class="mt-1 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+          <div class="flex flex-col sm:col-span-3">
+            <label for="{{ form.code.id_for_label }}">Machine Code</label>
+            {{ form.code }}
+            <span class="text-xs text-[#4c569b]">({{ form.code.help_text }})</span>
+            <p class="text-red-500 text-sm mt-1">{{ form.code.errors }}</p>
+          </div>
+
+          <div class="flex flex-col sm:col-span-3">
+            <label for="{{ form.machine_size.id_for_label }}">Size</label>
+            {{ form.machine_size }}
+            <p class="text-red-500 text-sm mt-1">{{ form.machine_size.errors }}</p>
+          </div>
+
+          <div class="flex flex-col sm:col-span-3">
+            <label for="{{ form.duration.id_for_label }}">Duration (Minutes)</label>
+            {{ form.duration }}
+            <p class="text-red-500 text-sm mt-1">{{ form.duration.errors }}</p>
+          </div>
+        </div>
+        <div class="mt-6 flex items-center justify-end gap-x-6">
+          <button type="submit" class="rounded-md bg-[#4c569b] hover:bg-[#3b4682] px-3 py-2 text-sm font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2">Save</button>
+          <button type="reset" class="text-sm font-semibold leading-6 ">Cancel</button>
+        </div>
+      </div>
+    </form>
+
+    {% if machines %}
+      <div class="w-full relative overflow-x-auto shadow-md sm:rounded-lg">
+        <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+          <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+            <tr>
+              <!-- column name : Machine Code -->
+              <th scope="col" class="px-6 py-3">
+                <div class="flex items-center">Machine Code</div>
+              </th>
+              <!-- column name : Size -->
+              <th scope="col" class="px-6 py-3">
+                <div class="flex items-center">Size</div>
+              </th>
+
+              <!-- column name : Price -->
+              <th scope="col" class="px-6 py-3">
+                <div class="flex items-center">Price</div>
+              </th>
+
+              <!-- column name : Duration -->
+              <th scope="col" class="px-6 py-3">
+                <div class="flex items-center">Duration</div>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- show machine data -->
+            {% for machine in machines %}
+              <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">{{ machine.code }}</th>
+
+                <td class="px-6">{{ machine.machine_size }}</td>
+
+                <td class="px-6">{{ machine.cost }}</td>
+
+                <td class="px-6">{{ machine.duration }}</td>
+
+                <td class="px-6 py-4 text-right">
+                  <a href="{% url 'delete_machine' machine.id %}" class="font-medium text-red-500 hover:underline">Delete</a>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% endif %}
+  </div>
+</div>
 {% endblock %}
-{% block script %}<script src="{% static 'clear_form.js' %}"></script>{% endblock %}
+{% block script %}
+  <script src="{% static 'clear_form.js' %}"></script>
+{% endblock %}
