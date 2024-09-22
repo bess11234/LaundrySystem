@@ -24,15 +24,20 @@
             <div class="mt-5 flex flex-col gap-x-6 gap-y-8 px-6 md:px-16 lg:px-52">
                 <div class="mt-5 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
                     <!-- size  -->
-                    <div class="flex flex-col sm:col-span-2">
-                        <label for="{{ form.size.id_for_label }}" >Size Name</label>
+                    <div class="flex flex-col sm:col-span-3">
+                        <label for="{{ form.size.id_for_label }}" >Name of size</label>
                         <input type="text" name="size" id="{{form.size.id_for_label}}" class="mt-2 rounded-lg shadow-sm bg-[#f9fbfc] dark:bg-[#353a55] border border-gray-300 dark:border-gray-600 focus:border-[#4c569b] focus:ring-1 focus:ring-[#4c569b] py-2 px-3 text-gray-900 dark:text-white transition read-only:border-opacity-50 read-only:bg-opacity-50 read-only:text-opacity-70" required>
                     </div>
                     
                     <!-- capacity  -->
-                    <div class="flex flex-col sm:col-span-2">
-                        <label for="{{form.capacity.id_for_label}}" >Capacity</label>
+                    <div class="flex flex-col sm:col-span-3">
+                        <label for="{{form.capacity.id_for_label}}" >Capacity (KG)</label>
                         <input type="Number" min="0" name="capacity" id="{{form.capacity.id_for_label}}" class="mt-2 rounded-lg shadow-sm bg-[#f9fbfc] dark:bg-[#353a55] border border-gray-300 dark:border-gray-600 focus:border-[#4c569b] focus:ring-1 focus:ring-[#4c569b] py-2 px-3 text-gray-900 dark:text-white transition read-only:border-opacity-50 read-only:bg-opacity-50 read-only:text-opacity-70" required>
+                    </div>
+
+                    <div class="flex flex-col sm:col-span-3">
+                        <label for="{{form.cost.id_for_label}}" >Cost</label>
+                        <input type="Number" min="0" name="cost" id="{{form.cost.id_for_label}}" class="mt-2 rounded-lg shadow-sm bg-[#f9fbfc] dark:bg-[#353a55] border border-gray-300 dark:border-gray-600 focus:border-[#4c569b] focus:ring-1 focus:ring-[#4c569b] py-2 px-3 text-gray-900 dark:text-white transition read-only:border-opacity-50 read-only:bg-opacity-50 read-only:text-opacity-70" required>
                     </div>
                     
                     <!-- submit and cancel  -->
