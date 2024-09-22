@@ -37,6 +37,7 @@
                     <label for="{{form.price.id_for_label}}" class="block text-sm font-medium leading-6 text-gray-900">Price</label>
                     <div class="mt-2">
                         <input type="Number" min = "0" name="price" id="{{form.price.id_for_label}}" class="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" required>
+                        <p class="text-red-500 text-sm mt-1">{{ form.price.errors }}</p>
                     </div>
                 </div>
                 
@@ -44,7 +45,7 @@
                 <div class="sm:col-span-2">
                     <div class="mt-6 flex items-center gap-x-6 py-2">
                         <button type="submit" class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Add</button>
-                        <button type="button" class="text-sm font-semibold leading-6 text-gray-900" onclick="clearForm('option-form')">Cancel</button>
+                        <button type="reset" class="text-sm font-semibold leading-6 text-gray-900" onclick="clearForm('option-form')">Cancel</button>
                     </div>
                 </div>
             </div>
@@ -86,7 +87,7 @@
                         <td class="px-6">
                             <form class="w-fit pt-3">
                                 <input value="{{option.price}}" 
-                                        class="block rounded-md border-0 py-2 px-3 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" 
+                                        class="block w-32 rounded-md border-0 py-2 px-3 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" 
                                         type="Number" 
                                         min = "0" 
                                         name="price" 
@@ -111,6 +112,5 @@
 {% endblock %}
 
 {% block script %}
-<script src="{% static 'clear_form.js' %}"></script>
 <script src="{% static 'edit_option.js' %}"></script>
 {% endblock %}

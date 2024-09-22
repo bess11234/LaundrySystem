@@ -23,9 +23,9 @@
 
            <div class="pt-3 border-b border-gray-900/10 pb-6">
 
-             <div class="mt-1 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+             <div class="mt-1 grid grid-cols-3 gap-x-6 gap-y-8 sm:grid-cols-6">
 
-              <div class="sm:col-span-3">
+              <div class="sm:col-span-2">
                 <label for="{{ form.code.id_for_label }}" class="block text-sm font-medium leading-6 text-gray-900">Machine Code</label>
                 <div class="mt-2">
                   {{form.code}}
@@ -33,7 +33,7 @@
                 </div>
               </div>
               
-               <div class="sm:col-span-3">
+               <div class="sm:col-span-2">
                  <label for="size" class="block text-sm font-medium leading-6 text-gray-900">Size</label>
                  <div class="mt-2">
                     {{form.machine_size}}
@@ -41,16 +41,8 @@
                  </div>
                </div>
 
-              <div class="sm:col-span-3">
-                <label for="size" class="block text-sm font-medium leading-6 text-gray-900">Price</label>
-                <div class="mt-2">
-                  {{form.cost}}
-                  <p class="text-red-500 text-sm mt-1">{{ form.cost.errors }}</p>
-                </div>
-              </div> 
-
-              <div class="sm:col-span-3">
-               <label for="machine-code" class="block text-sm font-medium leading-6 text-gray-900">Duration (minutes)</label>
+              <div class="sm:col-span-2">
+               <label for="machine-code" class="block text-sm font-medium leading-6 text-gray-900">Default Duration (minutes)</label>
                <div class="mt-2">
                  {{form.duration}}
                  <p class="text-red-500 text-sm mt-1">{{ form.duration.errors }}</p>
@@ -59,8 +51,8 @@
 
             </div>
              <div class="mt-6 flex items-center justify-end gap-x-6">
-              <button type="submit" class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Save</button>
-              <button type="button" class="text-sm font-semibold leading-6 text-gray-900" onclick="clearForm('machine-form')">Cancel</button>
+              <button type="submit" class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Add</button>
+              <button type="reset" class="text-sm font-semibold leading-6 text-gray-900">Cancel</button>
             </div>
            </div>
           </form>
@@ -83,20 +75,12 @@
                       </div>
                     </th>
 
-                    <!-- column name : Price  -->
-                    <th scope="col" class="px-6 py-3">
-                      <div class="flex items-center">
-                        Price
-                      </div>
-                    </th>
-
                     <!-- column name : Duration  -->
                     <th scope="col" class="px-6 py-3">
                       <div class="flex items-center">
-                        Duration
+                        Default Duration
                       </div>
                     </th>
-
                 </tr>
             </thead>
             <tbody>
@@ -110,10 +94,6 @@
                         <td class="px-6">
                            {{machine.machine_size}}
                         </td>
-
-                        <td class="px-6">
-                          {{machine.cost}}
-                       </td>
 
                        <td class="px-6">
                         {{machine.duration}}
@@ -134,4 +114,6 @@
  </div>
   
 {% endblock %}
-{% block script %}<script src="{% static 'clear_form.js' %}"></script>{% endblock %}
+{% block script %}
+<script src="{% static 'edit_machine.js' %}"></script>
+{% endblock %}

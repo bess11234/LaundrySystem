@@ -43,10 +43,16 @@ class ReportView(View):
 ## Staff
 class AddStaffView(View):
     def get(self, request):
-        getUsers = Users.objects.all()
-        print(getUsers)
+        query = request.GET.get('search', '')
+        if query:
+            getUsers = Users.objects.filter(email__icontains=query).order_by("create_at")
+        else:
+            getUsers = Users.objects.all().order_by("create_at") #defalut/empty search
+
         count_data = count_all_data()
-        show = {'users': getUsers,
+        form = AddStaffForm()
+        show = {'users': getUsers, 
+                'form': form,
                 **count_data}
         return render(request, 'manager/add_staff.html', show)
 
@@ -63,7 +69,7 @@ class AddMachineView(View):
         return show
 
     def get(self, request):
-        getMachines = Machine.objects.all()
+        getMachines = Machine.objects.all().order_by("create_at")
 
         form = AddMachineForm()
         show = self.show_data(getMachines, form)
@@ -81,12 +87,29 @@ class AddMachineView(View):
         show = self.show_data(Machine.objects.all(), form)
         print(form.errors)
         return render(request, "manager/add_machine.html", show)
+    
+    
+    def put(self, request):
+        data = json.loads(request.body) ## update machine price
+        price = data.get('price')
+        machine_id = data.get('machine_id')
+        try:
+            # Fetch the option and update its price
+            machine = Machine.objects.get(id=machine_id)
+            machine.cost = price
+            machine.save()
+            return JsonResponse({'success': True, 'price': machine.cost}, status=200)
+        except Service.DoesNotExist:
+            return JsonResponse({'error': 'Option not found'}, status=404)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
 
 class DeleteMachineView(View):
     def get(self, request, machine_id):
         getMachine = Machine.objects.get(id=machine_id)
         getMachine.delete()
         return redirect("add_machine")
+        
 
 ## Size
 class AddSizeView(View):

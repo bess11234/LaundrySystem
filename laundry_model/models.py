@@ -26,7 +26,7 @@ class Users(AbstractUser):
     CUSTOMER = "cus"
     ROLES = {CUSTOMER: "customer", STAFF: "staff", MANAGER: "manager"}
     
-    # username = models.CharField(max_length=50, blank=True, null=True, unique=False) # ของ AbstractUser
+    username = models.CharField(max_length=50, blank=True, null=True, unique=False) # ของ AbstractUser
     
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
@@ -50,6 +50,7 @@ class Service(models.Model):
 
 class Machine_Size(models.Model):
     size = models.CharField(max_length=15)
+    cost = models.IntegerField()
     capacity = models.IntegerField()
 
     def __str__(self):
@@ -59,7 +60,6 @@ class Machine_Size(models.Model):
 class Machine(models.Model):
     machine_size = models.ForeignKey(Machine_Size, null=True, on_delete=models.SET_NULL)
     code = models.CharField(max_length=10)
-    cost = models.IntegerField()
     duration = models.IntegerField()
     status_available = models.IntegerField(default=1)
     status_health = models.IntegerField(default=1)
