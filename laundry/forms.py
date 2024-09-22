@@ -12,9 +12,10 @@ class AddSizeForm(ModelForm):
     class Meta:
         model = Machine_Size
         fields = [
-            "size",
-            "cost",
-            "capacity"]
+            "size", 
+            "capacity",
+            "cost"
+        ]
         
 class AddOptionForm(ModelForm):
     class Meta:
