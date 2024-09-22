@@ -22,33 +22,34 @@
           </div>
             
             <div class="mt-5 flex flex-col gap-x-6 gap-y-8 px-6 md:px-16 lg:px-52">
-                <div class="mt-5 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+                <div class="mt-5 flex flex-row flex-wrap gap-x-6 gap-y-8">
                     <!-- size  -->
-                    <div class="flex flex-col sm:col-span-3">
+                    <div class="flex flex-col grow">
                         <label for="{{ form.size.id_for_label }}" >Name of size</label>
                         <input type="text" name="size" id="{{form.size.id_for_label}}" class="mt-2 rounded-lg shadow-sm bg-[#f9fbfc] dark:bg-[#353a55] border border-gray-300 dark:border-gray-600 focus:border-[#4c569b] focus:ring-1 focus:ring-[#4c569b] py-2 px-3 text-gray-900 dark:text-white transition read-only:border-opacity-50 read-only:bg-opacity-50 read-only:text-opacity-70" required>
                     </div>
                     
                     <!-- capacity  -->
-                    <div class="flex flex-col sm:col-span-3">
+                    <div class="flex flex-col grow">
                         <label for="{{form.capacity.id_for_label}}" >Capacity (KG)</label>
                         <input type="Number" min="0" name="capacity" id="{{form.capacity.id_for_label}}" class="mt-2 rounded-lg shadow-sm bg-[#f9fbfc] dark:bg-[#353a55] border border-gray-300 dark:border-gray-600 focus:border-[#4c569b] focus:ring-1 focus:ring-[#4c569b] py-2 px-3 text-gray-900 dark:text-white transition read-only:border-opacity-50 read-only:bg-opacity-50 read-only:text-opacity-70" required>
                     </div>
 
-                    <div class="flex flex-col sm:col-span-3">
+                    <div class="flex flex-col grow">
                         <label for="{{form.cost.id_for_label}}" >Cost</label>
                         <input type="Number" min="0" name="cost" id="{{form.cost.id_for_label}}" class="mt-2 rounded-lg shadow-sm bg-[#f9fbfc] dark:bg-[#353a55] border border-gray-300 dark:border-gray-600 focus:border-[#4c569b] focus:ring-1 focus:ring-[#4c569b] py-2 px-3 text-gray-900 dark:text-white transition read-only:border-opacity-50 read-only:bg-opacity-50 read-only:text-opacity-70" required>
                     </div>
                     
                     <!-- submit and cancel  -->
-                    <div class="flex flex-col sm:col-span-2 self-end">
-                        <div class="flex items-center gap-x-6">
+                    <div class="flex flex-col grow self-end">
+                        <div class="flex items-center gap-x-6 self-end justify-self-end">
                             <button type="submit" class="rounded-md bg-[#4c569b] hover:bg-[#3b4682] px-3 py-2 text-sm font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2">Add</button>
                             <button type="reset" class="text-sm font-semibold leading-6 hover:">Cancel</button>
                         </div>
                     </div>
                 </div>
-            </div>
+                
+            </div> <!-- end of inline  -->
         </form>
 
        <!-- show added size  -->
@@ -75,6 +76,15 @@
                             </svg></a>
                         </div>
                     </th>
+
+                    <th scope="col" class="px-6 py-3">
+                        <div class="flex items-center">
+                            Cost
+                        </div>
+                    </th>
+
+                    <th></th>
+
                 </tr>
             </thead>
             <tbody>
@@ -87,6 +97,9 @@
                         <td class="px-6 py-4">
                             {{size.capacity}} KG
                         </td>
+                        <td class="px-6 py-4">
+                            {{size.cost}} Baht
+                        </td>
                         <td class="px-6 py-4 text-right">
                             <a href="{% url 'delete_size' size.id %}" class="font-medium text-red-500  hover:underline">Delete</a>
                         </td>
@@ -98,8 +111,4 @@
     </div>
     </div>
  </div>
-{% endblock %}
-
-{% block script %}
-<script src="{% static "clear_form.js" %}"></script>
 {% endblock %}

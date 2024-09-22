@@ -4,66 +4,122 @@
 {% block title %}Staff{% endblock %}
 
 {% block main %}
-{% include 'manager/sidebar.html' with sidebar_size=count_size sidebar_service=count_service sidebar_machine=count_machine sidebar_staff=count_staff%}
+{% include 'sidebar.html' with sidebar_size=count_size sidebar_service=count_service sidebar_machine=count_machine sidebar_staff=count_staff%}
 <div class="p-4 sm:ml-64">
     <!-- border -->
     <div class="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700">
-       <div class="w-full relative overflow-x-auto shadow-md sm:rounded-lg">
-        <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                <tr>
-                    <!-- column name : Size Name  -->
-                    <th scope="col" class="px-6 py-3">
-                        <div class="flex items-center">
-                            Email
-                        </div>
-                    </th>
-                    
-                    <!-- column name : Capacity  -->
-                    <th scope="col" class="px-6 py-3">
-                        <div class="flex items-center">
-                            Phone
-                        </div>
-                    </th>
 
-                    <th scope="col" class="px-6 py-3">
-                        <div class="flex items-center">
-                            Role
-                        </div>
-                    </th>
+    <div class="space-y-12">
+        <div class="border-b border-gray-900/10 pb-7">
+            <h2 class="text-base font-semibold leading-7 text-gray-900">Manage Manager & Staff</h2>
+            <p class="mt-1 text-sm leading-6 text-gray-600">This Page you can add/edit role of user.</p>
+        </div>
+   </div>
 
-                    <th scope="col" class="px-6 py-3">
-                        <div class="flex items-center">
-                            Status
-                        </div>
-                    </th>
+    <div class="mt-2 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+        <div class="sm:col-span-2 sm:col-start-1">
+            <div class="mt-2">
+            <form action="{% url 'add_staff' %}" class="pt-3">
+                {% csrf_token %}
+                <input  action="{% url 'add_staff' %}" class="block w-full rounded-md border-0 py-2 px-3 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" 
+                        type="text" 
+                        name="search"
+                        placeholder="Search Email">
+                    </div>
+                </div>
+                {% comment %} <input type="hidden" name="csrfmiddlewaretoken" value='{% csrf_token %}'> {% endcomment %}
+                <div class="mt-4 sm:col-span-2">
+                    <div class="flex items-center gap-x-6 py-2">
+                        <button type="submit" class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Search</button>
+                    </div>
+                </div>
+            </form>
+        </div>
 
-                </tr>
-            </thead>
-            <tbody>
-                <!-- show size data -->
-                {% for user in users %}
-                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                            {{user.email}}
+        <div class="w-full relative overflow-x-auto shadow-md sm:rounded-lg">
+            <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                <thead class="text-xs text-white uppercase bg-indigo-950 dark:bg-gray-700 dark:text-gray-400">
+                    <tr>
+                        <th scope="col" class="px-6 py-3">
+                            <div class="flex items-center">
+                                Status
+                            </div>
                         </th>
-                        <td class="px-6 py-4">
-                            {{user.phone}}
-                        </td>
-                        <td class="px-6 py-4">
-                            {{user.role}}
-                        </td>
-                        <td class="px-6 py-4">
-                            {{user.status}}
-                        </td>
-                        <td class="px-6 py-4 text-right">
-                            <a href="#" class="font-medium text-red-500  hover:underline">Delete</a>
-                        </td>
+
+                        <!-- column name : Email  -->
+                        <th scope="col" class="px-6 py-3">
+                            <div class="flex items-center">
+                                Email
+                            </div>
+                        </th>
+
+                        <th scope="col" class="px-6 py-3">
+                            <div class="flex items-center">
+                                First Name
+                            </div>
+                        </th>
+
+                        <th scope="col" class="px-6 py-3">
+                            <div class="flex items-center">
+                                Last Name
+                            </div>
+                        </th>
+
+                        <th scope="col" class="px-6 py-3">
+                            <div class="flex items-center">
+                                Phone
+                            </div>
+                        </th>
+
+                        <th scope="col" class="px-6 py-3">
+                            <div class="flex items-center">
+                                Role
+                            </div>
+                        </th>
+
                     </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
+                </thead>
+                <tbody>
+                    <!-- show size data -->
+                    {% for user in users %}
+                        {% if user.status == 1 %}
+                        <tr class="bg-green-50 border-b dark:bg-gray-800 dark:border-gray-700">
+                        {% else %}
+                        <form>
+                            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                            {% endif %}
+                                <td class="px-6 py-4">
+                                    {{form.status}}
+                                </td>
+
+                                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                    {{user.email}}
+                                </th>
+
+                                <td class="px-6 py-4 text-gray-900">
+                                    {{user.first_name}}
+                                </td>
+                                
+                                <td class="px-6 py-4 text-gray-900">
+                                    {{user.last_name}}
+                                </td>
+                                
+                                <td class="px-6 py-4 text-gray-900">
+                                    {{user.phone}}
+                                </td>
+                                
+                                <td class="px-6 py-4 text-gray-900">
+                                    {{form.role}}
+                                </td>
+                                {% comment %} <td class="px-6 py-4 text-right">
+                                    <a href="#" class="font-medium text-red-500  hover:underline">Delete</a>
+                                </td> {% endcomment %}
+                            </tr>
+                        </form>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 {% endblock %}
