@@ -3,6 +3,8 @@ from django.contrib.auth.decorators import login_required
 
 from django.shortcuts import render, redirect
 from django.views import View
+from django.http import JsonResponse
+import json
 
 from django.utils.decorators import method_decorator
 
@@ -38,11 +40,53 @@ class ReportView(View):
     def get(self, request):
         return render(request, "manager/report.html")
 
+## Staff
+class AddStaffView(View):
+    def get(self, request):
+        getUsers = Users.objects.all()
+        print(getUsers)
+        count_data = count_all_data()
+        show = {'users': getUsers,
+                **count_data}
+        return render(request, 'manager/add_staff.html', show)
+
 ## Machine
 class AddMachineView(View):
     # @method_decorator(login_required)
+    def show_data(self, get_getMachine, get_form): ##use this method because when there is an error -> table will disappear
+        count_data = count_all_data()
+        show = {
+            "machines" : get_getMachine,
+            "form" : get_form,
+            **count_data 
+            }
+        return show
+
     def get(self, request):
-        return render(request, "manager/add_machine.html")
+        getMachines = Machine.objects.all()
+
+        form = AddMachineForm()
+        show = self.show_data(getMachines, form)
+
+        return render(request, "manager/add_machine.html", show)
+    
+    def post(self, request):
+        form = AddMachineForm(request.POST)
+        print(form)
+        if form.is_valid():
+            print("It comming!")
+            form.save()
+            return redirect("add_machine")
+        print("not valid")
+        show = self.show_data(Machine.objects.all(), form)
+        print(form.errors)
+        return render(request, "manager/add_machine.html", show)
+
+class DeleteMachineView(View):
+    def get(self, request, machine_id):
+        getMachine = Machine.objects.get(id=machine_id)
+        getMachine.delete()
+        return redirect("add_machine")
 
 ## Size
 class AddSizeView(View):
@@ -84,6 +128,16 @@ class DeleteSizeView(View):
 ## Option
 class AddOptionView(View):
     # @method_decorator(login_required)
+    def show_data(self, get_request, get_getOptions, get_form): ##use this method because when there is an error -> table will disappear
+        count_data = count_all_data()
+        show = {
+            "request": get_request,# request object will be accessible in the template
+            "options" : get_getOptions,
+            "form" : get_form,
+            **count_data 
+            }
+        return show
+
     def get(self, request):
         # check order (asc, desc) request
         order = request.GET.get('order', 'asc') # first order
@@ -92,13 +146,9 @@ class AddOptionView(View):
         else:
             getOptions = Service.objects.order_by("-price") # order by asc
 
-        count_data = count_all_data()
-        show = {
-            "request": request,# request object will be accessible in the template
-            "options" : getOptions,
-            "form" : AddOptionForm(),
-            **count_data 
-            } 
+        form = AddOptionForm()
+        show = self.show_data(request, getOptions, form) ##content to show
+
         return render(request, "manager/add_option.html", show)
     
     # @method_decorator(login_required)
@@ -107,10 +157,31 @@ class AddOptionView(View):
         if form.is_valid():
             form.save()
             return redirect("add_option")
+        
         print(form.errors)
-        return render(request, "manager/add_option.html", {"form": form})
-    
-    # def put(self, request, option_id, price) using with javascript
+        table = Service.objects.order_by("price")
+        show = self.show_data(request, table, form)
+        return render(request, "manager/add_option.html", show)
+
+    # def put(self, request, option_id, price) update data using with javascript
+
+    def put(self, request, *args, **kwargs):
+        data = json.loads(request.body)
+        price = data.get('price')
+        option_id = data.get('option_id')
+
+        try:
+            # Fetch the option and update its price
+            option = Service.objects.get(id=option_id)
+            option.price = price
+            option.save()
+            return JsonResponse({'success': True, 'price': option.price}, status=200)
+        except Service.DoesNotExist:
+            return JsonResponse({'error': 'Option not found'}, status=404)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
+
+
 
 class DeleteOptionView(View):
     # @method_decorator(login_required)

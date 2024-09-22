@@ -55,6 +55,10 @@ class Machine_Size(models.Model):
     size = models.CharField(max_length=15)
     capacity = models.IntegerField()
 
+    def __str__(self):
+        show = f"<= {self.capacity} kg ({self.size})"
+        return show
+
 class Machine(models.Model):
     machine_size = models.ForeignKey(Machine_Size, null=True, on_delete=models.SET_NULL)
     code = models.CharField(max_length=10)
