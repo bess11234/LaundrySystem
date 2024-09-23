@@ -4,15 +4,13 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.views import View
 from django.http import JsonResponse
-import json
 
+import json
 from django.utils.decorators import method_decorator
 
-#import model form laundry_model app
 from laundry_model.models import *
-
-# import form
 from laundry.forms import *
+from .decorators import access_only
 
 class Index(View):
     def get(self, request):
@@ -69,6 +67,8 @@ class AddMachineView(View):
             }
         return show
 
+    @method_decorator(login_required)
+    @method_decorator(access_only("mgr"))
     def get(self, request):
         getMachines = Machine.objects.all().order_by("create_at")
 

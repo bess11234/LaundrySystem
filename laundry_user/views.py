@@ -43,4 +43,3 @@ class ProfileView(View):
             form.save()
             return redirect("profile")
         return render(request, "profile.html", {"form": form, "sidebar": "sidebar_item/profile.html"})
-

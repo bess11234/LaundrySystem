@@ -1,114 +1,106 @@
 {% extends 'layout.html' %}
 {% load static %}
+{% load custom_filter %}
 
-{% block title %}Size{% endblock %}
+{% block title %}
+  Size
+{% endblock %}
 {% block main %}
-{% include 'sidebar.html' with count_size=count_size count_service=count_service count_machine=count_machine count_staff=count_staff %}
+  {% include 'sidebar.html' with count_size=count_size count_service=count_service count_machine=count_machine count_staff=count_staff %}
 
-<div class="p-4 sm:ml-64">
+  <div class="p-4 sm:ml-64">
     <!-- border -->
     <div class="p-4 border-2 border-[#3b4682]/50 dark:border-[#3b4682] bg-[#4c579b0b] dark:bg-[#4c569b]/20 border-dashed rounded-lg">
-        
-        <!-- insert new size  -->
-        <form id="size-form" method="POST">
-            {% csrf_token %}
-            <!-- introduction -->
+      <!-- insert new size -->
+      <form id="size-form" method="POST">
+        {% csrf_token %}
+        <!-- introduction -->
 
-           <div class="space-y-12">
-            <div class="border-b border-gray-900/10 pb-7">
-              <h2 class="text-base font-semibold leading-7">Manage Size Machine</h2>
-              <p class="mt-1 text-sm leading-6 text-[#4c569b]">Customer and Staff will see this information and you can use this information for adding machine.</p>
+        <div class="space-y-12">
+          <div class="border-b border-gray-900/10 pb-7">
+            <h2 class="text-base font-semibold leading-7">Manage Size Machine</h2>
+            <p class="mt-1 text-sm leading-6 text-[#4c569b]">Customer and Staff will see this information and you can use this information for adding machine.</p>
+          </div>
+        </div>
+
+        <div class="mt-5 flex flex-col gap-x-6 gap-y-8 px-6 md:px-16 lg:px-52">
+          <div class="mt-5 flex flex-row flex-wrap gap-x-6 gap-y-8">
+            <!-- size -->
+            <div class="flex flex-col grow">
+              <label for="{{ form.size.id_for_label }}">Name of size</label>
+              <input type="text" name="size" id="{{ form.size.id_for_label }}" class="mt-2 rounded-lg shadow-sm bg-[#f9fbfc] dark:bg-[#353a55] border border-gray-300 dark:border-gray-600 focus:border-[#4c569b] focus:ring-1 focus:ring-[#4c569b] py-2 px-3 text-gray-900 dark:text-white transition read-only:border-opacity-50 read-only:bg-opacity-50 read-only:text-opacity-70" required />
+            </div>
+
+            <!-- capacity -->
+            <div class="flex flex-col grow">
+              <label for="{{ form.capacity.id_for_label }}">Capacity (KG)</label>
+              <input type="Number" min="0" name="capacity" id="{{ form.capacity.id_for_label }}" class="mt-2 rounded-lg shadow-sm bg-[#f9fbfc] dark:bg-[#353a55] border border-gray-300 dark:border-gray-600 focus:border-[#4c569b] focus:ring-1 focus:ring-[#4c569b] py-2 px-3 text-gray-900 dark:text-white transition read-only:border-opacity-50 read-only:bg-opacity-50 read-only:text-opacity-70" required />
+            </div>
+
+            <div class="flex flex-col grow">
+              <label for="{{ form.cost.id_for_label }}">Cost</label>
+              <input type="Number" min="0" name="cost" id="{{ form.cost.id_for_label }}" class="mt-2 rounded-lg shadow-sm bg-[#f9fbfc] dark:bg-[#353a55] border border-gray-300 dark:border-gray-600 focus:border-[#4c569b] focus:ring-1 focus:ring-[#4c569b] py-2 px-3 text-gray-900 dark:text-white transition read-only:border-opacity-50 read-only:bg-opacity-50 read-only:text-opacity-70" required />
+            </div>
+
+            <!-- submit and cancel -->
+            <div class="flex flex-col grow self-end">
+              <div class="flex items-center gap-x-6 self-end justify-self-end">
+                <button type="submit" class="rounded-md bg-[#4c569b] hover:bg-[#3b4682] px-3 py-2 text-sm font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2">Add</button>
+                <button type="reset" class="text-sm font-semibold leading-6 hover:">Cancel</button>
+              </div>
             </div>
           </div>
-            
-            <div class="mt-5 flex flex-col gap-x-6 gap-y-8 px-6 md:px-16 lg:px-52">
-                <div class="mt-5 flex flex-row flex-wrap gap-x-6 gap-y-8">
-                    <!-- size  -->
-                    <div class="flex flex-col grow">
-                        <label for="{{ form.size.id_for_label }}" >Name of size</label>
-                        <input type="text" name="size" id="{{form.size.id_for_label}}" class="mt-2 rounded-lg shadow-sm bg-[#f9fbfc] dark:bg-[#353a55] border border-gray-300 dark:border-gray-600 focus:border-[#4c569b] focus:ring-1 focus:ring-[#4c569b] py-2 px-3 text-gray-900 dark:text-white transition read-only:border-opacity-50 read-only:bg-opacity-50 read-only:text-opacity-70" required>
-                    </div>
-                    
-                    <!-- capacity  -->
-                    <div class="flex flex-col grow">
-                        <label for="{{form.capacity.id_for_label}}" >Capacity (KG)</label>
-                        <input type="Number" min="0" name="capacity" id="{{form.capacity.id_for_label}}" class="mt-2 rounded-lg shadow-sm bg-[#f9fbfc] dark:bg-[#353a55] border border-gray-300 dark:border-gray-600 focus:border-[#4c569b] focus:ring-1 focus:ring-[#4c569b] py-2 px-3 text-gray-900 dark:text-white transition read-only:border-opacity-50 read-only:bg-opacity-50 read-only:text-opacity-70" required>
-                    </div>
+        </div> <!-- end of inline -->
+      </form>
+    </div>
 
-                    <div class="flex flex-col grow">
-                        <label for="{{form.cost.id_for_label}}" >Cost</label>
-                        <input type="Number" min="0" name="cost" id="{{form.cost.id_for_label}}" class="mt-2 rounded-lg shadow-sm bg-[#f9fbfc] dark:bg-[#353a55] border border-gray-300 dark:border-gray-600 focus:border-[#4c569b] focus:ring-1 focus:ring-[#4c569b] py-2 px-3 text-gray-900 dark:text-white transition read-only:border-opacity-50 read-only:bg-opacity-50 read-only:text-opacity-70" required>
-                    </div>
-                    
-                    <!-- submit and cancel  -->
-                    <div class="flex flex-col grow self-end">
-                        <div class="flex items-center gap-x-6 self-end justify-self-end">
-                            <button type="submit" class="rounded-md bg-[#4c569b] hover:bg-[#3b4682] px-3 py-2 text-sm font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2">Add</button>
-                            <button type="reset" class="text-sm font-semibold leading-6 hover:">Cancel</button>
-                        </div>
-                    </div>
-                </div>
-                
-            </div> <!-- end of inline  -->
-        </form>
+    <!-- show added size -->
+    {% if sizes %}
+      <div class="xl:px-36">
+        <div class="w-full relative overflow-x-auto shadow-md sm:rounded-lg mt-3">
+            <table class="w-full text-sm text-left rtl:text-right">
+              <thead class="text-xs uppercase bg-white dark:bg-[#4c569b] text-[#4c569b] dark:text-white">
+              <tr>
+                <!-- column name : Size Name -->
+                <th scope="col" class="px-6 py-3">
+                  <div class="flex items-center">Size Name</div>
+                </th>
 
-       <!-- show added size  -->
-       {% if sizes %}
-       <div class="w-full relative overflow-x-auto shadow-md sm:rounded-lg">
-        <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                <tr>
-                    <!-- column name : Size Name  -->
-                    <th scope="col" class="px-6 py-3">
-                        <div class="flex items-center">
-                            Size Name
-                        </div>
-                    </th>
-                    
-                    <!-- column name : Capacity  -->
-                    <th scope="col" class="px-6 py-3">
-                        <div class="flex items-center">
-                            Capacity
-                            <a href="?order={% if request.GET.order == 'desc' %}asc
-                            {% else %}desc{% endif %}">
-                            <svg class="w-3 h-3 ms-1.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M8.574 11.024h6.852a2.075 2.075 0 0 0 1.847-1.086 1.9 1.9 0 0 0-.11-1.986L13.736 2.9a2.122 2.122 0 0 0-3.472 0L6.837 7.952a1.9 1.9 0 0 0-.11 1.986 2.074 2.074 0 0 0 1.847 1.086Zm6.852 1.952H8.574a2.072 2.072 0 0 0-1.847 1.087 1.9 1.9 0 0 0 .11 1.985l3.426 5.05a2.123 2.123 0 0 0 3.472 0l3.427-5.05a1.9 1.9 0 0 0 .11-1.985 2.074 2.074 0 0 0-1.846-1.087Z"/>
-                            </svg></a>
-                        </div>
-                    </th>
+                <!-- column name : Capacity -->
+                <th scope="col" class="px-6 py-3">
+                  <div class="flex items-center">
+                    Capacity (KG)
+                    <a href="?order={{ request.GET.order|order_toggle }}">
+                      <svg class="w-3 h-3 ms-1.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M8.574 11.024h6.852a2.075 2.075 0 0 0 1.847-1.086 1.9 1.9 0 0 0-.11-1.986L13.736 2.9a2.122 2.122 0 0 0-3.472 0L6.837 7.952a1.9 1.9 0 0 0-.11 1.986 2.074 2.074 0 0 0 1.847 1.086Zm6.852 1.952H8.574a2.072 2.072 0 0 0-1.847 1.087 1.9 1.9 0 0 0 .11 1.985l3.426 5.05a2.123 2.123 0 0 0 3.472 0l3.427-5.05a1.9 1.9 0 0 0 .11-1.985 2.074 2.074 0 0 0-1.846-1.087Z" />
+                      </svg>
+                    </a>
+                  </div>
+                </th>
 
-                    <th scope="col" class="px-6 py-3">
-                        <div class="flex items-center">
-                            Cost
-                        </div>
-                    </th>
+                <th scope="col" class="px-6 py-3">
+                  <div class="flex items-center">Cost (Baht)</div>
+                </th>
 
-                    <th></th>
-
-                </tr>
+                <th></th>
+              </tr>
             </thead>
-            <tbody>
-                <!-- show size data -->
-                {% for size in sizes %}
-                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                            {{size.size}}
-                        </th>
-                        <td class="px-6 py-4">
-                            {{size.capacity}} KG
-                        </td>
-                        <td class="px-6 py-4">
-                            {{size.cost}} Baht
-                        </td>
-                        <td class="px-6 py-4 text-right">
-                            <a href="{% url 'delete_size' size.id %}" class="font-medium text-red-500  hover:underline">Delete</a>
-                        </td>
-                    </tr>
-                {% endfor %}
-                {% endif %}
+            <tbody class="text-[#4c569b]/80 dark:text-white/80">
+              <!-- show size data -->
+              {% for size in sizes %}
+              <tr class="border-b bg-white/55 dark:bg-[#3b4682]/80 dark:border-gray-700 ">
+                  <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">{{ size.size }}</th>
+                  <td class="px-6 py-4">{{ size.capacity }}</td>
+                  <td class="px-6 py-4">{{ size.cost }}</td>
+                  <td class="px-6 py-4 text-right">
+                    <a href="{% url 'delete_size' size.id %}" class="font-medium text-red-500 hover:underline">Delete</a>
+                  </td>
+                </tr>
+              {% endfor %}
             </tbody>
-        </table>
-    </div>
-    </div>
- </div>
+          </table>
+        </div>
+      </div>
+    {% endif %}
+  </div>
 {% endblock %}

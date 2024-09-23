@@ -24,7 +24,7 @@ class AddOptionForm(ModelForm):
 
 
 class AddMachineForm(ModelForm):
-    code = forms.CharField(widget=forms.TextInput(attrs={"class": myclass, "placeholder": "X-XXXXXXXX"}), max_length=10, help_text="ex.'A-0', 'A-1', ..., 'B-0'")
+    code = forms.CharField(widget=forms.TextInput(attrs={"class": myclass, "placeholder": "X-XXXXXXXX"}), min_length=3,max_length=10, help_text="ex.'A-0', 'A-1', ..., 'B-0'")
     machine_size = forms.ModelChoiceField(
         queryset=Machine_Size.objects.all(), 
         widget=forms.Select(attrs={"class": "mt-2 w-full rounded-lg shadow-md bg-[#f9fbfc] dark:bg-[#353a55] border border-gray-300 dark:border-gray-600 focus:border-[#4c569b] focus:ring-2 focus:ring-[#4c569b] py-2 px-3 text-gray-900 dark:text-white transition ease-in-out duration-150 appearance-none cursor-pointer"}))
@@ -39,13 +39,13 @@ class AddMachineForm(ModelForm):
     def clean_code(self):
         code = self.cleaned_data.get("code")
         try:
-            if not (code[0] in string.ascii_uppercase and code[1] == "-" and int(code[2:])):
-                ValidationError(
-                    "Code should be format like 'A-0', 'A-1', .."
+            if not (code[0] in string.ascii_uppercase and code[1] == "-" and int(code[2:]) >= 0):
+                raise ValidationError(
+                    "Ensure that format be like 'A-0', 'A-1', .."
                 )
         except ValueError:
-            ValidationError(
-                "Code should be format like 'A-0', 'A-1', .."
+            raise ValidationError(
+                "Ensure that format be like 'A-0', 'A-1', .."
             )
         return code
 

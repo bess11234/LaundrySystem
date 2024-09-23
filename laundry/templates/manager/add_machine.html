@@ -43,7 +43,7 @@
             </div>
 
             <div class="flex flex-col grow self-end xl:mb-4">
-              <div class="flex items-center gap-x-6 self-end justify-self-end">
+              <div class="flex items-center gap-x-6 self-end justify-self-start">
                 <button type="submit" class="rounded-md bg-[#4c569b] hover:bg-[#3b4682] px-3 py-2 text-sm font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2">Save</button>
                 <button type="reset" class="text-sm font-semibold leading-6 hover:">Cancel</button>
               </div>
@@ -54,40 +54,38 @@
         </div>
       </form>
 
-      {% if machines %}
-        <div class="w-full relative overflow-x-auto shadow-md sm:rounded-lg">
-          <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+    </div>
+
+    {% if machines %}
+      <div class="xl:px-36">
+        <div class="w-full relative overflow-x-auto shadow-md sm:rounded-lg mt-3">
+          <table class="w-full text-sm text-left rtl:text-right">
+            <thead class="text-xs uppercase bg-white dark:bg-[#4c569b] text-[#4c569b] dark:text-white">
               <tr>
                 <!-- column name : Machine Code -->
-                <th scope="col" class="px-6 py-3">
+                <th scope="col" class="px-6 py-3 max-w-10">
                   <div class="flex items-center">Machine Code</div>
                 </th>
                 <!-- column name : Size -->
-                <th scope="col" class="px-6 py-3">
+                <th scope="col" class="px-6 py-3 w-30 min-w-30">
                   <div class="flex items-center">Size</div>
-                </th>
-
-                <!-- column name : Price -->
-                <th scope="col" class="px-6 py-3">
-                  <div class="flex items-center">Price</div>
                 </th>
 
                 <!-- column name : Duration -->
                 <th scope="col" class="px-6 py-3">
                   <div class="flex items-center">Duration</div>
                 </th>
+                
+                <th scope="col" class="max-w-10 w-10"></th>
               </tr>
             </thead>
-            <tbody>
+            <tbody class="text-[#4c569b]/80 dark:text-white/80">
               <!-- show machine data -->
               {% for machine in machines %}
-                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                  <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">{{ machine.code }}</th>
+                <tr class="border-b bg-white/55 dark:bg-[#3b4682]/80 dark:border-gray-700 ">
+                  <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap ">{{ machine.code }}</th>
 
                   <td class="px-6">{{ machine.machine_size }}</td>
-
-                  <td class="px-6">{{ machine.cost }}</td>
 
                   <td class="px-6">{{ machine.duration }}</td>
 
@@ -99,7 +97,8 @@
             </tbody>
           </table>
         </div>
+      </div>
       {% endif %}
-    </div>
+
   </div>
 {% endblock %}

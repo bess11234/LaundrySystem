@@ -2,6 +2,7 @@
   <aside class="fixed left-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0" aria-label="Sidebar" id="sidebar">
     <div class="h-full px-3 py-4 overflow-y-auto navbar">
       <ul class="space-y-2 font-medium mb-4">
+        {% comment %} โยน sidebar จาก views โดยใส่ใน sidebar_item/ {% endcomment %}
         {% if sidebar == "sidebar_item/manager.html" %}
           {% include sidebar with sidebar_size=count_size sidebar_service=count_service sidebar_machine=count_machine sidebar_staff=count_staff %}
         {% else %}
