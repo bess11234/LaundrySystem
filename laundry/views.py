@@ -27,7 +27,7 @@ class Index(View):
 ## count all data (use in sidebar)
 def count_all_data():
     count_data = {
-        "count_staff": Users.objects.filter(role="stf").count(),
+        "count_staff": Users.objects.filter(role__in = ("stf", "mgr")).exclude(status=0).count(),
         "count_machine": Machine.objects.count(),
         "count_size": Machine_Size.objects.count(),
         "count_service": Service.objects.count(),
@@ -48,7 +48,7 @@ class AddStaffView(View):
         if query:
             getUsers = Users.objects.filter(email__icontains=query).order_by("create_at")
         else:
-            getUsers = Users.objects.all().order_by("create_at") #defalut/empty search
+            getUsers = Users.objects.all().order_by("-status", "create_at") #defalut/empty search
 
         count_data = count_all_data()
         form = AddStaffForm()
@@ -56,6 +56,29 @@ class AddStaffView(View):
                 'form': form,
                 **count_data}
         return render(request, 'manager/add_staff.html', show)
+    
+    def post(self, request):
+        data = json.loads(request.body)
+        user_id = data.get('user_id')
+        getUser = Users.objects.get(id=user_id)
+        
+        # Check for status update
+        if 'status' in data:
+            new_status = data.get('status')
+            print("update_status user_id", user_id, "new_status value", new_status)
+            getUser.status = new_status
+            # Update user status in the database here
+            # Example: User.objects.filter(id=user_id).update(status=status)
+
+        # Check for role update
+        if 'role' in data:
+            new_role = data.get('role')
+            print("update_role user_id", user_id, "new_role value", new_role)
+            getUser.role = new_role
+            # Update user role in the database here
+            # Example: User.objects.filter(id=user_id).update(role=role)
+        getUser.save()
+        return JsonResponse({'message': 'User updated successfully!'})
 
 ## Machine
 class AddMachineView(View):
