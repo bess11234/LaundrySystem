@@ -37,6 +37,8 @@
         </div>
 
         <div class="w-full relative overflow-x-auto shadow-md sm:rounded-lg">
+            <form method="POST">
+                {% csrf_token %}
             <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                 <thead class="text-xs text-white uppercase bg-indigo-950 dark:bg-gray-700 dark:text-gray-400">
                     <tr>
@@ -82,20 +84,21 @@
                 <tbody>
                     <!-- show size data -->
                     {% for user in users %}
-                        {% if user.status == 1 %}
-                        <tr class="bg-green-50 border-b dark:bg-gray-800 dark:border-gray-700">
-                        {% else %}
-                        <form>
-                            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                            {% if user.role != 'cus' and  user.status == 1%}
+                            <tr class="bg-teal-200 border-b dark:bg-gray-800 dark:border-gray-700">
+                            {% elif user.status == 1 %}
+                            <tr class="bg-green-200 border-b dark:bg-gray-800 dark:border-gray-700">
+                            {% else %}
+                            <tr class="bg-red-200 border-b dark:bg-gray-800 dark:border-gray-700">
                             {% endif %}
                                 <td class="px-6 py-4">
-                                    {{form.status}}
+                                    <input type="checkbox" name="status" id="status-{{ user.id }}" {% if user.status %}checked{% endif %}>
                                 </td>
-
+                                
                                 <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                     {{user.email}}
                                 </th>
-
+                                
                                 <td class="px-6 py-4 text-gray-900">
                                     {{user.first_name}}
                                 </td>
@@ -109,17 +112,19 @@
                                 </td>
                                 
                                 <td class="px-6 py-4 text-gray-900">
-                                    {{form.role}}
+                                    <select name="role" id="role-{{ user.id }}" class="block w-full rounded-md py-2 px-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                        <option value="mgr" {% if user.role == 'mgr' %}selected{% endif %}>Manager</option>
+                                        <option value="stf" {% if user.role == 'stf' %}selected{% endif %}>Staff</option>
+                                        <option value="cus" {% if user.role == 'cus' %}selected{% endif %}>Customer</option>
+                                    </select>
                                 </td>
-                                {% comment %} <td class="px-6 py-4 text-right">
-                                    <a href="#" class="font-medium text-red-500  hover:underline">Delete</a>
-                                </td> {% endcomment %}
-                            </tr>
-                        </form>
                     {% endfor %}
                 </tbody>
             </table>
+        </form>
         </div>
     </div>
 </div>
 {% endblock %}
+
+{% block script %}<script src="{% static 'edit_staff.js' %}"></script>{% endblock %}
