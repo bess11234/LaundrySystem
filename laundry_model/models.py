@@ -62,7 +62,7 @@ class Machine_Size(models.Model):
 
 class Machine(models.Model):
     machine_size = models.ForeignKey(Machine_Size, null=True, on_delete=models.SET_NULL)
-    code = models.CharField(max_length=10)
+    code = models.CharField(max_length=10, unique=True)
     duration = models.IntegerField()
     status_available = models.IntegerField(default=1)
     status_health = models.IntegerField(default=1)
