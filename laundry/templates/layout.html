@@ -3,6 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/x-icon" href="{% static 'images/washing_machine_color.png'%}">
     <title>
       {% block title %}
         TEST
@@ -21,10 +22,16 @@
       }
       @media (prefers-color-scheme: dark) {
         .navbar {
-          background: #4c569b0f;
+          background: #0c0d1849;
           box-shadow: rgba(17, 12, 46, 0.15) 0px 48px 100px 0px;
           backdrop-filter: blur(4px);
           -webkit-backdrop-filter: blur(4px);
+        }
+        .sidebar {
+          background: #0c0d1849;
+          box-shadow: rgba(17, 12, 46, 0.5) 0px 48px 100px 0px;
+          backdrop-filter: blur(8px);
+          -webkit-backdrop-filter: blur(8px);
         }
         body {
           background-color: black;
@@ -40,6 +47,12 @@
           box-shadow: rgba(0, 0, 0, 0.05) 0px 2px 4px;
           backdrop-filter: blur(4px);
           -webkit-backdrop-filter: blur(4px);
+        }
+        .sidebar {
+          background: rgba(255, 255, 255, 0.1);
+          box-shadow: rgba(0, 0, 0, 0.05) 0px 2px 4px;
+          backdrop-filter: blur(8px);
+          -webkit-backdrop-filter: blur(8px);
         }
         body {
           background-color: white;
@@ -59,7 +72,7 @@
       }
     </style>
   </head>
-  <body class="bg-[#fafdff] text-[#1b1e36] dark:bg-[#1b1e36] dark:text-[#eef7fc]">
+  <body class="bg-[#fafdff] text-[#0c0d18] dark:bg-[#0c0d18] dark:text-[#eef7fc]">
     {% block navbar %}
       {% include 'navbar.html' %}
     {% endblock %}
@@ -97,7 +110,6 @@
     <script>
       const sidebar = document.getElementById('sidebar')
       const sidebar_btn = document.getElementById('sidebar_btn')
-      
       if (sidebar != null) {
         sidebar_btn.addEventListener('click', () => {
           sidebar.classList.toggle('-translate-x-full')

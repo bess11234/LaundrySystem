@@ -25,7 +25,10 @@ class Index(View):
 # Customer
 
 # Staff
-
+class ManageReserve(View):
+    def get(self, request):
+        machine_size = Machine_Size.objects.order_by("capacity")
+        return render(request, "staff/manage_reserve.html", {"machine_size": machine_size})
 
 # Manager
 
@@ -92,7 +95,6 @@ class AddStaffView(LoginRequiredMixin, View):
 @method_decorator(access_only("mgr"), name="post")
 @method_decorator(access_only("mgr"), name="put")
 class AddMachineView(LoginRequiredMixin, View):
-    getMachines = Machine.objects.annotate(group=F("code")[0]).annotate(number=F("code")[2:]).annotate(number_int=Cast("number", output_field=IntegerField())).order_by("machine_size__capacity", "group", "number_int")
     
     def show_data(self, get_getMachine, get_form): ##use this method because when there is an error -> table will disappear
         count_data = count_all_data()
@@ -104,8 +106,9 @@ class AddMachineView(LoginRequiredMixin, View):
         return show
 
     def get(self, request):
+        getMachines = Machine.objects.annotate(group=F("code")[0]).annotate(number=F("code")[2:]).annotate(number_int=Cast("number", output_field=IntegerField())).order_by("machine_size__capacity", "group", "number_int")
         form = AddMachineForm()
-        show = self.show_data(self.getMachines, form)
+        show = self.show_data(getMachines, form)
 
         return render(request, "manager/add_machine.html", show)
     
@@ -115,7 +118,8 @@ class AddMachineView(LoginRequiredMixin, View):
             form.save()
             return redirect("add_machine")
 
-        show = self.show_data(self.getMachines, form)
+        getMachines = Machine.objects.annotate(group=F("code")[0]).annotate(number=F("code")[2:]).annotate(number_int=Cast("number", output_field=IntegerField())).order_by("machine_size__capacity", "group", "number_int")
+        show = self.show_data(getMachines, form)
         return render(request, "manager/add_machine.html", show)
     
     
@@ -248,11 +252,3 @@ class AddOptionView(LoginRequiredMixin, View):
         except KeyError:
             return JsonResponse({"success": False}, status=500)
         return JsonResponse({"success": True}, status=204)
-
-
-class DeleteOptionView(LoginRequiredMixin, View):
-    # @method_decorator(login_required)
-    def get(self, request, option_id):
-        getOption = Service.objects.get(pk=option_id)
-        getOption.delete()
-        return redirect("add_option")

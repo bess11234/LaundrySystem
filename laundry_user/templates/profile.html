@@ -3,9 +3,10 @@
   Profile
 {% endblock %}
 {% block main %}
+<div class="flex flex-col sm:flex-row">
   {% include 'sidebar.html' %}
 
-  <div class="p-4 sm:ml-64">
+  <div class="p-4 grow">
     <!-- border -->
     <div class="p-4 border-2 border-[#3b4682]/50 dark:border-[#3b4682] bg-[#4c579b0b] dark:bg-[#4c569b]/20 border-dashed rounded-lg">
       <!-- Update profile -->
@@ -56,4 +57,5 @@
       </form>
     </div>
   </div>
+</div>
 {% endblock %}
