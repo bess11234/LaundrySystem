@@ -43,14 +43,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'laundry',
-    'laundry_model',
-    'django_browser_reload'
+    'laundry_model'
 ]
-
-NPM_BIN_PATH = os.getenv("NPM_BIN_PATH")
-
-TAILWIND_APP_NAME = 'laundry'
-INTERNAL_IPS = ['localhost', '127.0.0.1']
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
