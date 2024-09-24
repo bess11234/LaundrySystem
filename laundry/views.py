@@ -174,6 +174,26 @@ class AddSizeView(LoginRequiredMixin, View):
         print(form.errors)
         return render(request, "manager/add_size.html", {"form": form}) # stay in same page and still fill data
     
+
+    def put(self, request):
+        data = json.loads(request.body)
+        cost = data.get('price')
+        size_id = data.get('content_id')
+
+        print("cost =", cost, " size_id =", size_id)
+
+        try:
+            # Fetch the option and update its price
+            option = Machine_Size.objects.get(id=size_id)
+            option.cost = cost
+            option.save()
+            return JsonResponse({'success': True, 'price': option.price}, status=200)
+        except Service.DoesNotExist:
+            return JsonResponse({'error': 'Option not found'}, status=404)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
+
+    
     def delete(self, request):
         content = json.loads(request.body)
         try:
@@ -224,10 +244,10 @@ class AddOptionView(LoginRequiredMixin, View):
 
     # def put(self, request, option_id, price) update data using with javascript
 
-    def put(self, request, *args, **kwargs):
+    def put(self, request):
         data = json.loads(request.body)
         price = data.get('price')
-        option_id = data.get('option_id')
+        option_id = data.get('content_id')
 
         try:
             # Fetch the option and update its price
