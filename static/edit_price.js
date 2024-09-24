@@ -1,12 +1,10 @@
 document.querySelectorAll('input[name="price"]').forEach(input => {
     input.addEventListener('blur', function() {
-        const optionId = this.dataset.optionId;  // Get the option ID from the data attribute
+        const contentId = this.dataset.contentId;  // Get the option ID from the data attribute
         const newValue = this.value;  // Get the updated value
 
         // Fetch the CSRF token from the cookie
         const csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
-
-        // Send the PUT request
         fetch('', {
             method: 'PUT',
             headers: {
@@ -15,7 +13,7 @@ document.querySelectorAll('input[name="price"]').forEach(input => {
             },
             body: JSON.stringify({
                 'price': newValue,
-                'option_id': optionId
+                'content_id': contentId
             })
         })
         .then(response => {

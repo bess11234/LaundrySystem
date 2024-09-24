@@ -94,7 +94,7 @@
                                         min = "0" 
                                         name="price" 
                                         id="{{option.id}}" 
-                                        data-option-id="{{ option.id }}"
+                                        data-content-id="{{ option.id }}"
                                         required>
                                 <input type="hidden" name="csrfmiddlewaretoken" value='{{ csrf_token }}'>
                             </form>
@@ -115,7 +115,7 @@
 {% endblock %}
 
 {% block script %}
-<script src="{% static 'edit_option.js' %}"></script>
+<script src="{% static 'edit_price.js' %}"></script>
 <script>
   function delete_option(option_id){
     fetch("",{
