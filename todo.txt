@@ -1,2 +1,2 @@
-1. ต้องเรียง Machine code จาก (A-), (1-9999999)
-2. ทำให้ path ของ manager ขึ้นเรืองแสงที่ manage ใน navbar
+1. Machine size ต้องเปลี่ยนได้
+2. Size machine ต้องเปลี่ยน cost ได้

@@ -90,7 +90,7 @@
                   <td class="pl-6">{{ machine.duration }}</td>
 
                   <td class="text-center">
-                    <a href="{% url 'delete_machine' machine.id %}" class="py-1 px-2 font-medium rounded-lg text-white bg-red-600 hover:bg-red-400">Delete</a>
+                    <a onclick="delete_machine({{ machine.id }})" class="cursor-pointer py-1 px-2 font-medium rounded-lg text-white bg-red-600 hover:bg-red-400">Delete</a>
                   </td>
                 </tr>
               {% endfor %}
@@ -101,4 +101,24 @@
       {% endif %}
 
   </div>
+{% endblock %}
+
+{% block script %}
+<script>
+  function delete_machine(machine_id){
+    fetch("",{
+      method: "DELETE",
+      headers:  {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': '{{ csrf_token }}'  // Send CSRF token in the request header
+      },
+      body: JSON.stringify({machine_id})
+    })
+    .then(response => response.json())
+    .then(location.reload())
+    .catch((error)=>{
+      console.log(error)
+    })
+  }
+</script>
 {% endblock %}

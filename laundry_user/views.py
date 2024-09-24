@@ -9,6 +9,8 @@ from django.views import View
 from laundry_model.models import Users
 from .forms import RegisterForm, ProfileForm
 
+from django.contrib.auth.mixins import LoginRequiredMixin
+
 class RegisterView(View):
     def get(self, request):
         if (request.user.is_authenticated):
@@ -28,14 +30,12 @@ class RegisterView(View):
             "form": form
         })
         
-class ProfileView(View):
-    @method_decorator(login_required)
+class ProfileView(LoginRequiredMixin, View):
     def get(self, request):
         profile = Users.objects.get(email=request.user)
         form = ProfileForm(instance=profile)
         return render(request, "profile.html", {"form": form, "sidebar": "sidebar_item/profile.html"})
     
-    @method_decorator(login_required)
     def post(self, request):
         profile = Users.objects.get(email=request.user)
         form = ProfileForm(request.POST, instance=profile)

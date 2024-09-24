@@ -1,16 +1,23 @@
-from django.contrib.auth import login
-from django.contrib.auth.decorators import login_required
-
-from django.shortcuts import render, redirect
+# Django
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 from django.http import JsonResponse
 
-import json
-from django.utils.decorators import method_decorator
+from django.db.models import F, IntegerField
+from django.db.models.functions import Cast
 
+import json
+
+# Model
 from laundry_model.models import *
 from laundry.forms import *
+
+# Decorator
 from .decorators import access_only
+
+# Authenticate
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.utils.decorators import method_decorator
 
 class Index(View):
     def get(self, request):
@@ -25,7 +32,7 @@ class Index(View):
 ## count all data (use in sidebar)
 def count_all_data():
     count_data = {
-        "count_staff": Users.objects.filter(role__in = ("stf", "mgr")).exclude(status=0).count(),
+        "count_staff": Users.objects.exclude(status=0).count(), #Users.objects.filter(role__in = ("stf", "mgr")).exclude(status=0).count()
         "count_machine": Machine.objects.count(),
         "count_size": Machine_Size.objects.count(),
         "count_service": Service.objects.count(),
@@ -40,13 +47,15 @@ class ReportView(View):
         return render(request, "manager/report.html")
 
 ## Staff
-class AddStaffView(View):
+@method_decorator(access_only("mgr"), name="get")
+@method_decorator(access_only("mgr"), name="post")
+class AddStaffView(LoginRequiredMixin, View):
     def get(self, request):
         query = request.GET.get('search', '')
         if query:
             getUsers = Users.objects.filter(email__icontains=query).order_by("create_at")
         else:
-            getUsers = Users.objects.all().order_by("-status", "create_at") #defalut/empty search
+            getUsers = Users.objects.order_by("-status", "create_at") #defalut/empty search
 
         count_data = count_all_data()
         form = AddStaffForm()
@@ -79,8 +88,12 @@ class AddStaffView(View):
         return JsonResponse({'message': 'User updated successfully!'})
 
 ## Machine
-class AddMachineView(View):
-    # @method_decorator(login_required)
+@method_decorator(access_only("mgr"), name="get")
+@method_decorator(access_only("mgr"), name="post")
+@method_decorator(access_only("mgr"), name="put")
+class AddMachineView(LoginRequiredMixin, View):
+    getMachines = Machine.objects.annotate(group=F("code")[0]).annotate(number=F("code")[2:]).annotate(number_int=Cast("number", output_field=IntegerField())).order_by("machine_size__capacity", "group", "number_int")
+    
     def show_data(self, get_getMachine, get_form): ##use this method because when there is an error -> table will disappear
         count_data = count_all_data()
         show = {
@@ -90,13 +103,9 @@ class AddMachineView(View):
             }
         return show
 
-    @method_decorator(login_required)
-    @method_decorator(access_only("mgr"))
     def get(self, request):
-        getMachines = Machine.objects.all().order_by("create_at")
-
         form = AddMachineForm()
-        show = self.show_data(getMachines, form)
+        show = self.show_data(self.getMachines, form)
 
         return render(request, "manager/add_machine.html", show)
     
@@ -106,7 +115,7 @@ class AddMachineView(View):
             form.save()
             return redirect("add_machine")
 
-        show = self.show_data(Machine.objects.all(), form)
+        show = self.show_data(self.getMachines, form)
         return render(request, "manager/add_machine.html", show)
     
     
@@ -124,16 +133,20 @@ class AddMachineView(View):
             return JsonResponse({'error': 'Option not found'}, status=404)
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=500)
-
-class DeleteMachineView(View):
-    def get(self, request, machine_id):
-        getMachine = Machine.objects.get(id=machine_id)
-        getMachine.delete()
-        return redirect("add_machine")
-        
+    
+    def delete(self, request):
+        content = json.loads(request.body)
+        try:
+            machine = get_object_or_404(Machine, pk=content['machine_id'])
+            machine.delete()
+        except KeyError:
+            return JsonResponse({"success": False}, status=500)
+        return JsonResponse({"success": True}, status=204)
 
 ## Size
-class AddSizeView(View):
+@method_decorator(access_only("mgr"), name="get")
+@method_decorator(access_only("mgr"), name="post")
+class AddSizeView(LoginRequiredMixin, View):
     # @method_decorator(login_required)
     def get(self, request):
         # check order (asc, desc) request
@@ -160,17 +173,21 @@ class AddSizeView(View):
             return redirect('add_size') # refresh page for show new inserted data
         print(form.errors)
         return render(request, "manager/add_size.html", {"form": form}) # stay in same page and still fill data
-
-## Delete Size
-class DeleteSizeView(View):
-    # @method_decorator(login_required)
-    def get(self, request, size_id):
-        getSize = Machine_Size.objects.get(pk=size_id)
-        getSize.delete()
-        return redirect("add_size")
     
+    def delete(self, request):
+        content = json.loads(request.body)
+        try:
+            size_machine = get_object_or_404(Machine_Size, pk=content['size_id'])
+            size_machine.delete()
+        except KeyError:
+            return JsonResponse({"success": False}, status=500)
+        return JsonResponse({"success": True}, status=204)
+
 ## Option
-class AddOptionView(View):
+@method_decorator(access_only("mgr"), name="get")
+@method_decorator(access_only("mgr"), name="post")
+@method_decorator(access_only("mgr"), name="put")
+class AddOptionView(LoginRequiredMixin, View):
     # @method_decorator(login_required)
     def show_data(self, get_request, get_getOptions, get_form): ##use this method because when there is an error -> table will disappear
         count_data = count_all_data()
@@ -195,14 +212,12 @@ class AddOptionView(View):
 
         return render(request, "manager/add_option.html", show)
     
-    # @method_decorator(login_required)
     def post(self, request):
         form = AddOptionForm(request.POST)
         if form.is_valid():
             form.save()
             return redirect("add_option")
         
-        print(form.errors)
         table = Service.objects.order_by("price")
         show = self.show_data(request, table, form)
         return render(request, "manager/add_option.html", show)
@@ -225,9 +240,17 @@ class AddOptionView(View):
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=500)
 
+    def delete(self, request):
+        content = json.loads(request.body)
+        try:
+            option = get_object_or_404(Service, pk=content['option_id'])
+            option.delete()
+        except KeyError:
+            return JsonResponse({"success": False}, status=500)
+        return JsonResponse({"success": True}, status=204)
 
 
-class DeleteOptionView(View):
+class DeleteOptionView(LoginRequiredMixin, View):
     # @method_decorator(login_required)
     def get(self, request, option_id):
         getOption = Service.objects.get(pk=option_id)

@@ -93,7 +93,7 @@
                   <td class="pl-6 py-4">{{ size.capacity }}</td>
                   <td class="pl-6 py-4">{{ size.cost }}</td>
                   <td class="text-center">
-                    <a href="{% url 'delete_size' size.id %}" class="py-1 px-2 font-medium rounded-lg text-white bg-red-600 hover:bg-red-400">Delete</a>
+                    <a onclick="delete_size({{size.id}})" class="cursor-pointer py-1 px-2 font-medium rounded-lg text-white bg-red-600 hover:bg-red-400">Delete</a>
                   </td>
                 </tr>
               {% endfor %}
@@ -103,4 +103,24 @@
       </div>
     {% endif %}
   </div>
+{% endblock %}
+
+{% block script %}
+<script>
+  function delete_size(size_id){
+    fetch("",{
+      method: "DELETE",
+      headers:  {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': '{{ csrf_token }}'  // Send CSRF token in the request header
+      },
+      body: JSON.stringify({size_id})
+    })
+    .then(response => response.json())
+    .then(location.reload())
+    .catch((error)=>{
+      console.log(error)
+    })
+  }
+</script>
 {% endblock %}

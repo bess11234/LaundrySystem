@@ -12,7 +12,5 @@ urlpatterns = [
     path("manager/addoption/", views.AddOptionView.as_view(), name="add_option"),
 
     #delete data
-    path("manager/delete/machine/<int:machine_id>", views.DeleteMachineView.as_view(), name="delete_machine"),
-    path("manager/delete/size/<int:size_id>", views.DeleteSizeView.as_view(), name="delete_size"),
     path("manager/delete/option/<int:option_id>", views.DeleteOptionView.as_view(), name="delete_option")
 ]

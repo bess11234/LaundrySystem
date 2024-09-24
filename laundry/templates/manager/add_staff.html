@@ -10,7 +10,7 @@
 
     <div class="space-y-12">
         <div class="border-b border-black/10 dark:border-white/10 pb-7">
-            <h2 class="text-base font-semibold leading-7">Manage Manager & Staff</h2>
+            <h2 class="text-base font-semibold leading-7">Manage Users</h2>
             <p class="mt-1 text-sm leading-6 text-[#4c569b]">This Page you can add/edit role of user.</p>
         </div>
     </div>
@@ -82,42 +82,46 @@
                 </thead>
                 <tbody>
                     <!-- show size data -->
-                    {% for user in users %}
-                            {% if user.role != 'cus' and  user.status == 1 %}
-                            <tr class="bg-teal-200 border-b dark:bg-teal-300/70 border-black/10 dark:border-white/10">
-                            {% elif user.status == 1 %}
-                            <tr class="bg-green-200 border-b dark:bg-green-300/70 border-black/10 dark:border-white/10">
-                            {% else %}
-                            <tr class="bg-red-200 border-b dark:bg-red-300/70 border-black/10 dark:border-white/10">
-                            {% endif %}
-                                <td class="px-6 py-4 text-center">
-                                    <input class="rounded" type="checkbox" name="status" id="status-{{ user.id }}" {% if user.status %}checked{% endif %}>
-                                </td>
-                                
-                                <td class="pl-6 py-4 font-medium whitespace-nowrap">
-                                    {{user.email}}
-                                </td>
-                                
-                                <td class="pl-6 py-4">
-                                    {{user.first_name}}
-                                </td>
-                                
-                                <td class="pl-6 py-4">
-                                    {{user.last_name}}
-                                </td>
-                                
-                                <td class="pl-6 py-4">
-                                    {{user.phone}}
-                                </td>
-                                
-                                <td class="px-6 py-4">
-                                    <select name="role" id="role-{{ user.id }}" class="mt-2 w-full font-bold rounded-lg shadow-sm bg-[#f9fbfc] dark:bg-[#353a55] border border-gray-300 dark:border-gray-600 focus:border-[#4c569b] focus:ring-1 focus:ring-[#4c569b] py-2 px-3 text-gray-900 dark:text-white transition read-only:border-opacity-50 read-only:bg-opacity-50 read-only:text-opacity-70">
-                                        <option class="font-bold" value="mgr" {% if user.role == 'mgr' %}selected{% endif %}>Manager</option>
-                                        <option class="font-bold" value="stf" {% if user.role == 'stf' %}selected{% endif %}>Staff</option>
-                                        <option class="font-bold" value="cus" {% if user.role == 'cus' %}selected{% endif %}>Customer</option>
-                                    </select>
-                                </td>
-                            </tr>
+                    {% for user_ in users %}
+                        {% if user_.role != 'cus' and  user_.status == 1 %}
+                        <tr class="border-b border-black/10 dark:border-white/10 {% if user == user_ or user_.is_superuser %}bg-teal-200/50 dark:bg-teal-300/50{%else%}bg-teal-200 dark:bg-teal-300/70{%endif%}">
+                        {% elif user_.status == 1 %}
+                        <tr class="border-black/10 dark:border-white/10 {% if user == user_ or user_.is_superuser %}bg-green-200/50 dark:bg-green-300/50{%else%}bg-green-200 dark:bg-green-300/70{%endif%}">
+                        {% else %}
+                        <tr class="border-black/10 dark:border-white/10 {% if user == user_ or user_.is_superuser %}bg-red-200/50 dark:bg-red-300/50{%else%}bg-red-200 dark:bg-red-300/70{%endif%}">
+                        {% endif %}
+                            <td class="px-6 py-4 text-center">
+                                <input class="rounded" type="checkbox" name="status" id="status-{{ user_.id }}" 
+                                {% if user_.status %}checked{% endif %}
+                                {% if user == user_ or user_.is_superuser %}disabled{%endif%}>
+                            </td>
+                            
+                            <td class="pl-6 py-4 font-medium whitespace-nowrap">
+                                {{user_.email}}
+                            </td>
+                            
+                            <td class="pl-6 py-4">
+                                {{user_.first_name}}
+                            </td>
+                            
+                            <td class="pl-6 py-4">
+                                {{user_.last_name}}
+                            </td>
+                            
+                            <td class="pl-6 py-4">
+                                {{user_.phone}}
+                            </td>
+                            
+                            <td class="px-6 py-4">
+                                <select name="role" id="role-{{ user_.id }}"
+                                class="cursor-pointer mt-2 w-full font-bold rounded-lg shadow-sm bg-[#f9fbfc] dark:bg-[#353a55] border border-gray-300 dark:border-gray-600 focus:border-[#4c569b] focus:ring-1 focus:ring-[#4c569b] py-2 px-3 text-gray-900 dark:text-white transition read-only:border-opacity-50 read-only:bg-opacity-50 read-only:text-opacity-70"
+                                {% if user == user_ or user_.is_superuser %}disabled{%endif%}>
+                                    <option class="font-bold" value="mgr" {% if user_.role == 'mgr' %}selected{% endif %}>Manager</option>
+                                    <option class="font-bold" value="stf" {% if user_.role == 'stf' %}selected{% endif %}>Staff</option>
+                                    <option class="font-bold" value="cus" {% if user_.role == 'cus' %}selected{% endif %}>Customer</option>
+                                </select>
+                            </td>
+                        </tr>
                     {% endfor %}
                 </tbody>
             </table>
