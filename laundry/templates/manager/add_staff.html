@@ -4,137 +4,136 @@
 {% block title %}Staff{% endblock %}
 
 {% block main %}
-<div class="flex flex-col sm:flex-row">
     {% include 'sidebar.html' with count_size=count_size count_service=count_service count_machine=count_machine count_staff=count_staff %}
   
-    <div class="p-4 grow">
+<div class="p-4 sm:ml-64">
     <div class="p-4 border-2 border-[#3b4682]/50 dark:border-[#3b4682] bg-[#4c579b0b] dark:bg-[#4c569b]/20 border-dashed rounded-lg">
 
-    <div class="space-y-12">
-        <div class="border-b border-black/10 dark:border-white/10 pb-7">
-            <h2 class="text-base font-semibold leading-7">Manage Users</h2>
-            <p class="mt-1 text-sm leading-6 text-[#4c569b]">This Page you can add/edit role of user.</p>
+        <div class="space-y-12">
+            <div class="border-b border-black/10 dark:border-white/10 pb-7">
+                <h2 class="text-base font-semibold leading-7">Manage Users</h2>
+                <p class="mt-1 text-sm leading-6 text-[#4c569b]">This Page you can add/edit role of user.</p>
+            </div>
         </div>
-    </div>
 
-    <div class="mt-2 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-        <div class="sm:col-span-2 sm:col-start-1">
-            <div class="mt-2">
-            <form action="{% url 'add_staff' %}" class="pt-3">
+        <div class="mt-2 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+            <div class="sm:col-span-2 sm:col-start-1">
+                <div class="mt-2">
+                <form action="{% url 'add_staff' %}" class="pt-3">
+                    {% csrf_token %}
+                    <input  action="{% url 'add_staff' %}" class="w-full rounded-lg shadow-sm bg-[#f9fbfc] dark:bg-[#353a55] border border-gray-300 dark:border-gray-600 focus:border-[#4c569b] focus:ring-1 focus:ring-[#4c569b] py-2 px-3 text-gray-900 dark:text-white transition read-only:border-opacity-50 read-only:bg-opacity-50 read-only:text-opacity-70" 
+                            type="text" 
+                            name="search"
+                            placeholder="Search Email">
+                        </div>
+                    </div>
+                    <div class="mt-4 sm:col-span-2">
+                        <div class="flex items-center gap-x-6 py-2">
+                            <button type="submit" class="rounded-md bg-[#4c569b] hover:bg-[#3b4682] px-3 py-2 text-sm font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2">Search</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        {% if users %}
+        <div class="xl:px-36">
+            <div class="w-full relative overflow-x-auto shadow-md sm:rounded-lg mt-3">
+                <form method="POST" class="m-0">
                 {% csrf_token %}
-                <input  action="{% url 'add_staff' %}" class="w-full rounded-lg shadow-sm bg-[#f9fbfc] dark:bg-[#353a55] border border-gray-300 dark:border-gray-600 focus:border-[#4c569b] focus:ring-1 focus:ring-[#4c569b] py-2 px-3 text-gray-900 dark:text-white transition read-only:border-opacity-50 read-only:bg-opacity-50 read-only:text-opacity-70" 
-                        type="text" 
-                        name="search"
-                        placeholder="Search Email">
-                    </div>
-                </div>
-                <div class="mt-4 sm:col-span-2">
-                    <div class="flex items-center gap-x-6 py-2">
-                        <button type="submit" class="rounded-md bg-[#4c569b] hover:bg-[#3b4682] px-3 py-2 text-sm font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2">Search</button>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
+                <table class="w-full text-sm text-left rtl:text-right">
+                    <thead class="text-xs uppercase shadow-sm bg-white dark:bg-[#4c569b] text-[#4c569b] dark:text-white/60">
+                        <tr>
+                            <th scope="col" class="px-6 py-3 text-center">
+                                Status
+                            </th>
 
-    {% if users %}
-    <div class="xl:px-36">
-        <div class="w-full relative overflow-x-auto shadow-md sm:rounded-lg mt-3">
-            <form method="POST" class="m-0">
-            {% csrf_token %}
-            <table class="w-full text-sm text-left rtl:text-right">
-                <thead class="text-xs uppercase shadow-sm bg-white dark:bg-[#4c569b] text-[#4c569b] dark:text-white/60">
-                    <tr>
-                        <th scope="col" class="px-6 py-3 text-center">
-                            Status
-                        </th>
+                            <!-- column name : Email  -->
+                            <th scope="col" class="pl-6 py-3">
+                                <div class="flex items-center">
+                                    Email
+                                </div>
+                            </th>
 
-                        <!-- column name : Email  -->
-                        <th scope="col" class="pl-6 py-3">
-                            <div class="flex items-center">
-                                Email
-                            </div>
-                        </th>
+                            <th scope="col" class="pl-6 py-3">
+                                <div class="flex items-center">
+                                    First Name
+                                </div>
+                            </th>
 
-                        <th scope="col" class="pl-6 py-3">
-                            <div class="flex items-center">
-                                First Name
-                            </div>
-                        </th>
+                            <th scope="col" class="pl-6 py-3">
+                                <div class="flex items-center">
+                                    Last Name
+                                </div>
+                            </th>
 
-                        <th scope="col" class="pl-6 py-3">
-                            <div class="flex items-center">
-                                Last Name
-                            </div>
-                        </th>
+                            <th scope="col" class="pl-6 py-3">
+                                <div class="flex items-center">
+                                    Phone
+                                </div>
+                            </th>
 
-                        <th scope="col" class="pl-6 py-3">
-                            <div class="flex items-center">
-                                Phone
-                            </div>
-                        </th>
+                            <th scope="col" class="pl-6 py-3">
+                                <div class="flex items-center">
+                                    Role
+                                </div>
+                            </th>
 
-                        <th scope="col" class="pl-6 py-3">
-                            <div class="flex items-center">
-                                Role
-                            </div>
-                        </th>
-
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- show size data -->
-                    {% for user_ in users %}
-                        {% if user_.role != 'cus' and  user_.status == 1 %}
-                        <tr class="border-b border-black/10 dark:border-white/10 {% if user == user_ or user_.is_superuser %}bg-teal-200/50 dark:bg-teal-300/50{%else%} dark:bg-teal-300/70{%endif%}"> 
-                        {% comment %} <tr class="border-b border-black/10 dark:border-white/10 {% if user == user_ or user_.is_superuser %}bg-teal-200/50 dark:bg-teal-300/50{%else%}bg-teal-200 dark:bg-teal-300/70{%endif%}"> {% endcomment %}
-                        {% elif user_.status == 1 %}
-                        <tr class="border-black/10 dark:border-white/10 {% if user == user_ or user_.is_superuser %}bg-green-200/50 dark:bg-green-300/50{%else%} dark:bg-green-300/70{%endif%}">
-                        {% comment %} <tr class="border-black/10 dark:border-white/10 {% if user == user_ or user_.is_superuser %}bg-green-200/50 dark:bg-green-300/50{%else%}bg-green-200 dark:bg-green-300/70{%endif%}"> {% endcomment %}
-                        {% else %}
-                        <tr class="text-gray-200 border-black/10 dark:border-white/10 {% if user == user_ or user_.is_superuser %}bg-red-200/50 dark:bg-red-300/50{%else%}bg-wh dark:bg-red-300/70{%endif%}">
-                        {% comment %} <tr class="text-gray-200 border-black/10 dark:border-white/10 {% if user == user_ or user_.is_superuser %}bg-red-200/50 dark:bg-red-300/50{%else%}bg-red-200 dark:bg-red-300/70{%endif%}"> {% endcomment %}
-                        {% endif %}
-                            <td class="px-6 py-4 text-center">
-                                <input class="rounded" type="checkbox" name="status" id="status-{{ user_.id }}" 
-                                {% if user_.status %}checked{% endif %}
-                                {% if user == user_ or user_.is_superuser %}disabled{%endif%}>
-                            </td>
-                            
-                            <td class="pl-6 py-4 font-medium whitespace-nowrap">
-                                {{user_.email}}
-                            </td>
-                            
-                            <td class="pl-6 py-4">
-                                {{user_.first_name}}
-                            </td>
-                            
-                            <td class="pl-6 py-4">
-                                {{user_.last_name}}
-                            </td>
-                            
-                            <td class="pl-6 py-4">
-                                {{user_.phone}}
-                            </td>
-                            
-                            <td class="px-6 py-4">
-                                <select name="role" id="role-{{ user_.id }}"
-                                class="cursor-pointer mt-2 w-full font-bold rounded-lg shadow-sm bg-[#f9fbfc] dark:bg-[#353a55] border border-gray-300 dark:border-gray-600 focus:border-[#4c569b] focus:ring-1 focus:ring-[#4c569b] py-2 px-3 text-gray-900 dark:text-white transition read-only:border-opacity-50 read-only:bg-opacity-50 read-only:text-opacity-70"
-                                {% if user == user_ or user_.is_superuser %}disabled{%endif%}>
-                                    <option class="font-bold" value="mgr" {% if user_.role == 'mgr' %}selected{% endif %}>Manager</option>
-                                    <option class="font-bold" value="stf" {% if user_.role == 'stf' %}selected{% endif %}>Staff</option>
-                                    <option class="font-bold" value="cus" {% if user_.role == 'cus' %}selected{% endif %}>Customer</option>
-                                </select>
-                            </td>
                         </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-            </form>
+                    </thead>
+                    <tbody>
+                        <!-- show size data -->
+                        {% for user_ in users %}
+                            {% if user_.role != 'cus' and  user_.status == 1 %}
+                            <tr class="border-b border-black/10 dark:border-white/10 {% if user == user_ or user_.is_superuser %}bg-teal-200/50 dark:bg-teal-300/50{%else%} dark:bg-teal-300/70{%endif%}"> 
+                            {% comment %} <tr class="border-b border-black/10 dark:border-white/10 {% if user == user_ or user_.is_superuser %}bg-teal-200/50 dark:bg-teal-300/50{%else%}bg-teal-200 dark:bg-teal-300/70{%endif%}"> {% endcomment %}
+                            {% elif user_.status == 1 %}
+                            <tr class="border-black/10 dark:border-white/10 {% if user == user_ or user_.is_superuser %}bg-green-200/50 dark:bg-green-300/50{%else%} dark:bg-green-300/70{%endif%}">
+                            {% comment %} <tr class="border-black/10 dark:border-white/10 {% if user == user_ or user_.is_superuser %}bg-green-200/50 dark:bg-green-300/50{%else%}bg-green-200 dark:bg-green-300/70{%endif%}"> {% endcomment %}
+                            {% else %}
+                            <tr class="text-gray-200 border-black/10 dark:border-white/10 {% if user == user_ or user_.is_superuser %}bg-red-200/50 dark:bg-red-300/50{%else%}bg-wh dark:bg-red-300/70{%endif%}">
+                            {% comment %} <tr class="text-gray-200 border-black/10 dark:border-white/10 {% if user == user_ or user_.is_superuser %}bg-red-200/50 dark:bg-red-300/50{%else%}bg-red-200 dark:bg-red-300/70{%endif%}"> {% endcomment %}
+                            {% endif %}
+                                <td class="px-6 py-4 text-center">
+                                    <input class="rounded" type="checkbox" name="status" id="status-{{ user_.id }}" 
+                                    {% if user_.status %}checked{% endif %}
+                                    {% if user == user_ or user_.is_superuser %}disabled{%endif%}>
+                                </td>
+                                
+                                <td class="pl-6 py-4 font-medium whitespace-nowrap">
+                                    {{user_.email}}
+                                </td>
+                                
+                                <td class="pl-6 py-4">
+                                    {{user_.first_name}}
+                                </td>
+                                
+                                <td class="pl-6 py-4">
+                                    {{user_.last_name}}
+                                </td>
+                                
+                                <td class="pl-6 py-4">
+                                    {{user_.phone}}
+                                </td>
+                                
+                                <td class="px-6 py-4">
+                                    <select name="role" id="role-{{ user_.id }}"
+                                    class="cursor-pointer mt-2 w-full font-bold rounded-lg shadow-sm bg-[#f9fbfc] dark:bg-[#353a55] border border-gray-300 dark:border-gray-600 focus:border-[#4c569b] focus:ring-1 focus:ring-[#4c569b] py-2 px-3 text-gray-900 dark:text-white transition read-only:border-opacity-50 read-only:bg-opacity-50 read-only:text-opacity-70"
+                                    {% if user == user_ or user_.is_superuser %}disabled{%endif%}>
+                                        <option class="font-bold" value="mgr" {% if user_.role == 'mgr' %}selected{% endif %}>Manager</option>
+                                        <option class="font-bold" value="stf" {% if user_.role == 'stf' %}selected{% endif %}>Staff</option>
+                                        <option class="font-bold" value="cus" {% if user_.role == 'cus' %}selected{% endif %}>Customer</option>
+                                    </select>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                </form>
+            </div>
         </div>
+        {% endif %}
     </div>
-    {% endif %}
-</div>
 </div>
 {% endblock %}
 
