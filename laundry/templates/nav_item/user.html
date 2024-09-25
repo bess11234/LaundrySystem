@@ -1,9 +1,9 @@
 <li>
-  <a href="{% url 'profile' %}" class="block py-2 pl-3 pr-6 md:pr-3 mb-1 transition-colors duration-300 text-[#1b1e36] hover:bg-[#eef7fc]/70 dark:hover:bg-[#272c4f] md:text-[#1b1e36] md:dark:text-[#4c569b] md:hover:text-[#4c569b] rounded md:bg-transparent dark:text-[#4c569b] md:dark:hover:text-white">Profile</a>
+  <a href="{% url 'profile' %}" class="block py-2 pl-3 pr-6 md:pr-3 transition-colors duration-300 text-[#0c0d18] hover:bg-[#eef7fc]/70 dark:hover:bg-[#272c4f] md:text-[#0c0d18] md:dark:text-[#4c569b] md:hover:text-[#4c569b] rounded md:bg-transparent dark:text-[#4c569b] md:dark:hover:text-white">Profile</a>
 </li>
 <li>
-  <form onclick="this.submit()" action="{% url 'logout' %}" method="post" class="m-0 transition-colors duration-300 bg-[#4c569b] hover:bg-[#3b4682] cursor-pointer">
+  <form onclick="this.submit()" action="{% url 'logout' %}" method="post" class="m-0 transition-colors duration-300 bg-red-600 hover:bg-red-400 cursor-pointer">
     {% csrf_token %}
-    <p class="block py-2 pl-3 pr-6 md:pr-3 pr-auto transition-colors duration-300 text-white md:hover:bg-transparent md:border-0 dark:text-white dark:hover:text-white md:dark:hover:bg-transparent text-start">Logout</p>
+    <p class="block py-2 pl-3 pr-6 md:pr-3 pr-auto rounded-lg transition-colors duration-300 text-white md:hover:bg-transparent md:border-0 dark:text-white dark:hover:text-white md:dark:hover:bg-transparent text-start">Logout</p>
   </form>
 </li>

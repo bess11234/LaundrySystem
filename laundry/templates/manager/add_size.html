@@ -6,9 +6,10 @@
   Size
 {% endblock %}
 {% block main %}
+<div class="flex flex-col sm:flex-row">
   {% include 'sidebar.html' with count_size=count_size count_service=count_service count_machine=count_machine count_staff=count_staff %}
 
-  <div class="p-4 sm:ml-64">
+  <div class="p-4 grow">
     <!-- border -->
     <div class="p-4 border-2 border-[#3b4682]/50 dark:border-[#3b4682] bg-[#4c579b0b] dark:bg-[#4c569b]/20 border-dashed rounded-lg">
       <!-- insert new size -->
@@ -89,7 +90,7 @@
               <!-- show size data -->
               {% for size in sizes %}
               <tr class="border-b border-black/10 dark:border-white/10 bg-[#fafdff]/40 dark:bg-[#3b4682]/80">
-                  <td class="pl-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">{{ size.size }}</td>
+                  <td class="pl-6 py-4 font-medium whitespace-nowrap dark:text-white">{{ size.size }}</td>
                   <td class="pl-6 py-4">{{ size.capacity }}</td>
                   <td class="pl-6 py-4">
                     <form class="w-fit pt-3">
@@ -115,6 +116,7 @@
       </div>
     {% endif %}
   </div>
+</div>
 {% endblock %}
 
 {% block script %}

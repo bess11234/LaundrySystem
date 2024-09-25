@@ -3,14 +3,14 @@ from . import views
 
 urlpatterns = [
     path("", views.Index.as_view(), name="index"),
+    # Staff
+    path("staff/reserve/", views.ManageReserve.as_view(), name="manage_reserve"),
 
-    # show data
+    # Manager
+    ## show data
     path("manager/report/", views.ReportView.as_view(), name="report"),
     path("manager/addstaff/", views.AddStaffView.as_view(), name="add_staff"),
     path("manager/addmachine/", views.AddMachineView.as_view(), name="add_machine"),
     path("manager/addsize/", views.AddSizeView.as_view(), name="add_size"),
     path("manager/addoption/", views.AddOptionView.as_view(), name="add_option"),
-
-    #delete data
-    path("manager/delete/option/<int:option_id>", views.DeleteOptionView.as_view(), name="delete_option")
 ]

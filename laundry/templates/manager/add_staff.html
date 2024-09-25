@@ -4,8 +4,10 @@
 {% block title %}Staff{% endblock %}
 
 {% block main %}
-{% include 'sidebar.html' with sidebar_size=count_size sidebar_service=count_service sidebar_machine=count_machine sidebar_staff=count_staff%}
-<div class="p-4 sm:ml-64">
+<div class="flex flex-col sm:flex-row">
+    {% include 'sidebar.html' with count_size=count_size count_service=count_service count_machine=count_machine count_staff=count_staff %}
+  
+    <div class="p-4 grow">
     <div class="p-4 border-2 border-[#3b4682]/50 dark:border-[#3b4682] bg-[#4c579b0b] dark:bg-[#4c569b]/20 border-dashed rounded-lg">
 
     <div class="space-y-12">
@@ -84,11 +86,14 @@
                     <!-- show size data -->
                     {% for user_ in users %}
                         {% if user_.role != 'cus' and  user_.status == 1 %}
-                        <tr class="border-b border-black/10 dark:border-white/10 {% if user == user_ or user_.is_superuser %}bg-teal-200/50 dark:bg-teal-300/50{%else%}bg-teal-200 dark:bg-teal-300/70{%endif%}">
+                        <tr class="border-b border-black/10 dark:border-white/10 {% if user == user_ or user_.is_superuser %}bg-teal-200/50 dark:bg-teal-300/50{%else%} dark:bg-teal-300/70{%endif%}"> 
+                        {% comment %} <tr class="border-b border-black/10 dark:border-white/10 {% if user == user_ or user_.is_superuser %}bg-teal-200/50 dark:bg-teal-300/50{%else%}bg-teal-200 dark:bg-teal-300/70{%endif%}"> {% endcomment %}
                         {% elif user_.status == 1 %}
-                        <tr class="border-black/10 dark:border-white/10 {% if user == user_ or user_.is_superuser %}bg-green-200/50 dark:bg-green-300/50{%else%}bg-green-200 dark:bg-green-300/70{%endif%}">
+                        <tr class="border-black/10 dark:border-white/10 {% if user == user_ or user_.is_superuser %}bg-green-200/50 dark:bg-green-300/50{%else%} dark:bg-green-300/70{%endif%}">
+                        {% comment %} <tr class="border-black/10 dark:border-white/10 {% if user == user_ or user_.is_superuser %}bg-green-200/50 dark:bg-green-300/50{%else%}bg-green-200 dark:bg-green-300/70{%endif%}"> {% endcomment %}
                         {% else %}
-                        <tr class="border-black/10 dark:border-white/10 {% if user == user_ or user_.is_superuser %}bg-red-200/50 dark:bg-red-300/50{%else%}bg-red-200 dark:bg-red-300/70{%endif%}">
+                        <tr class="text-gray-200 border-black/10 dark:border-white/10 {% if user == user_ or user_.is_superuser %}bg-red-200/50 dark:bg-red-300/50{%else%}bg-wh dark:bg-red-300/70{%endif%}">
+                        {% comment %} <tr class="text-gray-200 border-black/10 dark:border-white/10 {% if user == user_ or user_.is_superuser %}bg-red-200/50 dark:bg-red-300/50{%else%}bg-red-200 dark:bg-red-300/70{%endif%}"> {% endcomment %}
                         {% endif %}
                             <td class="px-6 py-4 text-center">
                                 <input class="rounded" type="checkbox" name="status" id="status-{{ user_.id }}" 
@@ -129,6 +134,7 @@
         </div>
     </div>
     {% endif %}
+</div>
 </div>
 {% endblock %}
 
