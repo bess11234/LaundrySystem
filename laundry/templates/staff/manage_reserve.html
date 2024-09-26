@@ -7,9 +7,9 @@
 
 {% block main %}
 <div class="flex flex-col sm:flex-row">
-  {% include 'sidebar.html' with count_size=count_size count_service=count_service count_machine=count_machine count_staff=count_staff %}
+  {% include 'staff/sidebar.html'%}
 
-  <div class="space-y-6 p-4 grow">
+<div class="space-y-6 p-4 sm:ml-40 grow">
         {% for size in machine_size %}
             {% if size.machine_set.count %}
             <div class="p-4 border-2 border-[#3b4682]/50 dark:border-[#3b4682] bg-[#4c579b0b] dark:bg-[#4c569b]/20 border-dashed rounded-lg">
@@ -89,7 +89,7 @@
         </div>
       </div>
       {% endif %}
-
+</div>
   </div>
 </div>
 {% endblock %}
