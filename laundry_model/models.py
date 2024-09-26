@@ -50,6 +50,9 @@ class Users(AbstractUser):
 class Service(models.Model):
     name = models.CharField(max_length=50)
     price = models.IntegerField()
+    
+    def __str__(self):
+        return "%s +%d"%(self.name, self.price)
 
 class Machine_Size(models.Model):
     size = models.CharField(max_length=15)

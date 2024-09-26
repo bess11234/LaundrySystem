@@ -11,30 +11,122 @@
     <h1 class="text-3xl font-bold">Reserve Machine</h1>
   </div>
   <div class="p-4 md:px-32 lg:px-52 relative">
-    <div class="absolute left-0 w-[100vw] flex flex-row justify-items-center m-3 gap-1 bg-[#e9eaf5] border-black/10 dark:bg-[#0c0d18] border dark:border-[#2c3360] rounded-xl transition-all duration-500" id="form_size">
-      {% for size in machine_size %}
-        <div onclick="select_size('{{size.id}}')" class="flex flex-col justify-items-center grow p-3 py-12 cursor-pointer hover:bg-[#ced2e9]/50 dark:hover:bg-[#2c3360] transition-colors duration-300 {% if forloop.first %}rounded-l-xl{%elif forloop.last %}rounded-r-xl{%endif%}">
-          <div>
-            <p class="text-center text-7xl md:text-8xl lg:text-9xl">{{ size.size }}</p>
-            <p class="text-center text-md md:text-2xl lg:text-3xl bg-[#ced2e9] dark:bg-[#292d51] dark:border dark:border-[#707ec0] w-fit m-auto px-3 py-1 rounded-lg">Avaliable: {{ size.machine_set|machine_is_available_count }}</p>
+    {% comment %}Select Size{% endcomment %}
+    <div class="absolute left-0 top-0 w-[100vw] z-20" id="absolute_size">
+      <div class="flex flex-row justify-items-center m-4 md:mx-32 lg:mx-52 gap-1 bg-[#ced2e9] border-black/10 dark:bg-[#0c0d18] border dark:border-[#2c3360] rounded-xl transition-all duration-500" id="form_size">
+        {% for size in machine_size %}
+          <div onclick="select_size({{ size.id }}, '{{ size.size }}', {{ size.cost }})"
+            class="flex flex-col justify-items-center grow p-3 py-12 cursor-pointer hover:bg-[#a2abd7]/50 dark:hover:bg-[#2c3360] transition-colors duration-300 {% if forloop.first %}
+              rounded-l-xl
+            {% elif forloop.last %}
+              rounded-r-xl
+            {% endif %}">
+            <div class="space-y-2">
+              <p class="text-center text-7xl md:text-8xl lg:text-9xl">{{ size.size }}</p>
+              <p class="text-center text-[2.5vw] sm:text-[3vw] md:text-2xl lg:text-3xl bg-[#a2abd7] dark:bg-[#292d51] dark:border dark:border-[#707ec0] w-fit m-auto px-3 py-1 rounded-lg">Avaliable: {{ size.machine_set|machine_is_available_count }}</p>
+            </div>
           </div>
-        </div>
-      {% endfor %}
+        {% endfor %}
+      </div>
     </div>
-    <div class="transition-opacity opacity-0 duration-500" id="form_reserve">
-        <h1>This is form</h1>
+
+    {% comment %}Form reserve{% endcomment %}
+    <div class="p-4 transition-opacity opacity-0 duration-700 z-10" id="form_reserve">
+      <div class="p-4 border-2 border-[#a2abd7] dark:border-[#3b4682] bg-[#ced2e9] dark:bg-[#292d51] border-dashed rounded-lg">
+        <form method="POST" id="machine-form">
+          {% csrf_token %}
+
+          <div class="space-y-12">
+            <div class="border-b border-gray-900/10 pb-7">
+              <h2 class="text-base font-semibold leading-7">Manage Machine</h2>
+              <p class="mt-1 text-sm leading-6 text-[#4c569b]">This information will be displayed publicly so be careful what you share.</p>
+            </div>
+          </div>
+
+          <div class="flex flex-col gap-x-6 gap-y-3 px-6 md:px-16 lg:px-52"><!-- gap-y-8 -->
+            <div class="mt-5 flex flex-row flex-wrap gap-x-6 gap-y-8">
+              <div class="flex flex-col">
+                <label for="{{ form.machine_size.id_for_label }}">Machine Size</label>
+                <input class="mt-2 rounded-lg shadow-sm bg-[#f9fbfc] dark:bg-[#353a55] border border-gray-300 dark:border-gray-600 focus:border-[#4c569b] focus:ring-1 focus:ring-[#4c569b] py-2 px-3 text-gray-900 dark:text-white transition read-only:border-opacity-50 read-only:bg-opacity-50 read-only:text-opacity-70" type="text" id="{{ form.machine_size.id_for_label }}_display" value="" readonly />
+                <input type="hidden" id="{{ form.machine_size.id_for_label }}" name="machine_size" value="" />
+                <span class="text-xs text-[#4c569b]">{{ form.machine_size.help_text }}</span>
+                <p class="text-red-500 text-sm mt-1">{{ form.machine_size.errors }}</p>
+              </div>
+
+              <div class="flex flex-col grow">
+                <label for="{{ form.arrive_at.id_for_label }}">Arrive at</label>
+                <input onchange="console.log(this.value)" class="mt-2 rounded-lg shadow-sm bg-[#f9fbfc] dark:bg-[#353a55] border border-gray-300 dark:border-gray-600 focus:border-[#4c569b] focus:ring-1 focus:ring-[#4c569b] py-2 px-3 text-gray-900 dark:text-white transition read-only:border-opacity-50 read-only:bg-opacity-50 read-only:text-opacity-70" type="datetime-local" min="{{ min_time_reserve|date:'Y-m-d' }}T{{ min_time_reserve|date:'H:i' }}" id="{{ form.arrive_at.id_for_label }}" value="{{ min_time_reserve|date:'Y-m-d' }}T{{ min_time_reserve|date:'H:i' }}" name="arrive_at" />
+                <p class="text-red-500 text-sm mt-1">{{ form.arrive_at.errors }}</p>
+              </div>
+
+              <div class="flex flex-col">
+                <label for="{{ form.machine_size.id_for_label }}">Cost</label>
+                <input class="mt-2 rounded-lg shadow-sm bg-[#f9fbfc] dark:bg-[#353a55] border border-gray-300 dark:border-gray-600 focus:border-[#4c569b] focus:ring-1 focus:ring-[#4c569b] py-2 px-3 text-gray-900 dark:text-white transition read-only:border-opacity-50 read-only:bg-opacity-50 read-only:text-opacity-70"
+                    type="number" id="cost" value="" readonly />
+                <span class="text-xs text-[#4c569b]">{{ form.machine_size.help_text }}</span>
+                <p class="text-red-500 text-sm mt-1">{{ form.machine_size.errors }}</p>
+              </div>
+
+              <div class="flex flex-col grow self-end xl:mb-4">
+                <div class="flex items-center gap-x-6 self-end justify-self-start">
+                  <button type="submit" class="rounded-md bg-[#4e5ea9] hover:bg-[#3c488d] active:bg-[#313a73] px-3 py-2 text-sm font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2">Reserve</button>
+                  <button type="reset" class="text-sm font-semibold leading-6">Cancel</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex flex-col grow max-h-48 overflow-y-auto">
+                {{ form.service.as_field_group }}
+                {% comment %} <fieldset onchange="check_service()" class="m-3">
+                    <legend>Services (Optional)</legend>
+                    {{ form.service }}
+                    <p class="text-red-500 text-sm mt-1">{{ form.service.errors }}</p>
+                </fieldset> {% endcomment %}
+            </div>
+          </div>
+        </form>
+      </div>
     </div>
   </div>
 {% endblock %}
 {% block script %}
-<script>
-    const form_size = document.getElementById("form_size")
-    const form_reserve = document.getElementById("form_reserve")
-    function select_size(size){
-        form_size.classList.toggle("opacity-0")
-        form_size.classList.toggle("-translate-y-full")
+  <script>
+    const form_size = document.getElementById('form_size')
+    const form_reserve = document.getElementById('form_reserve')
+    const absolute_size = document.getElementById('absolute_size')
+    const inp_cost = document.getElementById('cost')
+    const inp_service = document.getElementsByName("service")
+    let origin_cost = 0
+    
+    function check_service(){
+        let addition = 0
+        for (let i=0; i<inp_service.length;i++){
+            if (inp_service[i].checked){
+                let label = inp_service[i].parentElement.innerText
+                addition += Number(label.slice(label.search("/+/")-1))
+            }
+        }
+        inp_cost.value = origin_cost + addition
+    }
 
-        form_reserve.classList.toggle("opacity-0")
-    } 
-</script>
+    function select_size(id=null, size=null, cost=null) {
+      form_size.classList.toggle('opacity-0')
+      form_size.classList.toggle('-translate-y-full')
+    
+      form_reserve.classList.toggle('opacity-0')
+    
+      setTimeout(() => {
+        absolute_size.classList.toggle('w-[100vw]')
+        absolute_size.classList.toggle('w-[0vw]')
+      }, 550)
+    
+      document.getElementById('{{ form.machine_size.id_for_label }}_display').value = size
+      document.getElementById('{{ form.machine_size.id_for_label }}').value = id
+
+      origin_cost = cost
+      inp_cost.value = origin_cost
+      check_service()
+    }
+
+  </script>
 {% endblock %}

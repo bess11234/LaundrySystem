@@ -6,6 +6,8 @@ from django.http import JsonResponse
 from django.db.models import F, IntegerField
 from django.db.models.functions import Cast
 
+from django.utils.timezone import now, timedelta
+
 import json
 
 # Model
@@ -30,13 +32,22 @@ class Index(View):
 
 # Customer
 class ReserveMachine(View):
-    def get(self, request):
+    def data(self, form = ReserveMachineForm()):
         machine_size = Machine_Size.objects.order_by("capacity")
         machine = []
         for i in machine_size:
             machine.append(i.machine_set.filter(status_available=True))
-        form = ReserveMachineForm()
-        return render(request, "customer/reserve.html", {"form": form, "machine_size": machine_size, "machine":machine})
+        time_now = now() + timedelta(minutes=30)
+        return {"form": form, "machine_size": machine_size, "machine":machine, "min_time_reserve": time_now}
+    
+    def get(self, request):
+        return render(request, "customer/reserve.html", self.data())
+    
+    def post(self, request):
+        form = ReserveMachineForm(request.POST)
+        if form.is_valid():
+            print(form.changed_data)
+        return render(request, "customer/reserve.html", self.data(form))
 
 # Staff
 class ManageReserve(View):
