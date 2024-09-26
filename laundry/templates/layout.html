@@ -1,5 +1,5 @@
 {% load static %}
-<html lang="en">
+<html lang="en" class="scroll-smooth">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -72,7 +72,7 @@
       }
     </style>
   </head>
-  <body class="bg-[#fafdff] text-[#0c0d18] dark:bg-[#0c0d18] dark:text-[#eef7fc]">
+  <body class="bg-[#fafdff] text-[#0c0d18] dark:bg-[#0c0d18] dark:text-[#eef7fc] relative">
     {% block navbar %}
       {% include 'navbar.html' %}
     {% endblock %}
@@ -81,7 +81,7 @@
 
     {% endblock %}
 
-    <main>
+    <main class="relative">
       {% block main %}
 
       {% endblock %}
@@ -117,13 +117,15 @@
       } else sidebar_btn.classList.add('hidden')
       
       // Close sidebar if clicking outside
-      document.addEventListener('click', (event) => {
-        const isClickInside = sidebar.contains(event.target) || sidebar_btn.contains(event.target)
-      
-        if (!isClickInside && !sidebar.classList.contains('-translate-x-full')) {
-          sidebar.classList.add('-translate-x-full')
-        }
-      })
+      if (sidebar != undefined){
+        document.addEventListener('click', (event) => {
+          const isClickInside = sidebar.contains(event.target) || sidebar_btn.contains(event.target)
+        
+          if (!isClickInside && !sidebar.classList.contains('-translate-x-full')) {
+            sidebar.classList.add('-translate-x-full')
+          }
+        })
+      }
     </script>
   </body>
 </html>

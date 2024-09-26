@@ -6,8 +6,18 @@ from django.forms.widgets  import Select
 
 import string
 
-myclass = "mt-2 w-full rounded-lg shadow-sm bg-[#f9fbfc] dark:bg-[#353a55] border border-gray-300 dark:border-gray-600 focus:border-[#4c569b] focus:ring-1 focus:ring-[#4c569b] py-2 px-3 text-gray-900 dark:text-white transition read-only:border-opacity-50 read-only:bg-opacity-50 read-only:text-opacity-70"
+# Customer
+class ReserveMachineForm(ModelForm):
+    class Meta:
+        model = Reserve_Machine
+        fields = [
+            "machine_size",
+            "arrive_at",
+            "service"
+        ]
 
+# Manager
+myclass = "mt-2 w-full rounded-lg shadow-sm bg-[#f9fbfc] dark:bg-[#353a55] border border-gray-300 dark:border-gray-600 focus:border-[#4c569b] focus:ring-1 focus:ring-[#4c569b] py-2 px-3 text-gray-900 dark:text-white transition read-only:border-opacity-50 read-only:bg-opacity-50 read-only:text-opacity-70"
 class AddSizeForm(ModelForm):
     class Meta:
         model = Machine_Size

@@ -3,6 +3,9 @@ from . import views
 
 urlpatterns = [
     path("", views.Index.as_view(), name="index"),
+    # Customer
+    path("customer/reserve/", views.ReserveMachine.as_view(), name="reserve_machine"),
+    
     # Staff
     path("staff/reserve/", views.ManageReserve.as_view(), name="manage_reserve"),
 
