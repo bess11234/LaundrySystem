@@ -73,17 +73,17 @@ class Machine(models.Model):
 
 class Reserve_Machine(models.Model):
     # "waiting","workable","working","complete","retrivable"
-    STATUS = {0: "waiting", 1: "workable", 2: "working", 3: "complete"}
+    STATUS = {0: "waiting", 1: "workable", 2: "working", 3: "complete", 4: "cancel"}
     
     user = models.ForeignKey(Users, on_delete=models.CASCADE)
-    machine = models.ForeignKey(Machine, on_delete=models.CASCADE)
+    machine = models.ForeignKey(Machine, null=True, on_delete=models.SET_NULL)
     machine_size = models.ForeignKey(Machine_Size, null=True, on_delete=models.SET_NULL)
     code = models.CharField(max_length=6)
     cost = models.IntegerField()
     arrive_at = models.DateTimeField()
     status = models.IntegerField(choices=STATUS, default=0)
     create_at = models.DateTimeField(auto_now_add=True)
-    arrive_arrive = models.DateTimeField(null=True)
+    actual_arrive = models.DateTimeField(null=True)
     work_at = models.DateTimeField(null=True)
     service = models.ManyToManyField(Service, related_name="reserve_service")
 

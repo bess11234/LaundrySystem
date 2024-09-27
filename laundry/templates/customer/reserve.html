@@ -31,43 +31,48 @@
     </div>
 
     {% comment %}Form reserve{% endcomment %}
-    <div class="p-4 transition-opacity opacity-0 duration-700 z-10" id="form_reserve">
+    <div class="p-4 transition-opacity opacity-0 duration-700" id="form_reserve">
       <div class="p-4 border-2 border-[#a2abd7] dark:border-[#3b4682] bg-[#ced2e9] dark:bg-[#292d51] border-dashed rounded-lg">
         <form method="POST" id="machine-form">
           {% csrf_token %}
 
-          <div class="space-y-12">
-            <div class="border-b border-gray-900/10 pb-7">
-              <h2 class="text-base font-semibold leading-7">Manage Machine</h2>
-              <p class="mt-1 text-sm leading-6 text-[#4c569b]">This information will be displayed publicly so be careful what you share.</p>
+          <div class="space-y-12 md:px-16 lg:px-40 xl:px-56">
+            <div class="border-b border-[#707ec0] border-opacity-10 pb-7">
+              {% comment %} <h2 class="text-base font-semibold leading-7">Manage Machine</h2>
+              <p class="mt-1 text-sm leading-6 text-[#4c569b]">This information will be displayed publicly so be careful what you share.</p> {% endcomment %}
+
+              <div class="grid grid-cols-2 gap-x-6">
+                <div class="flex flex-col">
+                  <label for="{{ form.machine_size.id_for_label }}">Machine Size</label>
+                  <input class="mt-2 rounded-lg shadow-sm bg-[#f9fbfc] dark:bg-[#353a55] border border-gray-300 dark:border-gray-600 focus:border-[#4c569b] focus:ring-1 focus:ring-[#4c569b] py-2 px-3 text-gray-900 dark:text-white transition read-only:border-opacity-50 read-only:bg-opacity-50 read-only:text-opacity-70" type="text" id="{{ form.machine_size.id_for_label }}_display" value="" readonly />
+                  <span class="text-xs text-[#4c569b]">{{ form.machine_size.help_text }}</span>
+                  <p class="text-red-500 text-sm mt-1">{{ form.machine_size.errors }}</p>
+                </div>
+                <div class="flex flex-col">
+                  <label for="{{ form.machine_size.id_for_label }}">Cost</label>
+                  <input class="mt-2 rounded-lg shadow-sm bg-[#f9fbfc] dark:bg-[#353a55] border border-gray-300 dark:border-gray-600 focus:border-[#4c569b] focus:ring-1 focus:ring-[#4c569b] py-2 px-3 text-gray-900 dark:text-white transition-form duration-500 read-only:border-opacity-50 read-only:bg-opacity-50 read-only:text-opacity-70"
+                    type="number" id="cost" value="" readonly />
+                  <span class="text-xs text-[#4c569b]">{{ form.machine_size.help_text }}</span>
+                  <p class="text-red-500 text-sm mt-1">{{ form.machine_size.errors }}</p>
+                </div>
+              </div>
+
             </div>
           </div>
 
-          <div class="flex flex-col gap-x-6 gap-y-3 px-6 md:px-16 lg:px-52"><!-- gap-y-8 -->
-            <div class="mt-5 flex flex-row flex-wrap gap-x-6 gap-y-8">
-              <div class="flex flex-col">
-                <label for="{{ form.machine_size.id_for_label }}">Machine Size</label>
-                <input class="mt-2 rounded-lg shadow-sm bg-[#f9fbfc] dark:bg-[#353a55] border border-gray-300 dark:border-gray-600 focus:border-[#4c569b] focus:ring-1 focus:ring-[#4c569b] py-2 px-3 text-gray-900 dark:text-white transition read-only:border-opacity-50 read-only:bg-opacity-50 read-only:text-opacity-70" type="text" id="{{ form.machine_size.id_for_label }}_display" value="" readonly />
-                <input type="hidden" id="{{ form.machine_size.id_for_label }}" name="machine_size" value="" />
-                <span class="text-xs text-[#4c569b]">{{ form.machine_size.help_text }}</span>
-                <p class="text-red-500 text-sm mt-1">{{ form.machine_size.errors }}</p>
-              </div>
+          <input type="hidden" name="initial_time" value="{{ min_time_reserve|date:"Y m d H i" }}">
+          <input type="hidden" id="{{ form.machine_size.id_for_label }}" name="machine_size" value="" />
 
-              <div class="flex flex-col grow">
+          <div class="flex flex-col gap-x-6 gap-y-3 px-6 md:px-16 lg:px-40 xl:px-56"><!-- gap-y-8 -->
+            <div class="mt-5 flex flex-row flex-wrap gap-x-6 gap-y-8">
+
+              <div class="flex flex-col grow place-self-center">
                 <label for="{{ form.arrive_at.id_for_label }}">Arrive at</label>
                 <input onchange="console.log(this.value)" class="mt-2 rounded-lg shadow-sm bg-[#f9fbfc] dark:bg-[#353a55] border border-gray-300 dark:border-gray-600 focus:border-[#4c569b] focus:ring-1 focus:ring-[#4c569b] py-2 px-3 text-gray-900 dark:text-white transition read-only:border-opacity-50 read-only:bg-opacity-50 read-only:text-opacity-70" type="datetime-local" min="{{ min_time_reserve|date:'Y-m-d' }}T{{ min_time_reserve|date:'H:i' }}" id="{{ form.arrive_at.id_for_label }}" value="{{ min_time_reserve|date:'Y-m-d' }}T{{ min_time_reserve|date:'H:i' }}" name="arrive_at" />
                 <p class="text-red-500 text-sm mt-1">{{ form.arrive_at.errors }}</p>
               </div>
 
-              <div class="flex flex-col">
-                <label for="{{ form.machine_size.id_for_label }}">Cost</label>
-                <input class="mt-2 rounded-lg shadow-sm bg-[#f9fbfc] dark:bg-[#353a55] border border-gray-300 dark:border-gray-600 focus:border-[#4c569b] focus:ring-1 focus:ring-[#4c569b] py-2 px-3 text-gray-900 dark:text-white transition read-only:border-opacity-50 read-only:bg-opacity-50 read-only:text-opacity-70"
-                    type="number" id="cost" value="" readonly />
-                <span class="text-xs text-[#4c569b]">{{ form.machine_size.help_text }}</span>
-                <p class="text-red-500 text-sm mt-1">{{ form.machine_size.errors }}</p>
-              </div>
-
-              <div class="flex flex-col grow self-end xl:mb-4">
+              <div class="flex flex-col self-end xl:mb-1">
                 <div class="flex items-center gap-x-6 self-end justify-self-start">
                   <button type="submit" class="rounded-md bg-[#4e5ea9] hover:bg-[#3c488d] active:bg-[#313a73] px-3 py-2 text-sm font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2">Reserve</button>
                   <button type="reset" class="text-sm font-semibold leading-6">Cancel</button>
@@ -77,11 +82,6 @@
 
             <div class="flex flex-col grow max-h-48 overflow-y-auto">
                 {{ form.service.as_field_group }}
-                {% comment %} <fieldset onchange="check_service()" class="m-3">
-                    <legend>Services (Optional)</legend>
-                    {{ form.service }}
-                    <p class="text-red-500 text-sm mt-1">{{ form.service.errors }}</p>
-                </fieldset> {% endcomment %}
             </div>
           </div>
         </form>
@@ -98,7 +98,7 @@
     const inp_service = document.getElementsByName("service")
     let origin_cost = 0
     
-    function check_service(){
+    function check_service(changed=true){
         let addition = 0
         for (let i=0; i<inp_service.length;i++){
             if (inp_service[i].checked){
@@ -107,6 +107,11 @@
             }
         }
         inp_cost.value = origin_cost + addition
+        
+        if (changed){
+          inp_cost.classList.toggle("scale-110")
+          setTimeout(()=>inp_cost.classList.toggle("scale-110"),200)
+        }
     }
 
     function select_size(id=null, size=null, cost=null) {
@@ -125,7 +130,7 @@
 
       origin_cost = cost
       inp_cost.value = origin_cost
-      check_service()
+      check_service(false)
     }
 
   </script>
