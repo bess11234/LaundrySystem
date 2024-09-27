@@ -87,7 +87,7 @@ class Migration(migrations.Migration):
                 ('code', models.CharField(max_length=6)),
                 ('cost', models.IntegerField()),
                 ('arrive_at', models.DateTimeField()),
-                ('status', models.IntegerField(choices=[(0, 'waiting'), (1, 'workable'), (2, 'working'), (3, 'complete'), (4, 'retrivable')], default=0)),
+                ('status', models.IntegerField(choices=[(0, 'waiting'), (1, 'workable'), (2, 'working'), (3, 'complete')], default=0)),
                 ('create_at', models.DateTimeField(auto_now_add=True)),
                 ('arrive_arrive', models.DateTimeField(null=True)),
                 ('work_at', models.DateTimeField(null=True)),

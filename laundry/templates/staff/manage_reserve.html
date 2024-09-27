@@ -9,7 +9,7 @@
 <div class="flex flex-col sm:flex-row">
   {% include 'staff/sidebar.html'%}
 
-<div class="space-y-6 p-4 sm:ml-40 grow">
+<div class="space-y-6 p-4 sm:ml-44 grow">
         {% for size in machine_size %}
             {% if size.machine_set.count %}
             <div class="p-4 border-2 border-[#3b4682]/50 dark:border-[#3b4682] bg-[#4c579b0b] dark:bg-[#4c569b]/20 border-dashed rounded-lg">
@@ -24,7 +24,7 @@
                     </div>
 
                     <div class="flex flex-col gap-x-6 gap-y-8 px-6 md:px-16 lg:px-52">
-                        <div class="mt-2 flex flex-row flex-wrap gap-x-10 gap-y-12 justify-items-center">
+                        <div class="w-full mt-2 flex flex-row flex-wrap gap-x-10 gap-y-12 justify-items-center">
                             {% comment %} Machine {% endcomment %}
                             {% for machine in size.machine_set.all %}
                                 <div>
@@ -41,57 +41,55 @@
                         </div>
                     </div>
                 </form>
+                <div class="xl:px-36">
+                  <div class="w-full relative overflow-x-auto shadow-md sm:rounded-lg mt-3">
+                      <table class="w-full text-sm text-left rtl:text-right">
+                         <thead class="text-xs uppercase shadow-sm bg-white/80 dark:bg-[#4c569b] text-[#4c569b] dark:text-white/60">
+                    <tr>
+                      <!-- column name : Machine Code -->
+                      {% comment %} <th scope="col" class="px-6 py-3 max-w-10"> {% endcomment %}
+                        <th scope="col" class="px-6 py-3 max-w-10">
+                        <div class="flex items-center">Reserve Code</div>
+                      </th>
+                      <!-- column name : Size -->
+                      <th scope="col" class="px-6 py-3 w-30 min-w-30">
+                        <div class="flex items-center">Customer Name</div>
+                      </th>
+      
+                      <!-- column name : Duration -->
+                      <th scope="col" class="px-6 py-3">
+                        <div class="flex items-center">Option</div>
+                      </th>
+                      
+                      <th scope="col" class="px-6 py-3">
+                        <div class="flex items-center">Arrive At</div>
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody class="text-[#4c569b]/80 dark:text-white/80">
+                    {% for reserve in reserved %}
+                      <tr class="border-b border-black/10 dark:border-white/10 bg-[#fafdff]/40 dark:bg-[#3b4682]/80">
+                        <th scope="row" class="pl-6 py-4 font-medium whitespace-nowrap ">{{ reserve.code }}</th>
+      
+                        <td class="pl-6">{{reserve.user_id}}</td>
+
+                        <td>ICE Water</td>
+                        
+                        <td class="pl-6">{{ reserve.arrive_at }}</td>
+
+                        <td>
+                          <button><a>Copy Code</a></button>
+                        </td>
+                      </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
             </div>
-            {% endif %}
+          </div>
+          {% endif %}
         {% endfor %}
     </div>
-
-    {% if machines %}
-      <div class="xl:px-36">
-        <div class="w-full relative overflow-x-auto shadow-md sm:rounded-lg mt-3">
-          <table class="w-full text-sm text-left rtl:text-right">
-            <thead class="text-xs uppercase shadow-sm bg-white dark:bg-[#4c569b] text-[#4c569b] dark:text-white/60">
-              <tr>
-                <!-- column name : Machine Code -->
-                <th scope="col" class="pl-6 py-3 max-w-10">
-                  <div class="flex items-center">Machine Code</div>
-                </th>
-                <!-- column name : Size -->
-                <th scope="col" class="pl-6 py-3 w-30 min-w-30">
-                  <div class="flex items-center">Size</div>
-                </th>
-
-                <!-- column name : Duration -->
-                <th scope="col" class="pl-6 py-3">
-                  <div class="flex items-center">Duration</div>
-                </th>
-                
-                <th></th>
-              </tr>
-            </thead>
-            <tbody class="text-[#4c569b]/80 dark:text-white/80">
-              <!-- show machine data -->
-              {% for machine in machines %}
-                <tr class="border-b border-black/10 dark:border-white/10 bg-[#fafdff]/40 dark:bg-[#3b4682]/80">
-                  <th scope="row" class="pl-6 py-4 font-medium whitespace-nowrap ">{{ machine.code }}</th>
-
-                  <td class="pl-6">{{ machine.machine_size }}</td>
-
-                  <td class="pl-6">{{ machine.duration }}</td>
-
-                  <td class="text-center">
-                    <a onclick="delete_machine({{ machine.id }})" class="cursor-pointer py-1 px-2 font-medium rounded-lg text-white bg-red-600 hover:bg-red-400">Delete</a>
-                  </td>
-                </tr>
-              {% endfor %}
-            </tbody>
-          </table>
-        </div>
-      </div>
-      {% endif %}
-</div>
-  </div>
-</div>
 {% endblock %}
 
 {% block script %}

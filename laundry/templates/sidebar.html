@@ -1,7 +1,7 @@
 <div class="block">
   <aside class="absolute left-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0" aria-label="Sidebar" id="sidebar">
     <div class="h-full px-3 py-4 overflow-y-auto sidebar shadow-sm">
-      <ul class="space-y-1 font-medium mb-4">
+      <ul class="space-y-1 font-medium mb-4" id="sidebar_link">
         {% comment %}โยน sidebar จาก views โดยใส่ใน sidebar_item/{% endcomment %}
         {% if sidebar == 'sidebar_item/manager.html' %}
           {% include sidebar with sidebar_size=count_size sidebar_service=count_service sidebar_machine=count_machine sidebar_staff=count_staff %}
@@ -17,3 +17,12 @@
     </div>
   </aside>
 </div>
+
+<script>
+  const sidebar_link = document.getElementById("sidebar_link").getElementsByTagName("a")
+  for (let i=0;i<sidebar_link.length;i++){
+    if (sidebar_link[i].href == location.href ){
+      sidebar_link[i].classList.add("dark:bg-[#292d51]", "bg-[#ced2e9]")
+    }
+  }
+</script>

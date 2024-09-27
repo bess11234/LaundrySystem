@@ -21,14 +21,29 @@ from django.utils.decorators import method_decorator
 
 class Index(View):
     def get(self, request):
+        user = request.user
+        if user.is_authenticated:
+            if user.role == "cus":
+                machine_size = Machine_Size.objects.order_by("capacity")
+                return render(request, "index.html", {"machine_size": machine_size})
         return render(request, "index.html")
+
 # Customer
+class ReserveMachine(View):
+    def get(self, request):
+        machine_size = Machine_Size.objects.order_by("capacity")
+        machine = []
+        for i in machine_size:
+            machine.append(i.machine_set.filter(status_available=True))
+        form = ReserveMachineForm()
+        return render(request, "customer/reserve.html", {"form": form, "machine_size": machine_size, "machine":machine})
 
 # Staff
 class ManageReserve(View):
     def get(self, request):
         machine_size = Machine_Size.objects.order_by("capacity")
-        return render(request, "staff/manage_reserve.html", {"machine_size": machine_size})
+        reserved = Reserve_Machine.objects.all()
+        return render(request, "staff/manage_reserve.html", {"machine_size": machine_size, "reserved": reserved})
 
 # Manager
 
@@ -49,7 +64,7 @@ class ReportView(View):
     def get(self, request):
         return render(request, "manager/report.html")
 
-## Staff
+## Manage User
 @method_decorator(access_only("mgr"), name="get")
 @method_decorator(access_only("mgr"), name="post")
 class AddStaffView(LoginRequiredMixin, View):
