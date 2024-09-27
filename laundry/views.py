@@ -98,7 +98,9 @@ class ReserveMachine(View):
 class ManageReserve(View):
     def get(self, request):
         machine_size = Machine_Size.objects.order_by("capacity")
-        return render(request, "staff/manage_reserve.html", {"machine_size": machine_size})
+        reserved = Reserve_Machine.objects.filter(status__range=(0 , 2)).order_by("actual_arrive" ,"arrive_at")
+        print(reserved)
+        return render(request, "staff/manage_reserve.html", {"machine_size": machine_size, "reserved": reserved})
 
 # Manager
 

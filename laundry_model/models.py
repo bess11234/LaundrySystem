@@ -87,6 +87,9 @@ class Reserve_Machine(models.Model):
     work_at = models.DateTimeField(null=True)
     service = models.ManyToManyField(Service, related_name="reserve_service")
 
+    def status_context(self):
+        return self.STATUS[self.status]
+
 class Review_Reserve(models.Model):
     RATING = ((1,1), (2,2), (3,3), (4,4), (5,5))
     rating = models.IntegerField(choices=RATING)
