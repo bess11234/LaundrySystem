@@ -12,7 +12,10 @@
 <div class="space-y-6 p-4 sm:ml-44 grow">
         {% for size in machine_size %}
             {% if size.machine_set.count %}
-            <div class="p-4 border-2 border-[#3b4682]/50 dark:border-[#3b4682] bg-[#4c579b0b] dark:bg-[#4c569b]/20 border-dashed rounded-lg">
+            {% comment %} div for space when using sidebar {% endcomment %}
+            <div id="manager-reserve-size-{{size.size}}" class="h-1"></div> 
+            {% comment %} <div id="manager-reserve-size-{{size.size}}" class="p-4 border-2 border-[#3b4682]/50 dark:border-[#3b4682] bg-[#4c579b0b] dark:bg-[#4c569b]/20 border-dashed rounded-lg"> {% endcomment %}
+              <div  class="p-4 border-2 border-[#3b4682]/50 dark:border-[#3b4682]  dark:bg-[#4c569b]/20 border-dashed rounded-lg">
                 <form method="POST" id="machine-form">
                     {% csrf_token %}
 
@@ -23,9 +26,8 @@
                         </div>
                     </div>
 
-                    <div class="flex flex-col gap-x-6 gap-y-8 px-6 md:px-16 lg:px-52">
-                        <div class="w-full mt-2 flex flex-row flex-wrap gap-x-10 gap-y-12 justify-items-center">
-                            {% comment %} Machine {% endcomment %}
+                    <div class="flex flex-col gap-x-6 gap-y-8 px-6 items-center">
+                        <div class="mt-2 flex flex-row flex-wrap gap-x-10 gap-y-12 justify-items-center">
                             {% for machine in size.machine_set.all %}
                                 <div>
                                     <div class="mb-1 md:mb-2">
@@ -33,59 +35,104 @@
                                     </div>
                                     <img class="w-20 md:w-24 lg:w-36" src="{% static 'images/washing_machine_color.png' %}" alt="">
                                     <div>
-                                        <p class="text-center">{{ machine.code }}</p>
-                                        <p class="text-center">{{ machine.machine_size.size }}</p>
+                                        <p class="w-20 md:w-24 lg:w-36 text-center">{{ machine.code }}</p>
+                                        <p class="w-20 md:w-24 lg:w-36 text-center">TREM: {{machine.duration}} min(s)</p>
+
+                                        <input type="text" name="name" id="{{machine.id}}" 
+                                        class="mt-2 w-20 md:w-24 lg:w-36 rounded-lg shadow-sm bg-[#f9fbfc] dark:bg-[#353a55] border border-gray-300 dark:border-gray-600 focus:border-[#4c569b] focus:ring-1 focus:ring-[#4c569b] py-2 px-3 text-gray-900 dark:text-white transition read-only:border-opacity-50 read-only:bg-opacity-50 read-only:text-opacity-70" 
+                                        placeholder="Code">
+
+                                    </div>
+                                    <div class="mt-3 w-20 md:w-24 lg:w-36 text-center">
+                                      <a id="{{ machine.code }}" onclick="" class="cursor-pointer py-1 px-2 rounded-lg text-white bg-blue-600 hover:bg-blue-200">Accept</a>
                                     </div>
                                 </div>
                             {% endfor %}
                         </div>
                     </div>
                 </form>
+              
+                {% comment %} {% if options %} {% endcomment %}
                 <div class="xl:px-36">
-                  <div class="w-full relative overflow-x-auto shadow-md sm:rounded-lg mt-3">
-                      <table class="w-full text-sm text-left rtl:text-right">
-                         <thead class="text-xs uppercase shadow-sm bg-white/80 dark:bg-[#4c569b] text-[#4c569b] dark:text-white/60">
-                    <tr>
-                      <!-- column name : Machine Code -->
-                      {% comment %} <th scope="col" class="px-6 py-3 max-w-10"> {% endcomment %}
-                        <th scope="col" class="px-6 py-3 max-w-10">
-                        <div class="flex items-center">Reserve Code</div>
-                      </th>
-                      <!-- column name : Size -->
-                      <th scope="col" class="px-6 py-3 w-30 min-w-30">
-                        <div class="flex items-center">Customer Name</div>
-                      </th>
-      
-                      <!-- column name : Duration -->
-                      <th scope="col" class="px-6 py-3">
-                        <div class="flex items-center">Option</div>
-                      </th>
-                      
-                      <th scope="col" class="px-6 py-3">
-                        <div class="flex items-center">Arrive At</div>
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody class="text-[#4c569b]/80 dark:text-white/80">
-                    {% for reserve in reserved %}
-                      <tr class="border-b border-black/10 dark:border-white/10 bg-[#fafdff]/40 dark:bg-[#3b4682]/80">
-                        <th scope="row" class="pl-6 py-4 font-medium whitespace-nowrap ">{{ reserve.code }}</th>
-      
-                        <td class="pl-6">{{reserve.user_id}}</td>
+                    <div class="w-full relative overflow-x-auto shadow-md sm:rounded-lg m-3 mt-10">
+                        <table class="w-full text-sm text-left rtl:text-right">
+                          <thead class="text-xs uppercase shadow-sm bg-gray-200 dark:bg-[#4c569b] text-[#4c569b] dark:text-white/60">
+                                <tr>
+                                    <!-- column name : Service Name  -->
+                                    <th scope="col" class="px-6 py-3">
+                                      <div class="flex items-center">
+                                      Queue
+                                      </div>
+                                    </th>
+                                    <th scope="col" class="px-6 py-3">
+                                        <div class="flex items-center">
+                                        Reserve Code
+                                        </div>
+                                    </th>
+                                    <th scope="col" class="px-6 py-3">
+                                      <div class="flex items-center">
+                                        Reserve Time
+                                      </div>
+                                    </th>
+                                    <th scope="col" class="px-6 py-3">
+                                      <div class="flex items-center">
+                                        Customer Email
+                                      </div>
+                                    </th>
+                                    <th scope="col" class="px-6 py-3">
+                                      <div class="flex items-center">
+                                        Reserve Status
+                                      </div>
+                                    </th>
+                                    <th scope="col" class="px-6 py-3">
+                                    </th>
+                                    
+                                    <!-- column name : Price  -->
+                                </tr>
+                            </thead>
+                            <tbody class="text-[#4c569b]/80 dark:text-white/80">
+                            <!-- show service data -->
+                            {% for reserve in reserved %}
+                              {% if reserve.machine_size == size%}
+                              <tr class="border-b border-black/10 dark:border-white/10 bg-[#fafdff]/40 dark:bg-[#3b4682]/80">
+                                      <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                        {{forloop.counter}}
+                                      </td>
+                                      <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                          <span id="{{reserve.code}}">{{reserve.code}}</span>
+                                          {% comment %} copy icon {% endcomment %}
+                                          <a title="Copy code" onclick="copyFunction('{{reserve.code}}')"><img class="w-4 inline rounded-sm cursor-pointer" src="{% static 'images/Copy-icon.png' %}"></a>
+                                      </td>
+                                      <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                        {{reserve.arrive_at}}
+                                      </td>
+                                      <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                        {{reserve.user.email}}
+                                      </td>
+                                      <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                        {{reserve.status_context}}
+                                      </td>
+                                      {% if reserve.status == 0%}
+                                      <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                        <a onclick="" class="cursor-pointer py-1 px-2 font-medium rounded-lg text-white bg-green-500 hover:bg-green-200">Accept</a>
+                                      </td>
+                                      {% else %}
+                                      <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                        <a onclick="" class="cursor-pointer py-1 px-2 font-medium rounded-lg text-white bg-red-600 hover:bg-red-400">Cancle</a>
+                                      </td>
+                                      {% endif %}
+                                      {% comment %} <td class="text-center">
+                                          <a onclick="delete_option({{option.id}})" class="cursor-pointer py-1 px-2 font-medium rounded-lg text-white bg-red-600 hover:bg-red-400">Delete</a>
+                                        </td> {% endcomment %}
+                                  </tr>
+                                  {% endif %}
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                {% comment %} {% endif %} {% endcomment %}
 
-                        <td>ICE Water</td>
-                        
-                        <td class="pl-6">{{ reserve.arrive_at }}</td>
-
-                        <td>
-                          <button><a>Copy Code</a></button>
-                        </td>
-                      </tr>
-                    {% endfor %}
-                  </tbody>
-                </table>
-              </div>
-            </div>
           </div>
           {% endif %}
         {% endfor %}
@@ -108,6 +155,11 @@
     .catch((error)=>{
       console.log(error)
     })
+  }
+
+  function copyFunction(reserved_code){
+    copy_text = document.getElementById(reserved_code).innerText;
+    navigator.clipboard.writeText(copy_text)
   }
 </script>
 {% endblock %}

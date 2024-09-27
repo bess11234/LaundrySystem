@@ -50,6 +50,9 @@ class Users(AbstractUser):
 class Service(models.Model):
     name = models.CharField(max_length=50)
     price = models.IntegerField()
+    
+    def __str__(self):
+        return "%s +%d"%(self.name, self.price)
 
 class Machine_Size(models.Model):
     size = models.CharField(max_length=15)
@@ -73,16 +76,19 @@ class Reserve_Machine(models.Model):
     STATUS = {0: "waiting", 1: "workable", 2: "working", 3: "complete"}
     
     user = models.ForeignKey(Users, on_delete=models.CASCADE)
-    machine = models.ForeignKey(Machine, on_delete=models.CASCADE)
+    machine = models.ForeignKey(Machine, null=True ,on_delete=models.CASCADE)
     machine_size = models.ForeignKey(Machine_Size, null=True, on_delete=models.SET_NULL)
     code = models.CharField(max_length=6)
     cost = models.IntegerField()
     arrive_at = models.DateTimeField()
     status = models.IntegerField(choices=STATUS, default=0)
     create_at = models.DateTimeField(auto_now_add=True)
-    arrive_arrive = models.DateTimeField(null=True)
+    actual_arrive = models.DateTimeField(null=True)
     work_at = models.DateTimeField(null=True)
     service = models.ManyToManyField(Service, related_name="reserve_service")
+
+    def status_context(self):
+        return self.STATUS[self.status]
 
 class Review_Reserve(models.Model):
     RATING = ((1,1), (2,2), (3,3), (4,4), (5,5))

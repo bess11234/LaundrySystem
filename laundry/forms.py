@@ -15,6 +15,9 @@ class ReserveMachineForm(ModelForm):
             "arrive_at",
             "service"
         ]
+        widgets = {
+            "service": forms.CheckboxSelectMultiple(attrs={"onchange": "check_service()"})
+        }
 
 # Manager
 myclass = "mt-2 w-full rounded-lg shadow-sm bg-[#f9fbfc] dark:bg-[#353a55] border border-gray-300 dark:border-gray-600 focus:border-[#4c569b] focus:ring-1 focus:ring-[#4c569b] py-2 px-3 text-gray-900 dark:text-white transition read-only:border-opacity-50 read-only:bg-opacity-50 read-only:text-opacity-70"
