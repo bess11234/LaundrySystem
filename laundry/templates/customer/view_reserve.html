@@ -27,12 +27,16 @@
 <div class="space-y-3 py-4">
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-6 gap-x-4 md:gap-x-8 lg:gap-x-12 justify-stretch">
         {% for i in reserve_machine %}
-        <div class="flex flex-col dark:bg-[#292d51] dark:border-[#707ec0] rounded-lg p-4" id="reserve_{{ forloop.counter }}">
+        <div class="flex flex-col bg-[#e9eaf5] dark:bg-[#292d51] border-[#707ec0] dark:border-[#707ec0] rounded-lg p-4" id="reserve_{{ forloop.counter }}">
             <div class="flex flex-row justify-between place-items-center space-x-4">
                 <div>
-                    <p class="leading-tight">Size<br><span class="text-5xl">{{ i.machine_size.size }}</span></p>
+                    <p class="leading-tight">Size<br><span class="text-7xl">{{ i.machine_size.size }}</span></p>
                 </div>
                 <div class="flex flex-col place-items-end text-right">
+                    <div class="flex flex-row justify-between">
+                        <span></span>
+                        <span class="text-right font-bold bg-[#ced2e9] dark:bg-[#a2abd7] dark:text-[#292d51] rounded-lg px-2 w-fit">{{ i.code }}</span>
+                    </div>
                     <p class="text-lg">{{ i.cost }} Baht</p>
                     <p class="text-md">{{ i.arrive_at|date:"j M Y, H:i" }}</p>
                     {% if i.arrive_at > time_now %}
@@ -64,12 +68,8 @@
                 </div>
                 {% endif %}
             </div>
-            <hr class="border-[#707ec0] my-3" />
+            <hr class="dark:border-[#707ec0] my-3 dark:opacity-50" />
             <div>
-                <div class="flex flex-row justify-between">
-                    <span>Code</span>
-                    <span class="text-right font-bold dark:bg-[#a2abd7] dark:text-[#292d51] rounded-lg px-2 w-fit">{{ i.code }}</span>
-                </div>
                 <div class="flex flex-row justify-between">
                     <span>Status</span>
                     <div class="flex flex-row place-items-center gap-1">
@@ -87,17 +87,17 @@
                 </div>
             </div>
             {% if i.status == 3 %}
-            <button onclick="show_review({{forloop.counter}})" {% if i.review_reserve %}disabled{%endif%} class="mt-auto text-white bg-[#4e5ea9] hover:bg-[#3c488d] active:bg-[#313a73] disabled:opacity-50 px-2 py-1 rounded-lg">Review</button>
+            <button onclick="show_review({{forloop.counter}})" {% if i.review_reserve %}disabled{%endif%} class="mt-auto text-white bg-[#4e5ea9] hover:bg-[#3c488d] active:bg-[#313a73] disabled:opacity-50 px-2 py-1 rounded-lg opacity-80 dark:opacity-100">Review</button>
             {% else %}
-            <button onclick="cancel_reserve({{ i.id }})" {% if i.status != 0 %}disabled{%endif%} class="mt-auto text-white bg-gray-500 hover:bg-gray-600 active:bg-gray-700 disabled:opacity-50 px-2 py-1 rounded-lg">Cancel</button>
+            <button onclick="cancel_reserve({{ i.id }})" {% if i.status != 0 %}disabled{%endif%} class="mt-auto text-white bg-gray-500 hover:bg-gray-600 active:bg-gray-700 disabled:opacity-50 px-2 py-1 rounded-lg opacity-80 dark:opacity-100">Cancel</button>
             {% endif %}
         </div>
 
         {% comment %} Review {% endcomment %}
-        {% if i.status == 3%}
-        <form action="" method="post">
+        {% if i.status == 3 and not i.review_reserve %}
+        <form action="" method="post" class="m-0 hidden" id="review_{{forloop.counter}}">
             {% csrf_token %}
-            <div class="relative flex flex-col dark:bg-[#292d51] dark:border-[#707ec0] rounded-lg p-4 hidden gap-3" id="review_{{forloop.counter}}">
+            <div class="relative h-full flex flex-col bg-[#e9eaf5] dark:bg-[#292d51] border-[#707ec0] dark:border-[#707ec0] rounded-lg p-4 gap-3">
                 <p class="absolute">Rating</p>
                 <div class="flex justify-center cursor-pointer" id="rating_star_{{ forloop.counter }}">
                     <svg onclick="star_review({{forloop.counter}}, 1)" class="size-6 lg:size-8 text-gray-300 dark:text-gray-500 hover:text-opacity-50 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">
@@ -120,8 +120,8 @@
                 <input type="hidden" name="reserve" value="{{ i.id }}">
                 <textarea placeholder="Review" name="description" id="" class="grow rounded-lg shadow-sm bg-[#f9fbfc] dark:bg-[#353a55] border border-gray-300 dark:border-gray-600 focus:border-[#4c569b] focus:ring-1 focus:ring-[#4c569b] py-2 px-3 text-gray-900 dark:text-white transition read-only:border-opacity-50 read-only:bg-opacity-50 read-only:text-opacity-70"></textarea>
                 <div class="mt-auto flex flex-col gap-3">
-                    <button class="text-white bg-[#4e5ea9] hover:bg-[#3c488d] active:bg-[#313a73] px-2 py-1 rounded-lg">Submit</button>
-                    <button type="reset" onclick="show_review({{forloop.counter}})" class="text-white bg-gray-500 hover:bg-gray-600 active:bg-gray-700 disabled:opacity-50 px-2 py-1 rounded-lg">Close</button>
+                    <button class="text-white bg-[#4e5ea9] hover:bg-[#3c488d] active:bg-[#313a73] px-2 py-1 rounded-lg opacity-80 dark:opacity-100">Submit</button>
+                    <button type="reset" onclick="show_review({{forloop.counter}})" class="text-white bg-gray-500 hover:bg-gray-600 active:bg-gray-700 disabled:opacity-50 px-2 py-1 rounded-lg opacity-80 dark:opacity-100">Close</button>
                 </div>
             </div>
         </form>
