@@ -7,6 +7,11 @@ from django.forms.widgets  import Select
 import string
 
 # Customer
+class ReviewReserveForm(ModelForm):
+    class Meta:
+        model = Review_Reserve
+        fields = "__all__"
+
 class ReserveMachineForm(ModelForm):
     def __init__(self, *args, **kwargs):
         # first call parent's constructor

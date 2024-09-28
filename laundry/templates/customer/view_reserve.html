@@ -1,0 +1,178 @@
+{% extends 'layout.html' %}
+{% load static %}
+
+{% block title %}
+  View reserve
+{% endblock %}
+
+{% block main %}
+  {% comment %} {% include 'sidebar.html' %} {% endcomment %}
+
+  <div class="p-4">
+    <!-- border -->
+    <div class="p-4 border-2 border-[#3b4682]/50 dark:border-[#3b4682] bg-[#4c579b0b] dark:bg-[#4c569b]/20 border-dashed rounded-lg">
+      <!-- Update profile -->
+      <!-- introduction -->
+      <div class="space-y-12">
+        <div class="pb-7">
+          <h2 class="text-base font-semibold leading-7">View reservation</h2>
+          <p class="mt-1 text-sm leading-6 text-[#4c569b]">Shows all of your current reservations that are still in progress. You can easily check the status of each reservation, which will be marked as either "Waiting" (pending action), "Workable" (ready to move forward), or "Working" (currently in progress). This page helps you stay updated on the progress of your reservations.</p>
+        </div>
+    </div>
+    
+    
+    {% comment %}Show Reserve{% endcomment %}
+</div>
+{% if reserve_machine %}
+<div class="space-y-3 py-4">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-6 gap-x-4 md:gap-x-8 lg:gap-x-12 justify-stretch">
+        {% for i in reserve_machine %}
+        <div class="flex flex-col dark:bg-[#292d51] dark:border-[#707ec0] rounded-lg p-4" id="reserve_{{ forloop.counter }}">
+            <div class="flex flex-row justify-between place-items-center space-x-4">
+                <div>
+                    <p class="leading-tight">Size<br><span class="text-5xl">{{ i.machine_size.size }}</span></p>
+                </div>
+                <div class="flex flex-col place-items-end text-right">
+                    <p class="text-lg">{{ i.cost }} Baht</p>
+                    <p class="text-md">{{ i.arrive_at|date:"j M Y, H:i" }}</p>
+                    {% if i.arrive_at > time_now %}
+                        <p class="text-xl">({{ i.arrive_at|timeuntil }})</p>
+                    {% else %}
+                        <p class="text-xl">({{ i.arrive_at|timesince }} ago)</p>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="flex flex-row justify-between place-items-center mt-2">
+                <span class="text-xs ">Creation date<br>{{ i.create_at|date:"j M Y, H:i" }}</span>
+                {% if i.review_reserve %}
+                <div class="flex justify-center">
+                    <svg class="size-6 lg:size-8 {%if i.review_reserve.rating >= 1 %}text-yellow-300{%else%}text-gray-300 dark:text-gray-500{%endif%}  ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">
+                       <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"/>
+                    </svg>
+                    <svg class="size-6 lg:size-8 {%if i.review_reserve.rating >= 2 %}text-yellow-300{%else%}text-gray-300 dark:text-gray-500{%endif%} ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">
+                        <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"/>
+                     </svg>
+                     <svg class="size-6 lg:size-8 {%if i.review_reserve.rating >= 3 %}text-yellow-300{%else%}text-gray-300 dark:text-gray-500{%endif%} ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">
+                        <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"/>
+                     </svg>
+                     <svg class="size-6 lg:size-8 {%if i.review_reserve.rating >= 4 %}text-yellow-300{%else%}text-gray-300 dark:text-gray-500{%endif%} ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">
+                        <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"/>
+                     </svg>
+                     <svg class="size-6 lg:size-8 {%if i.review_reserve.rating >= 5 %}text-yellow-300{%else%}text-gray-300 dark:text-gray-500{%endif%} ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">
+                        <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"/>
+                     </svg>
+                </div>
+                {% endif %}
+            </div>
+            <hr class="border-[#707ec0] my-3" />
+            <div>
+                <div class="flex flex-row justify-between">
+                    <span>Code</span>
+                    <span class="text-right font-bold dark:bg-[#a2abd7] dark:text-[#292d51] rounded-lg px-2 w-fit">{{ i.code }}</span>
+                </div>
+                <div class="flex flex-row justify-between">
+                    <span>Status</span>
+                    <div class="flex flex-row place-items-center gap-1">
+                        <div class="size-3 left-0 rounded-full {% if i.status != 3 and i.status != 4 %}animate-pulse{%endif%} {% if i.status == 0 %}bg-yellow-300{%elif i.status == 1%}bg-yellow-600{%elif i.status == 2%}bg-blue-300{%elif i.status == 3%}bg-green-300{%elif i.status == 4%}bg-red-300{%endif%}"></div>
+                        <span class="text-right">{{ i.status_context|title }}</span>
+                    </div>
+                </div>
+                <div class="flex flex-row justify-between">
+                    <span>Services</span>
+                    <div class="text-right flex flex-col text-sm place-items-end py-1">
+                    {% for service in i.service.all %}
+                        <span>{{ service }}</span>
+                    {% endfor %}
+                    </div>
+                </div>
+            </div>
+            {% if i.status == 3 %}
+            <button onclick="show_review({{forloop.counter}})" {% if i.review_reserve %}disabled{%endif%} class="mt-auto text-white bg-[#4e5ea9] hover:bg-[#3c488d] active:bg-[#313a73] disabled:opacity-50 px-2 py-1 rounded-lg">Review</button>
+            {% else %}
+            <button onclick="cancel_reserve({{ i.id }})" {% if i.status != 0 %}disabled{%endif%} class="mt-auto text-white bg-gray-500 hover:bg-gray-600 active:bg-gray-700 disabled:opacity-50 px-2 py-1 rounded-lg">Cancel</button>
+            {% endif %}
+        </div>
+
+        {% comment %} Review {% endcomment %}
+        {% if i.status == 3%}
+        <form action="" method="post">
+            {% csrf_token %}
+            <div class="relative flex flex-col dark:bg-[#292d51] dark:border-[#707ec0] rounded-lg p-4 hidden gap-3" id="review_{{forloop.counter}}">
+                <p class="absolute">Rating</p>
+                <div class="flex justify-center cursor-pointer" id="rating_star_{{ forloop.counter }}">
+                    <svg onclick="star_review({{forloop.counter}}, 1)" class="size-6 lg:size-8 text-gray-300 dark:text-gray-500 hover:text-opacity-50 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">
+                        <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"/>
+                    </svg>
+                    <svg onclick="star_review({{forloop.counter}}, 2)" class="size-6 lg:size-8 text-gray-300 dark:text-gray-500 hover:text-opacity-50 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">
+                        <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"/>
+                    </svg>
+                    <svg onclick="star_review({{forloop.counter}}, 3)" class="size-6 lg:size-8 text-gray-300 dark:text-gray-500 hover:text-opacity-50 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">
+                        <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"/>
+                    </svg>
+                    <svg onclick="star_review({{forloop.counter}}, 4)" class="size-6 lg:size-8 text-gray-300 dark:text-gray-500 hover:text-opacity-50 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">
+                        <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"/>
+                    </svg>
+                    <svg onclick="star_review({{forloop.counter}}, 5)" class="size-6 lg:size-8 ms-1 text-gray-300 dark:text-gray-500 hover:text-opacity-50" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">
+                        <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"/>
+                    </svg>
+                </div>
+                <input type="hidden" name="rating" id="rating_{{forloop.counter}}">
+                <input type="hidden" name="reserve" value="{{ i.id }}">
+                <textarea placeholder="Review" name="description" id="" class="grow rounded-lg shadow-sm bg-[#f9fbfc] dark:bg-[#353a55] border border-gray-300 dark:border-gray-600 focus:border-[#4c569b] focus:ring-1 focus:ring-[#4c569b] py-2 px-3 text-gray-900 dark:text-white transition read-only:border-opacity-50 read-only:bg-opacity-50 read-only:text-opacity-70"></textarea>
+                <div class="mt-auto flex flex-col gap-3">
+                    <button class="text-white bg-[#4e5ea9] hover:bg-[#3c488d] active:bg-[#313a73] px-2 py-1 rounded-lg">Submit</button>
+                    <button type="reset" onclick="show_review({{forloop.counter}})" class="text-white bg-gray-500 hover:bg-gray-600 active:bg-gray-700 disabled:opacity-50 px-2 py-1 rounded-lg">Close</button>
+                </div>
+            </div>
+        </form>
+        {% endif %}
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block script %}
+<script>
+    function cancel_reserve(machine_id){
+        fetch("", {
+            method: "PUT",
+            headers:  {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'  // Send CSRF token in the request header
+            },
+            body: JSON.stringify({machine_id})
+        })
+        .then(response => response.json())
+        .then(location.reload())
+        .catch((error)=>{
+        console.log(error)
+        })
+    }
+
+    function show_review(counter){
+        const reserve = document.getElementById("reserve_"+counter)
+        const review = document.getElementById("review_"+counter)
+        review.style.height = reserve.clientHeight
+        reserve.classList.toggle("hidden")
+        review.classList.toggle("hidden")
+
+        star_review(counter, 0)
+    }
+
+    function star_review(counter, star){
+        const rating_star = document.getElementById("rating_star_"+counter).getElementsByTagName("svg")
+        const inp_rating = document.getElementById("rating_"+counter)
+        inp_rating.value = star
+        for (let i=0;i<rating_star.length;i++){
+            if (i < star){
+                rating_star[i].classList.remove("text-gray-300", "dark:text-gray-500")
+                rating_star[i].classList.add("text-yellow-300")
+            }else{
+                rating_star[i].classList.remove("text-yellow-300")
+                rating_star[i].classList.add("text-gray-300", "dark:text-gray-500")
+            }
+        }
+    }
+</script>
+{% endblock %}

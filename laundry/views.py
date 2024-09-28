@@ -47,8 +47,36 @@ class Index(View):
         return render(request, "index.html")
 
 # Customer
-class ReserveMachine(View):
+class ViewReserve(View):
+    def get(self, request):
+        review = ReviewReserveForm()
+        
+        reserve_machine = Reserve_Machine.objects.filter(user=request.user).order_by("status", "arrive_at")
+        return render(request, "customer/view_reserve.html", {
+            "reserve_machine": reserve_machine, "sidebar": "sidebar_item/customer.html", "time_now": now(),
+            "form_review": review
+        })
     
+    def post(self, request):
+        review = ReviewReserveForm(request.POST)
+        if review.is_valid():
+            review.save()
+        return redirect("view_reserve")
+
+    # Cancel Reserve
+    def put(self, request):
+        content = loads(request.body)
+        try:
+            machine = Reserve_Machine.objects.get(pk=content['machine_id'])
+            machine.status = 4
+            machine.save()
+        except Reserve_Machine.DoesNotExist:
+            return JsonResponse({"success": False}, status=500)
+        return JsonResponse({"success": True}, status=200)
+        
+@method_decorator(access_only("cus"), name="get")
+@method_decorator(access_only("cus"), name="post")
+class ReserveMachineView(LoginRequiredMixin, View):
     def data(self, form = ReserveMachineForm()):
         machine_size = Machine_Size.objects.order_by("capacity")
         machine = []
@@ -89,7 +117,7 @@ class ReserveMachine(View):
                                     code=code, cost=cost, arrive_at=arrive_at)
                     reserve_m.service.add(*service)
                     
-                    return redirect("index")
+                    return redirect("view_reserve")
             except Exception:
                 raise PermissionDenied()
         return render(request, "customer/reserve.html", self.data(form))
