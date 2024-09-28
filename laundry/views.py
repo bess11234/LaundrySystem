@@ -46,6 +46,7 @@ class Index(View):
                 return render(request, "index.html", {"machine_size": machine_size})
         return render(request, "index.html")
 
+
 # Customer
 class ReserveMachine(View):
     
@@ -98,12 +99,47 @@ class ReserveMachine(View):
 class ManageReserve(View):
     def get(self, request):
         machine_size = Machine_Size.objects.order_by("capacity")
-        reserved = Reserve_Machine.objects.filter(status__range=(0 , 2)).order_by("actual_arrive" ,"arrive_at")
+        reserved = Reserve_Machine.objects.filter(status__range=(0 , 2)).order_by("-status", "actual_arrive" ,"arrive_at")
         print(reserved)
         return render(request, "staff/manage_reserve.html", {"machine_size": machine_size, "reserved": reserved})
+    
+    def post(self, request):
+        data = loads(request.body)
+        if 'reserve_id' in data:
+            reserve_id = data.get('reserve_id')
+            change_wating= Reserve_Machine.objects.get(pk=reserve_id)
+            change_wating.status = 1
+            change_wating.save()
+            return JsonResponse({'success': True, 'id': change_wating.id}, status=200)
+        
+        if 'reserve_code_workable' in data:
+            reserve_code = data.get('reserve_code_workable')
+            machine_code = data.get('machine_code')
+
+            if reserve_code in Reserve_Machine.objects.filter(status=1).values_list('code', flat=True):
+                get_machine = Machine.objects.get(code=machine_code)
+                get_machine.status_available = 0
+                get_machine.save()
+
+                change_workable = Reserve_Machine.objects.get(code=reserve_code)
+
+                change_workable.work_at = datetime.now()
+                change_workable.machine = get_machine
+                change_workable.status = 2
+                change_workable.save()
+
+                return JsonResponse({'valid': True, 'reserve_code': reserve_code}, status=200)
+
+        if 'machine_code_avaliable' in data:
+            machine_code = data.get('machine_code_avaliable')
+            get_machine = Machine.objects.get(code=machine_code)
+            get_machine.status_available = 1
+            get_machine.save()
+
+
+        
 
 # Manager
-
 ## count all data (use in sidebar)
 def count_all_data():
     count_data = {
