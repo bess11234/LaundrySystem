@@ -36,15 +36,15 @@
                                     <img class="w-20 md:w-24 lg:w-36" src="{% static 'images/washing_machine_color.png' %}" alt="">
                                     <div>
                                         <p class="w-20 md:w-24 lg:w-36 text-center">{{ machine.code }}</p>
-                                        <p class="w-20 md:w-24 lg:w-36 text-center">TREM: {{machine.duration}} min(s)</p>
+                                        <p id="{{ machine.code }}-duration" class="w-20 md:w-24 lg:w-36 text-center">TREM: {{machine.duration}} min(s)</p>
 
-                                        <input type="text" name="name" id="{{machine.id}}" 
+                                        <input type="text" name="name" id="reserve-code" 
                                         class="mt-2 w-20 md:w-24 lg:w-36 rounded-lg shadow-sm bg-[#f9fbfc] dark:bg-[#353a55] border border-gray-300 dark:border-gray-600 focus:border-[#4c569b] focus:ring-1 focus:ring-[#4c569b] py-2 px-3 text-gray-900 dark:text-white transition read-only:border-opacity-50 read-only:bg-opacity-50 read-only:text-opacity-70" 
                                         placeholder="Code">
 
                                     </div>
                                     <div class="mt-3 w-20 md:w-24 lg:w-36 text-center">
-                                      <a id="{{ machine.code }}" onclick="" class="cursor-pointer py-1 px-2 rounded-lg text-white bg-blue-600 hover:bg-blue-200">Accept</a>
+                                      <a id="{{ machine.code }}" onclick="countdown('{{ machine.code }}-duration', {{machine.duration}})" class="cursor-pointer py-1 px-2 rounded-lg text-white bg-blue-600 hover:bg-blue-200">Comfirm</a>
                                     </div>
                                 </div>
                             {% endfor %}
@@ -107,7 +107,7 @@
                                         {{reserve.arrive_at}}
                                       </td>
                                       <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                        {{reserve.user.email}}
+                                        {{reserve.user.first_name}} {{reserve.user.last_name}}
                                       </td>
                                       <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                         {{reserve.status_context}}
@@ -157,9 +157,47 @@
     })
   }
 
+  //copy code
   function copyFunction(reserved_code){
     copy_text = document.getElementById(reserved_code).innerText;
     navigator.clipboard.writeText(copy_text)
   }
+
+// Object to store interval IDs for each element
+var countdownIntervals = {};
+
+function countdown(element_duration, duration) {
+    // Clear any existing interval for this element
+    if (countdownIntervals[element_duration]) {
+        clearInterval(countdownIntervals[element_duration]);
+    }
+
+    // Get current time to calculate the future time
+    var oldDateObj = new Date();
+    var future = new Date(oldDateObj.getTime() + duration * 60000);
+    console.log("old = " + oldDateObj + " new = " + future);
+
+    // Start a new interval for the countdown
+    countdownIntervals[element_duration] = setInterval(function() {
+        // Get current time
+        var now = new Date().getTime();
+
+        // Calculate the distance between now and the future time
+        var distance = future - now;
+        var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+        console.log("distance = " + distance + " minutes = " + minutes + " seconds = " + seconds);
+
+        var new_duration = document.getElementById(element_duration);
+        new_duration.innerText = "TREM: " + minutes + " m " + seconds + " s";
+
+        // If the countdown is over, clear the interval and reset the text
+        if (distance < 0) {
+            clearInterval(countdownIntervals[element_duration]);
+            new_duration.innerText = "TREM: " + duration;
+        }
+    }, 1000);
+}
 </script>
 {% endblock %}
