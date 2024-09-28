@@ -23,6 +23,7 @@
             {% endif %}">
             <div class="space-y-2">
               <p class="text-center text-7xl md:text-8xl lg:text-9xl">{{ size.size }}</p>
+              <p class="text-center text-[2.5vw] sm:text-[3vw] md:text-2xl lg:text-3xl">{{ size.cost }} Baht</p>
               <p class="text-center text-[2.5vw] sm:text-[3vw] md:text-2xl lg:text-3xl bg-[#a2abd7] dark:bg-[#292d51] dark:border dark:border-[#707ec0] w-fit m-auto px-3 py-1 rounded-lg">Avaliable: {{ size.machine_set|machine_is_available_count }}</p>
             </div>
           </div>
@@ -32,7 +33,7 @@
 
     {% comment %}Form reserve{% endcomment %}
     <div class="p-4 transition-opacity opacity-0 duration-700" id="form_reserve">
-      <div class="p-4 border-2 border-[#a2abd7] dark:border-[#3b4682] bg-[#ced2e9] dark:bg-[#292d51] border-dashed rounded-lg">
+      <div class="p-4 py-6 border-2 border-[#a2abd7] dark:border-[#3b4682] bg-[#ced2e9] dark:bg-[#292d51] border-dashed rounded-lg">
         <form method="POST" id="machine-form">
           {% csrf_token %}
 

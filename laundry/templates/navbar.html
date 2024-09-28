@@ -51,6 +51,9 @@
           {% include 'nav_item/guest.html' %}
         {% else %}
         {% comment %} Customer {% endcomment %}
+          {% if user.role == "cus" %}
+            {% include 'nav_item/customer.html' %}
+          {% endif %}
 
         {% comment %} Staff {% endcomment %}
           {% if user.role == "stf" %}

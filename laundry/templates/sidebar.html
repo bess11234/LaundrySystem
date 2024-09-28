@@ -22,7 +22,8 @@
   const sidebar_link = document.getElementById("sidebar_link").getElementsByTagName("a")
   for (let i=0;i<sidebar_link.length;i++){
     if (sidebar_link[i].href == location.href ){
-      sidebar_link[i].classList.add("dark:bg-[#292d51]", "bg-[#ced2e9]")
+      sidebar_link[i].classList.add("dark:bg-[#292d51]", "bg-[#ced2e9]/60")
+      sidebar_link[i].href = "#"
     }
   }
 </script>
