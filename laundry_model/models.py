@@ -73,10 +73,10 @@ class Machine(models.Model):
 
 class Reserve_Machine(models.Model):
     # "waiting","workable","working","complete","retrivable"
-    STATUS = {0: "waiting", 1: "workable", 2: "working", 3: "complete"}
+    STATUS = {0: "waiting", 1: "workable", 2: "working", 3: "complete", 4: "cancel"}
     
     user = models.ForeignKey(Users, on_delete=models.CASCADE)
-    machine = models.ForeignKey(Machine, null=True ,on_delete=models.CASCADE)
+    machine = models.ForeignKey(Machine, null=True, on_delete=models.SET_NULL)
     machine_size = models.ForeignKey(Machine_Size, null=True, on_delete=models.SET_NULL)
     code = models.CharField(max_length=6)
     cost = models.IntegerField()

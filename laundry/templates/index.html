@@ -9,13 +9,15 @@
   {% if user.is_authenticated %}
     {% if user.role == 'cus' %}
 
-      <div class="w-fit m-auto">
+      <div class="w-fit m-auto my-3">
         <a href="{% url 'reserve_machine' %}">
-          <button class="bg-[#4e5ea9] hover:bg-[#3c488d] active:bg-[#313a73] px-4 py-2 rounded-lg">Reserve machine</button>
+          <button {%if machine_size.count == 0 %}disabled{%endif%} class="bg-[#4e5ea9] hover:bg-[#3c488d] active:bg-[#313a73] disabled:bg-[#e9eaf5] disabled:dark:bg-[#292d51] disabled:text-[#707ec0]  px-4 py-2 rounded-lg">
+            Reserve machine
+          </button>
         </a>
       </div>
 
-      <div class="space-y-6 p-4 md:px-32 lg:px-52 z-0">
+      <div class="space-y-6 p-4 md:px-32 lg:px-52">
         {% for size in machine_size %}
             {% if size.machine_set.count %}
                 <div class="max-h-[33dvh] md:max-h-[50dvh] lg:max-h-[60dvh] overflow-y-auto p-4 border-2 border-[#3b4682]/50 dark:border-[#3b4682] bg-[#4c579b0b] dark:bg-[#4c569b]/20 border-dashed rounded-lg">

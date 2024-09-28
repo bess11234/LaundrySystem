@@ -1,5 +1,5 @@
 {% load static %}
-<nav class="border-gray-200 navbar flex flex-row justify-between place-items-center py-4 px-3 font-medium">
+<nav class="relative z-40 border-gray-200 navbar flex flex-row justify-between place-items-center py-4 px-3 font-medium">
   {% comment %} LOGO {% endcomment %}
   <div class="flex flex-row">
     
@@ -32,7 +32,7 @@
       {% endif %}
     </button>
     
-    <div class="hidden w-full z-40" id="navbar-default">
+    <div class="hidden w-full" id="navbar-default">
 
       <div class="absolute top-25 right-[10px] min-w-32 flex flex-col border border-[#3b4682]/50 dark:border-[#1b1e36] rounded-md bg-gray-50  dark:bg-[#0c0d18]">
       {% if user.is_authenticated %}

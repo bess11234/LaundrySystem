@@ -3,12 +3,21 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 from django.http import JsonResponse
 
+## Exception
+from django.core.exceptions import PermissionDenied
+
+## Function Model
+from django.db import transaction
 from django.db.models import F, IntegerField
 from django.db.models.functions import Cast
 
-from django.utils.timezone import now, timedelta
+from django.utils.timezone import now, timedelta, make_aware
 
-import json
+# Python
+from json import loads
+from string import ascii_letters
+from datetime import datetime
+from random import randint
 
 # Model
 from laundry_model.models import *
@@ -21,6 +30,13 @@ from .decorators import access_only
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils.decorators import method_decorator
 
+def random_string(length=0):
+    text = ""
+    random_ = ascii_letters+"0123456789"
+    for _ in range(length):
+        text += random_[randint(0, 62)]
+    return text
+
 class Index(View):
     def get(self, request):
         user = request.user
@@ -32,13 +48,14 @@ class Index(View):
 
 # Customer
 class ReserveMachine(View):
+    
     def data(self, form = ReserveMachineForm()):
         machine_size = Machine_Size.objects.order_by("capacity")
         machine = []
         for i in machine_size:
             machine.append(i.machine_set.filter(status_available=True))
-        time_now = now() + timedelta(minutes=30)
-        return {"form": form, "machine_size": machine_size, "machine":machine, "min_time_reserve": time_now}
+        time = now() + timedelta(minutes=30)
+        return {"form": form, "machine_size": machine_size, "machine":machine, "min_time_reserve": time}
     
     def get(self, request):
         return render(request, "customer/reserve.html", self.data())
@@ -46,7 +63,35 @@ class ReserveMachine(View):
     def post(self, request):
         form = ReserveMachineForm(request.POST)
         if form.is_valid():
-            print(form.changed_data)
+            try:
+                with transaction.atomic():
+                    cost = 0
+                    code = ""
+                    arrive_at = form.cleaned_data.get("arrive_at")
+                    machine_size = Machine_Size.objects.get(pk=request.POST.get("machine_size"))
+                    service = form.cleaned_data.get("service")
+                    
+                    initial_time = list(map(int, request.POST.get("initial_time").split(" ")))
+                    initial_time = make_aware(datetime(*initial_time))
+                    
+                    if arrive_at < initial_time:
+                        raise Exception()
+                    
+                    cost += machine_size.cost
+                    for i in service:
+                        cost += i.price
+                    
+                    code = random_string(6)
+                    while Reserve_Machine.objects.filter(status__in=(0, 1), code=code).count():
+                        code = random_string(6)
+                    
+                    reserve_m = Reserve_Machine.objects.create(user=request.user, machine_size=machine_size, 
+                                    code=code, cost=cost, arrive_at=arrive_at)
+                    reserve_m.service.add(*service)
+                    
+                    return redirect("index")
+            except Exception:
+                raise PermissionDenied()
         return render(request, "customer/reserve.html", self.data(form))
 
 # Staff
@@ -95,7 +140,7 @@ class AddStaffView(LoginRequiredMixin, View):
         return render(request, 'manager/add_staff.html', show)
     
     def post(self, request):
-        data = json.loads(request.body)
+        data = loads(request.body)
         user_id = data.get('user_id')
         getUser = Users.objects.get(id=user_id)
         
@@ -152,7 +197,7 @@ class AddMachineView(LoginRequiredMixin, View):
     
     
     def put(self, request):
-        data = json.loads(request.body) ## update machine price
+        data = loads(request.body) ## update machine price
         price = data.get('price')
         machine_id = data.get('machine_id')
         try:
@@ -167,7 +212,7 @@ class AddMachineView(LoginRequiredMixin, View):
             return JsonResponse({'error': str(e)}, status=500)
     
     def delete(self, request):
-        content = json.loads(request.body)
+        content = loads(request.body)
         try:
             machine = get_object_or_404(Machine, pk=content['machine_id'])
             machine.delete()
@@ -208,7 +253,7 @@ class AddSizeView(LoginRequiredMixin, View):
     
 
     def put(self, request):
-        data = json.loads(request.body)
+        data = loads(request.body)
         cost = data.get('price')
         size_id = data.get('content_id')
 
@@ -227,7 +272,7 @@ class AddSizeView(LoginRequiredMixin, View):
 
     
     def delete(self, request):
-        content = json.loads(request.body)
+        content = loads(request.body)
         try:
             size_machine = get_object_or_404(Machine_Size, pk=content['size_id'])
             size_machine.delete()
@@ -277,7 +322,7 @@ class AddOptionView(LoginRequiredMixin, View):
     # def put(self, request, option_id, price) update data using with javascript
 
     def put(self, request):
-        data = json.loads(request.body)
+        data = loads(request.body)
         price = data.get('price')
         option_id = data.get('content_id')
 
@@ -293,7 +338,7 @@ class AddOptionView(LoginRequiredMixin, View):
             return JsonResponse({'error': str(e)}, status=500)
 
     def delete(self, request):
-        content = json.loads(request.body)
+        content = loads(request.body)
         try:
             option = get_object_or_404(Service, pk=content['option_id'])
             option.delete()
