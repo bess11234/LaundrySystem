@@ -1,5 +1,5 @@
 {% load static %}
-<nav class="relative z-40 border-gray-200 navbar flex flex-row justify-between place-items-center py-4 px-3 font-medium">
+<nav class="relative z-30 border-gray-200 navbar flex flex-row justify-between place-items-center py-4 px-3 font-medium">
   {% comment %} LOGO {% endcomment %}
   <div class="flex flex-row">
     
@@ -38,7 +38,7 @@
       {% if user.is_authenticated %}
       <ul class="border-b-[1px] py-2 px-4">
         <li>
-          <p>{{ user.first_name }} {{ user.last_name }}</p>
+          <p>{{ user.get_full_name|truncatechars:"12" }}</p>
         </li>
         <li>
           <p class="text-sm">{{ user.email }}</p>

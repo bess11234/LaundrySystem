@@ -121,6 +121,7 @@
 <script src="{% static 'edit_price.js' %}"></script>
 <script>
   function delete_size(size_id){
+    show_alert("Delete size successful.")
     fetch("",{
       method: "DELETE",
       headers:  {
@@ -130,7 +131,7 @@
       body: JSON.stringify({size_id})
     })
     .then(response => response.json())
-    .then(location.reload())
+    .then(setTimeout(()=>location.reload(true), 1200))
     .catch((error)=>{
       console.log(error)
     })

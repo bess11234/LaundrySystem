@@ -1,5 +1,6 @@
-document.querySelectorAll('input[name="price"]').forEach(input => {
+document.querySelectorAll('input[name="price2"]').forEach(input => {
     input.addEventListener('blur', function() {
+        show_alert("Change service price.")
         const contentId = this.dataset.contentId;  // Get the option ID from the data attribute
         const newValue = this.value;  // Get the updated value
 

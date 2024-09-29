@@ -44,6 +44,9 @@ class Users(AbstractUser):
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['first_name', 'last_name']
     
+    def get_full_name(self):
+        return "%s %s"%(self.first_name, self.last_name)
+    
     def display_role(self):
         return self.ROLES[self.role]
 

@@ -142,6 +142,7 @@
 {% block script %}
 <script>
   function delete_machine(machine_id){
+    show_alert("Delete machine successful")
     fetch("",{
       method: "DELETE",
       headers:  {
@@ -151,7 +152,7 @@
       body: JSON.stringify({machine_id})
     })
     .then(response => response.json())
-    .then(location.reload())
+    .then(setTimeout(()=>location.reload(true), 1200))
     .catch((error)=>{
       console.log(error)
     })

@@ -47,7 +47,10 @@ class Index(View):
         return render(request, "index.html")
 
 # Customer
-class ViewReserve(View):
+@method_decorator(access_only("cus"), name="get")
+@method_decorator(access_only("cus"), name="post")
+@method_decorator(access_only("cus"), name="put")
+class ViewReserve(LoginRequiredMixin, View):
     def get(self, request):
         review = ReviewReserveForm()
         
@@ -156,9 +159,9 @@ class AddStaffView(LoginRequiredMixin, View):
     def get(self, request):
         query = request.GET.get('search', '')
         if query:
-            getUsers = Users.objects.filter(email__icontains=query).order_by("create_at")
+            getUsers = Users.objects.filter(email__icontains=query).order_by("-role")
         else:
-            getUsers = Users.objects.order_by("-status", "create_at") #defalut/empty search
+            getUsers = Users.objects.order_by("-status", "-role") #defalut/empty search
 
         count_data = count_all_data()
         form = AddStaffForm()
@@ -209,35 +212,34 @@ class AddMachineView(LoginRequiredMixin, View):
         getMachines = Machine.objects.annotate(group=F("code")[0]).annotate(number=F("code")[2:]).annotate(number_int=Cast("number", output_field=IntegerField())).order_by("machine_size__capacity", "group", "number_int")
         form = AddMachineForm()
         show = self.show_data(getMachines, form)
-
+        show['machine_size'] = Machine_Size.objects.all()
         return render(request, "manager/add_machine.html", show)
     
     def post(self, request):
         form = AddMachineForm(request.POST)
         if form.is_valid():
             form.save()
-            print("ready to redirect")
             return redirect("add_machine")
 
         getMachines = Machine.objects.annotate(group=F("code")[0]).annotate(number=F("code")[2:]).annotate(number_int=Cast("number", output_field=IntegerField())).order_by("machine_size__capacity", "group", "number_int")
         show = self.show_data(getMachines, form)
+        show['machine_size'] = Machine_Size.objects.all()
         return render(request, "manager/add_machine.html", show)
     
     
     def put(self, request):
-        data = loads(request.body) ## update machine price
-        price = data.get('price')
-        machine_id = data.get('machine_id')
+        content = loads(request.body)
         try:
-            # Fetch the option and update its price
-            machine = Machine.objects.get(id=machine_id)
-            machine.cost = price
+            machine = Machine.objects.get(pk=content['machine_id'])
+            machine.machine_size = Machine_Size.objects.get(pk=content['size'])
             machine.save()
-            return JsonResponse({'success': True, 'price': machine.cost}, status=200)
-        except Service.DoesNotExist:
-            return JsonResponse({'error': 'Option not found'}, status=404)
-        except Exception as e:
-            return JsonResponse({'error': str(e)}, status=500)
+        except Machine.DoesNotExist:
+            return JsonResponse({"success": False}, status=500)
+        except Machine_Size.DoesNotExist:
+            return JsonResponse({"success": False}, status=500)
+        except Exception:
+            return JsonResponse({"error": True}, status=500)
+        return JsonResponse({"success": True}, status=200)
     
     def delete(self, request):
         content = loads(request.body)
@@ -348,7 +350,6 @@ class AddOptionView(LoginRequiredMixin, View):
         return render(request, "manager/add_option.html", show)
 
     # def put(self, request, option_id, price) update data using with javascript
-
     def put(self, request):
         data = loads(request.body)
         price = data.get('price')
