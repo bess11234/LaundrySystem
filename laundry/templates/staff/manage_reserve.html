@@ -216,7 +216,7 @@
   // Object to store interval IDs for each element
   var countdownIntervals = {};
 
-  function countdown(element_duration, duration, machine_code) {
+  function countdown(element_duration, duration) {
     // Clear any existing interval for this element
     if (countdownIntervals[element_duration]) {
         clearInterval(countdownIntervals[element_duration]);
@@ -244,14 +244,13 @@
         console.log("distance = " + distance + " minutes = " + minutes + " seconds = " + seconds);
 
         var new_duration = document.getElementById(element_duration);
-        var new_Input = document.getElementById(machine_code+'-input');
 
         new_duration.innerText = "TREM: " + minutes + " m " + seconds + " s";
 
         // If the countdown is over, clear the interval and reset the text
         if (distance < 0) {
-            resetTime(machine_code, duration)// Remove the stored end time
-            location.reload();          
+            location.reload();
+            //resetTime(machine_code, duration)// Remove the stored end time      
           }
     }, 1000);
 }
@@ -259,11 +258,14 @@
 // On page load, continue countdown if it was running before the refresh
 window.onload = function() {
     document.querySelectorAll('[id$="-duration"]').forEach(function(element) {
+      console.log("element.id = ", element.id)
         var element_duration = element.id;
         var storedEndTime = localStorage.getItem(element_duration + '_endTime');
         
-        var machine_code = element_duration.split('-')[0];
+        var machine_code = element_duration.split('-duration')[0];
+        console.log("machine_code = ", machine_code)
         var storedReserveCode = localStorage.getItem(machine_code + '_reserveCode');
+        console.log("storedReserveCode =", storedReserveCode)
         if (storedReserveCode) {
             var inputField = document.getElementById(machine_code + '-input');
             if (inputField) {
@@ -275,7 +277,7 @@ window.onload = function() {
             // Calculate remaining time and continue countdown
             var remainingTime = (storedEndTime - new Date().getTime()) / 60000;
             if (remainingTime > 0) {
-                countdown(element_duration, remainingTime, machine_code);
+                countdown(element_duration, remainingTime);
             } else {
                 localStorage.removeItem(element_duration + '_endTime');  // If time is already up, clear storage
             }
@@ -289,8 +291,8 @@ function resetTime(machine_code, duration){
   changeMachineAvaliable(machine_code);
   localStorage.removeItem(machine_code+'-duration' + '_endTime');
   localStorage.removeItem(machine_code + '_reserveCode');
-  
   location.reload();
+
 }
 
 </script>
