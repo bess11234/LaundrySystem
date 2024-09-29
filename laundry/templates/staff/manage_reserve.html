@@ -1,5 +1,6 @@
 {% extends 'layout.html' %}
 {% load static %}
+{% load custom_filter %}
 
 {% block title %}
   Manage Reserve
@@ -28,7 +29,8 @@
 
                     <div class="flex flex-col gap-x-6 gap-y-8 px-6 items-center">
                         <div class="mt-2 flex flex-row flex-wrap gap-x-10 gap-y-12 justify-items-center">
-                            {% for machine in size.machine_set.all %}
+                            {% for machine in machines %}
+                              {% if machine.machine_size == size %}
                                 <div>
                                     <div class="mb-1 md:mb-2">
                                         <div id='{{machine_code}}-status' class="absolute {% if machine.status_available %}bg-teal-500{% else %}bg-red-700{%endif%} rounded-full size-4 md:size-6 lg:size-8"></div>
@@ -36,7 +38,11 @@
                                     <img class="w-20 md:w-24 lg:w-36" src="{% static 'images/washing_machine_color.png' %}" alt="">
                                     <div>
                                         <p class="w-20 md:w-24 lg:w-36 text-center">{{ machine.code }}</p>
-                                        <p id="{{ machine.code }}-duration" class="w-20 md:w-24 lg:w-36 text-center">TREM: {{machine.duration}} min(s)</p>
+                                        {% if machine.status_available %}
+                                        <p id="{{ machine.code }}-duration" class="w-20 md:w-24 lg:w-36 text-center">TREM: {{machine.duration}}</p>
+                                        {% else %}
+                                        <p id="{{ machine.code }}-duration" class="w-20 md:w-24 lg:w-36 text-center">TREM: {{ machine|current_reserve_work_til }}</p>
+                                        {% endif %}
 
                                         <input type="text" name="name" id="{{machine.code}}-input" 
                                         class="mt-2 w-20 md:w-24 lg:w-36 rounded-lg shadow-sm bg-[#f9fbfc] dark:bg-[#353a55] border border-gray-300 dark:border-gray-600 focus:border-[#4c569b] focus:ring-1 focus:ring-[#4c569b] py-2 px-3 text-gray-900 dark:text-white transition read-only:border-opacity-50 read-only:bg-opacity-50 read-only:text-opacity-70" 
@@ -47,20 +53,22 @@
                                       {% if machine.status_available %}
                                       <a id="{{ machine.code }}-button" 
                                       onclick="confirmFunction('{{machine.code}}', '{{machine.code}}-input', '{{ machine.code }}-duration', {{machine.duration}})" 
-                                      class="cursor-pointer py-1 px-2 rounded-lg text-white bg-teal-500">Comfirm</a>
+                                      class="cursor-pointer py-1 px-2 rounded-lg text-white bg-teal-500 hover:bg-teal-600 activebg-teal-700">Confirm</a>
                                       {% else %}
                                       <a id="{{ machine.code }}-reset" 
-                                      onclick="resetTime('{{ machine.code }}', {{machine.duration}})" 
+                                      onclick="resetTime('{{ machine.code }}')" 
                                       class="cursor-pointer py-1 px-2 rounded-lg text-white bg-red-700">Reset</a>
                                       {% endif %}
                                     </div>
                                 </div>
+                              {% endif %}
                             {% endfor %}
                         </div>
                     </div>
                 </form>
               
                 {% comment %} {% if options %} {% endcomment %}
+                {% if size.reserve_machine_set|reserve_sort_wait_workable %}
                 <div class="xl:px-36">
                     <div class="w-full relative overflow-x-auto shadow-md sm:rounded-lg m-3 mt-10">
                         <table class="w-full text-sm text-left rtl:text-right">
@@ -89,6 +97,11 @@
                                     </th>
                                     <th scope="col" class="px-6 py-3">
                                       <div class="flex items-center">
+                                       Options
+                                      </div>
+                                    </th>
+                                    <th scope="col" class="px-6 py-3">
+                                      <div class="flex items-center">
                                         Reserve Status
                                       </div>
                                     </th>
@@ -98,42 +111,54 @@
                             </thead>
                             <tbody class="text-[#4c569b]/80 dark:text-white/80">
                             <!-- show service data -->
-                            {% for reserve in reserved %}
-                              {% if reserve.machine_size == size%}
-                              <tr class="border-b border-black/10 dark:border-white/10 bg-[#fafdff]/40 dark:bg-[#3b4682]/80">
-                                      <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                        {{forloop.counter}}
-                                      </td>
-                                      <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                          <span id="{{reserve.code}}">{{reserve.code}}</span>
-                                          {% comment %} copy icon {% endcomment %}
-                                          {% if reserve.status != 0 %}
-                                          <a title="Copy code" onclick="copyFunction('{{reserve.code}}')"><img class="w-4 inline rounded-sm cursor-pointer" src="{% static 'images/Copy-icon.png' %}"></a>
-                                          {% endif %}
-                                      </td>
-                                      <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                        {{reserve.arrive_at}}
-                                      </td>
-                                      <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                        {{reserve.user.first_name}} {{reserve.user.last_name}}
-                                      </td>
-                                      <td id=""class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                        {{reserve.status_context}}
-                                      </td>
-                                      <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                      {% if reserve.status == 0 %}
-                                        <a onclick="updateStatus({{reserve.id}})" class="cursor-pointer py-1 px-2 font-medium rounded-lg text-white bg-green-500 hover:bg-green-200">Accept</a>
-                                      {% else %}
-                                        <a onclick="" class="cursor-pointer py-1 px-2 font-medium rounded-lg text-white bg-red-600 hover:bg-red-400">Cancle</a>
-                                      </td>
-                                      {% endif %}
-                                  </tr>
-                                  {% endif %}
-                                {% endfor %}
+                              {% for reserve in size.reserve_machine_set|reserve_sort_wait_workable|reserve_sort %}
+                                <tr class="border-b border-black/10 dark:border-white/10 bg-[#fafdff]/40 dark:bg-[#3b4682]/80">
+                                    <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                      {{forloop.counter}}
+                                    </td>
+                                    <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white flex place-items-center gap-x-1">
+                                        <span id="{{reserve.code}}">{{reserve.code}}</span>
+                                        {% comment %} copy icon {% endcomment %}
+                                        {% if reserve.status == 1 %}
+                                        {% comment %} <img class="w-4 inline rounded-sm cursor-pointer" src="{% static 'images/Copy-icon.png' %}"> {% endcomment %}
+                                        <svg onclick="copyFunction('{{reserve.code}}')" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4 inline cursor-pointer hover:opacity-70 hover:bg-black/20 dark:hover:bg-black/50 rounded-full" >
+                                          <path stroke-linecap="round" stroke-linejoin="round" d="M15.666 3.888A2.25 2.25 0 0 0 13.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 0 1-.75.75H9a.75.75 0 0 1-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.646.049 1.288.11 1.927.184 1.1.128 1.907 1.077 1.907 2.185V19.5a2.25 2.25 0 0 1-2.25 2.25H6.75A2.25 2.25 0 0 1 4.5 19.5V6.257c0-1.108.806-2.057 1.907-2.185a48.208 48.208 0 0 1 1.927-.184" />
+                                        </svg>
+                                        {% endif %}
+                                    </td>
+                                    <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                     {{reserve.arrive_at|date:"j M Y, H:i"}}
+                                    </td>
+                                    <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                      {{reserve.user.get_full_name}}
+                                    </td>
+                                    <td class="px-6 py-1 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                      <div class="flex flex-col">
+                                        {% for service in reserve.service.all %}
+                                        <span>{{ service.name }}</span>
+                                        {% endfor %}
+                                      </div>
+                                    </td>
+                                    <td id=""class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                      <div class="flex flex-row place-items-center gap-1">
+                                        <div class="size-3 left-0 rounded-full {% if reserve.status != 3 and reserve.status != 4 %}animate-pulse{%endif%} {% if reserve.status == 0 %}bg-yellow-300{%elif reserve.status == 1%}bg-yellow-600{%elif reserve.status == 2%}bg-blue-300{%elif reserve.status == 3%}bg-green-300{%elif reserve.status == 4%}bg-red-300{%endif%}"></div>
+                                        <span class="text-right">{{ reserve.status_context|title }}</span>
+                                      </div>
+                                    </td>
+                                    <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                    {% if reserve.status == 0 %}
+                                      <a onclick="updateStatus({{reserve.id}})" class="cursor-pointer py-1 px-2 font-medium rounded-lg text-white bg-green-500 hover:bg-green-600 active:bg-green-700">Accept</a>
+                                    {% else %}
+                                      <a onclick="" class="cursor-pointer py-1 px-2 font-medium rounded-lg text-white bg-red-500 hover:bg-red-600 active:bg-red-700">Cancel</a>
+                                    </td>
+                                    {% endif %}
+                                </tr>
+                              {% endfor %}
                             </tbody>
                         </table>
                     </div>
                 </div>
+                {% endif %}
                 {% comment %} {% endif %} {% endcomment %}
 
           </div>
@@ -146,7 +171,7 @@
 <script>
   //copy code
   function copyFunction(reserved_code){
-    console.log(reserved_code)
+    show_alert("Copy code successful.")
     copy_text = document.getElementById(reserved_code).innerText;
     navigator.clipboard.writeText(copy_text)
   }
@@ -190,15 +215,18 @@
             localStorage.setItem(element_duration + '_endTime', endTime);
             localStorage.setItem(machine_code + '_reserveCode', reserve_code);
 
-            countdown(element_duration, machine_duration, machine_code);
+            //countdown(element_duration, machine_duration, machine_code);
       } else {
           console.error('Invalid reserve code:', reserve_code);
       }})
     .catch(error => {console.error('Error:', error);});
   }
 
-  function updateStatus(reserveId){
-    console.log(reserveId)
+  
+  function resetTime(machine_code){
+    var storedReserveCode = localStorage.getItem(machine_code + '_reserveCode');
+    console.log(storedReserveCode)
+  
     fetch("", {
       method:"POST",
       headers: {
@@ -206,94 +234,19 @@
         'x-CSRFToken': '{{csrf_token}}'
       },
       body: JSON.stringify({
-        'reserve_id': reserveId})
+        'reserveCode': storedReserveCode})
     })
-    .then(response => response.json())
-    .then(data => {location.reload();})
-    .catch(error => {console.error('Error:', error);});
+    
+    clearInterval(countdownIntervals[machine_code+'-duration']);
+    
+    localStorage.removeItem(machine_code+'-duration' + '_endTime');
+    localStorage.removeItem(machine_code + '_reserveCode');
+  
+    changeMachineAvaliable(machine_code);
+    
+    location.reload();
+  
   }
-
-  // Object to store interval IDs for each element
-  var countdownIntervals = {};
-
-  function countdown(element_duration, duration) {
-    // Clear any existing interval for this element
-    if (countdownIntervals[element_duration]) {
-        clearInterval(countdownIntervals[element_duration]);
-    }
-
-    // Get stored end time from localStorage if it exists
-    var endTime = localStorage.getItem(element_duration + '_endTime');
-    if (!endTime) {
-        // If there's no stored end time, calculate a new future time
-        var future = new Date().getTime() + duration * 60000;
-        localStorage.setItem(element_duration + '_endTime', future);
-        endTime = future;
-    }
-
-    // Start a new interval for the countdown
-    countdownIntervals[element_duration] = setInterval(function() {
-        // Get current time
-        var now = new Date().getTime();
-
-        // Calculate the distance between now and the future end time
-        var distance = endTime - now;
-        var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-        var seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-        console.log("distance = " + distance + " minutes = " + minutes + " seconds = " + seconds);
-
-        var new_duration = document.getElementById(element_duration);
-
-        new_duration.innerText = "TREM: " + minutes + " m " + seconds + " s";
-
-        // If the countdown is over, clear the interval and reset the text
-        if (distance < 0) {
-            location.reload();
-            //resetTime(machine_code, duration)// Remove the stored end time      
-          }
-    }, 1000);
-}
-
-// On page load, continue countdown if it was running before the refresh
-window.onload = function() {
-    document.querySelectorAll('[id$="-duration"]').forEach(function(element) {
-      console.log("element.id = ", element.id)
-        var element_duration = element.id;
-        var storedEndTime = localStorage.getItem(element_duration + '_endTime');
-        
-        var machine_code = element_duration.split('-duration')[0];
-        console.log("machine_code = ", machine_code)
-        var storedReserveCode = localStorage.getItem(machine_code + '_reserveCode');
-        console.log("storedReserveCode =", storedReserveCode)
-        if (storedReserveCode) {
-            var inputField = document.getElementById(machine_code + '-input');
-            if (inputField) {
-                inputField.value = storedReserveCode; // Set the value of the input field to the stored reserve code
-            }
-        }
-
-        if (storedEndTime) {
-            // Calculate remaining time and continue countdown
-            var remainingTime = (storedEndTime - new Date().getTime()) / 60000;
-            if (remainingTime > 0) {
-                countdown(element_duration, remainingTime);
-            } else {
-                localStorage.removeItem(element_duration + '_endTime');  // If time is already up, clear storage
-            }
-        }
-    });
-}
-
-function resetTime(machine_code, duration){
-
-  clearInterval(countdownIntervals[machine_code+'-duration']);
-  changeMachineAvaliable(machine_code);
-  localStorage.removeItem(machine_code+'-duration' + '_endTime');
-  localStorage.removeItem(machine_code + '_reserveCode');
-  location.reload();
-
-}
 
 </script>
 {% endblock %}

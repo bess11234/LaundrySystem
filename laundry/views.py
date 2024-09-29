@@ -2,6 +2,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 from django.http import JsonResponse
+from django.db.models import Count
 
 ## Exception
 from django.core.exceptions import PermissionDenied
@@ -30,6 +31,14 @@ from .decorators import access_only
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils.decorators import method_decorator
 
+def reserve_check_working():
+    for reserve_m in Reserve_Machine.objects.filter(status=3):
+        reserve_work = reserve_m.work_at + timedelta(minutes=reserve_m.machine.duration)
+        if now() > reserve_work:
+            reserve_m.machine.status_available = True
+            reserve_m.status = 3
+            reserve_m.save()
+
 def random_string(length=0):
     text = ""
     random_ = ascii_letters+"0123456789"
@@ -46,10 +55,13 @@ class Index(View):
                 return render(request, "index.html", {"machine_size": machine_size})
         return render(request, "index.html")
 
-
 # Customer
-class ViewReserve(View):
+@method_decorator(access_only("cus"), name="get")
+@method_decorator(access_only("cus"), name="post")
+@method_decorator(access_only("cus"), name="put")
+class ViewReserve(LoginRequiredMixin, View):
     def get(self, request):
+        reserve_check_working()
         review = ReviewReserveForm()
         
         reserve_machine = Reserve_Machine.objects.filter(user=request.user).order_by("status", "arrive_at")
@@ -126,13 +138,16 @@ class ReserveMachineView(LoginRequiredMixin, View):
 # Staff
 class ManageReserve(View):
     def get(self, request):
+        reserve_check_working()
+        getMachines = Machine.objects.annotate(group=F("code")[0]).annotate(number=F("code")[2:]).annotate(number_int=Cast("number", output_field=IntegerField())).order_by("machine_size__capacity", "group", "number_int")
+
         machine_size = Machine_Size.objects.order_by("capacity")
         reserved = Reserve_Machine.objects.filter(status__range=(0 , 2)).order_by("-status", "actual_arrive" ,"arrive_at")
-        print(reserved)
-        return render(request, "staff/manage_reserve.html", {"machine_size": machine_size, "reserved": reserved})
+        
+        return render(request, "staff/manage_reserve.html", {"machine_size": machine_size, 'machines': getMachines, "reserved": reserved, 'time_now': now()})
     
     def post(self, request):
-        data = loads(request.body)
+        data = loads(request.body)     
         if 'reserve_id' in data:
             reserve_id = data.get('reserve_id')
             change_wating= Reserve_Machine.objects.get(pk=reserve_id)
@@ -164,6 +179,14 @@ class ManageReserve(View):
             get_machine.status_available = 1
             get_machine.save()
 
+        if 'reserveCode' in data:
+            reserve_code = data.get('reserveCode')
+            change_working= Reserve_Machine.objects.get(code=reserve_code)
+            change_working.status = 1
+            change_working.save()
+            
+        return JsonResponse({'valid': True}, status=200)
+
 
         
 
@@ -192,9 +215,9 @@ class AddStaffView(LoginRequiredMixin, View):
     def get(self, request):
         query = request.GET.get('search', '')
         if query:
-            getUsers = Users.objects.filter(email__icontains=query).order_by("create_at")
+            getUsers = Users.objects.filter(email__icontains=query).order_by("-role")
         else:
-            getUsers = Users.objects.order_by("-status", "create_at") #defalut/empty search
+            getUsers = Users.objects.order_by("-status", "-role") #defalut/empty search
 
         count_data = count_all_data()
         form = AddStaffForm()
@@ -245,35 +268,39 @@ class AddMachineView(LoginRequiredMixin, View):
         getMachines = Machine.objects.annotate(group=F("code")[0]).annotate(number=F("code")[2:]).annotate(number_int=Cast("number", output_field=IntegerField())).order_by("machine_size__capacity", "group", "number_int")
         form = AddMachineForm()
         show = self.show_data(getMachines, form)
-
+        show['machine_size'] = Machine_Size.objects.order_by("capacity")
         return render(request, "manager/add_machine.html", show)
     
     def post(self, request):
         form = AddMachineForm(request.POST)
         if form.is_valid():
             form.save()
-            print("ready to redirect")
             return redirect("add_machine")
 
         getMachines = Machine.objects.annotate(group=F("code")[0]).annotate(number=F("code")[2:]).annotate(number_int=Cast("number", output_field=IntegerField())).order_by("machine_size__capacity", "group", "number_int")
         show = self.show_data(getMachines, form)
+        show['machine_size'] = Machine_Size.objects.all()
         return render(request, "manager/add_machine.html", show)
     
     
     def put(self, request):
-        data = loads(request.body) ## update machine price
-        price = data.get('price')
-        machine_id = data.get('machine_id')
+        content = loads(request.body)
         try:
-            # Fetch the option and update its price
-            machine = Machine.objects.get(id=machine_id)
-            machine.cost = price
-            machine.save()
-            return JsonResponse({'success': True, 'price': machine.cost}, status=200)
-        except Service.DoesNotExist:
-            return JsonResponse({'error': 'Option not found'}, status=404)
-        except Exception as e:
-            return JsonResponse({'error': str(e)}, status=500)
+            with transaction.atomic():
+                machine = Machine.objects.get(pk=content['machine_id'])
+                if (content['size'] != ""):
+                    machine.machine_size = Machine_Size.objects.get(pk=content['size'])
+                else:
+                    machine.machine_size = None
+                machine.status_health = content['status']
+                machine.save()
+        except Machine.DoesNotExist:
+            return JsonResponse({"success": False}, status=500)
+        except Machine_Size.DoesNotExist:
+            return JsonResponse({"success": False}, status=500)
+        except Exception:
+            return JsonResponse({"error": True}, status=500)
+        return JsonResponse({"success": True}, status=200)
     
     def delete(self, request):
         content = loads(request.body)
@@ -319,7 +346,7 @@ class AddSizeView(LoginRequiredMixin, View):
     def put(self, request):
         data = loads(request.body)
         cost = data.get('price')
-        size_id = data.get('content_id')
+        size_id = data.get('size_id')
 
         print("cost =", cost, " size_id =", size_id)
 
@@ -384,7 +411,6 @@ class AddOptionView(LoginRequiredMixin, View):
         return render(request, "manager/add_option.html", show)
 
     # def put(self, request, option_id, price) update data using with javascript
-
     def put(self, request):
         data = loads(request.body)
         price = data.get('price')

@@ -24,10 +24,11 @@ document.addEventListener('DOMContentLoaded', function () {
     // Add event listeners for status (checkbox) and role (select dropdown)
     document.querySelectorAll('input[type="checkbox"]').forEach(function (checkbox) {
         checkbox.addEventListener('change', function () {
+            show_alert("Change user status.")
             const userId = this.id.split('-')[1];  // Get user id from the element's id
             var valueCheck = this.checked ? 1 : 0;
 
-            console.log(`Status changed for user ${userId} to value ${valueCheck}!`);
+            //console.log(`Status changed for user ${userId} to value ${valueCheck}!`);
             
             // Prepare the data
             const data = {
@@ -42,10 +43,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
     document.querySelectorAll('select').forEach(function (select) {
         select.addEventListener('change', function () {
+            show_alert("Change user role.")
             const userId = this.id.split('-')[1];  // Get user id from the element's id
             const valueSelected = this.value;
 
-            console.log(`Role changed for user ${userId} to value ${valueSelected}!`);
+            //console.log(`Role changed for user ${userId} to value ${valueSelected}!`);
 
             // Prepare the data
             const data = {

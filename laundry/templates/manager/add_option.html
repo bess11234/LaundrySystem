@@ -91,7 +91,7 @@
                                 class="mt-2 w-full font-bold rounded-lg shadow-sm bg-[#f9fbfc] dark:bg-[#353a55] border border-gray-300 dark:border-gray-600 focus:border-[#4c569b] focus:ring-1 focus:ring-[#4c569b] py-2 px-3 text-gray-900 dark:text-white transition read-only:border-opacity-50 read-only:bg-opacity-50 read-only:text-opacity-70" 
                                         type="Number" 
                                         min = "0" 
-                                        name="price" 
+                                        name="price2" 
                                         id="{{option.id}}" 
                                         data-content-id="{{ option.id }}"
                                         required>
@@ -116,6 +116,7 @@
 <script src="{% static 'edit_price.js' %}"></script>
 <script>
   function delete_option(option_id){
+    show_alert("Delete service successful.")
     fetch("",{
       method: "DELETE",
       headers:  {
@@ -125,7 +126,7 @@
       body: JSON.stringify({option_id})
     })
     .then(response => response.json())
-    .then(location.reload())
+    .then(setTimeout(()=>location.reload(true), 1200))
     .catch((error)=>{
       console.log(error)
     })

@@ -93,7 +93,7 @@
                   <td class="pl-6 py-4">{{ size.capacity }}</td>
                   <td class="pl-6 py-4">
                     <form class="w-fit pt-3">
-                      <input value="{{ size.cost}}" 
+                      <input onblur="update_size({{size.id}}, this.value)" value="{{ size.cost}}" 
                         class="mt-2 w-full font-bold rounded-lg shadow-sm bg-[#f9fbfc] dark:bg-[#353a55] border border-gray-300 dark:border-gray-600 focus:border-[#4c569b] focus:ring-1 focus:ring-[#4c569b] py-2 px-3 text-gray-900 dark:text-white transition read-only:border-opacity-50 read-only:bg-opacity-50 read-only:text-opacity-70" 
                                 type="Number" 
                                 min = "0" 
@@ -118,9 +118,24 @@
 {% endblock %}
 
 {% block script %}
-<script src="{% static 'edit_price.js' %}"></script>
 <script>
+  function update_size(size_id, price){
+    show_alert("Change service price.")
+    fetch("",{
+      method: "PUT",
+      headers:  {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': '{{ csrf_token }}'  // Send CSRF token in the request header
+      },
+      body: JSON.stringify({size_id, price})
+    })
+    .then(response => response.json())
+    .catch((error)=>{
+      console.log(error)
+    })
+  }
   function delete_size(size_id){
+    show_alert("Delete size successful.")
     fetch("",{
       method: "DELETE",
       headers:  {
@@ -130,7 +145,7 @@
       body: JSON.stringify({size_id})
     })
     .then(response => response.json())
-    .then(location.reload())
+    .then(setTimeout(()=>location.reload(true), 1200))
     .catch((error)=>{
       console.log(error)
     })

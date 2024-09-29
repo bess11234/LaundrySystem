@@ -13,7 +13,7 @@
   <div class="p-4 md:px-32 lg:px-52 relative">
     {% comment %}Select Size{% endcomment %}
     <div class="absolute left-0 top-0 w-[100vw] z-20" id="absolute_size">
-      <div class="flex flex-row justify-items-center m-4 md:mx-32 lg:mx-52 gap-1 bg-[#ced2e9] border-black/10 dark:bg-[#0c0d18] border dark:border-[#2c3360] rounded-xl transition-all duration-500" id="form_size">
+      <div class="flex flex-row flex-wrap justify-items-center m-4 md:mx-32 lg:mx-52 gap-1 bg-[#ced2e9] border-black/10 dark:bg-[#0c0d18] border dark:border-[#2c3360] rounded-xl transition-all duration-500" id="form_size">
         {% for size in machine_size %}
           <div onclick="select_size({{ size.id }}, '{{ size.size }}', {{ size.cost }})"
             class="flex flex-col justify-items-center grow p-3 py-12 cursor-pointer hover:bg-[#a2abd7]/50 dark:hover:bg-[#2c3360] transition-colors duration-300 {% if forloop.first %}
@@ -45,13 +45,13 @@
               <div class="grid grid-cols-2 gap-x-6">
                 <div class="flex flex-col">
                   <label for="{{ form.machine_size.id_for_label }}">Machine Size</label>
-                  <input class="mt-2 rounded-lg shadow-sm bg-[#f9fbfc] dark:bg-[#353a55] border border-gray-300 dark:border-gray-600 focus:border-[#4c569b] focus:ring-1 focus:ring-[#4c569b] py-2 px-3 text-gray-900 dark:text-white transition read-only:border-opacity-50 read-only:bg-opacity-50 read-only:text-opacity-70" type="text" id="{{ form.machine_size.id_for_label }}_display" value="" readonly />
+                  <input class="mt-2 rounded-lg shadow-sm bg-[#f9fbfc] dark:bg-[#353a55] border border-gray-300 dark:border-gray-600 focus:border-[#4c569b] focus:ring-1 focus:ring-[#4c569b] py-2 px-3 transition read-only:border-opacity-50 read-only:bg-opacity-50 read-only:text-opacity-70" type="text" id="{{ form.machine_size.id_for_label }}_display" value="" readonly />
                   <span class="text-xs text-[#4c569b]">{{ form.machine_size.help_text }}</span>
                   <p class="text-red-500 text-sm mt-1">{{ form.machine_size.errors }}</p>
                 </div>
                 <div class="flex flex-col">
                   <label for="{{ form.machine_size.id_for_label }}">Cost</label>
-                  <input class="mt-2 rounded-lg shadow-sm bg-[#f9fbfc] dark:bg-[#353a55] border border-gray-300 dark:border-gray-600 focus:border-[#4c569b] focus:ring-1 focus:ring-[#4c569b] py-2 px-3 text-gray-900 dark:text-white transition-form duration-500 read-only:border-opacity-50 read-only:bg-opacity-50 read-only:text-opacity-70"
+                  <input class="mt-2 rounded-lg shadow-sm bg-[#f9fbfc] dark:bg-[#353a55] border border-gray-300 dark:border-gray-600 focus:border-[#4c569b] focus:ring-1 focus:ring-[#4c569b] py-2 px-3 transition-all duration-500 read-only:border-opacity-50 read-only:bg-opacity-50 read-only:text-opacity-70"
                     type="number" id="cost" value="" readonly />
                   <span class="text-xs text-[#4c569b]">{{ form.machine_size.help_text }}</span>
                   <p class="text-red-500 text-sm mt-1">{{ form.machine_size.errors }}</p>
@@ -69,14 +69,14 @@
 
               <div class="flex flex-col grow place-self-center">
                 <label for="{{ form.arrive_at.id_for_label }}">Arrive at</label>
-                <input onchange="console.log(this.value)" class="mt-2 rounded-lg shadow-sm bg-[#f9fbfc] dark:bg-[#353a55] border border-gray-300 dark:border-gray-600 focus:border-[#4c569b] focus:ring-1 focus:ring-[#4c569b] py-2 px-3 text-gray-900 dark:text-white transition read-only:border-opacity-50 read-only:bg-opacity-50 read-only:text-opacity-70" type="datetime-local" min="{{ min_time_reserve|date:'Y-m-d' }}T{{ min_time_reserve|date:'H:i' }}" id="{{ form.arrive_at.id_for_label }}" value="{{ min_time_reserve|date:'Y-m-d' }}T{{ min_time_reserve|date:'H:i' }}" name="arrive_at" />
+                <input onchange="console.log(this.value)" class="mt-2 rounded-lg shadow-sm bg-[#f9fbfc] dark:bg-[#353a55] border border-gray-300 dark:border-gray-600 focus:border-[#4c569b] focus:ring-1 focus:ring-[#4c569b] py-2 px-3 transition read-only:border-opacity-50 read-only:bg-opacity-50 read-only:text-opacity-70" type="datetime-local" min="{{ min_time_reserve|date:'Y-m-d' }}T{{ min_time_reserve|date:'H:i' }}" id="{{ form.arrive_at.id_for_label }}" value="{{ min_time_reserve|date:'Y-m-d' }}T{{ min_time_reserve|date:'H:i' }}" name="arrive_at" />
                 <p class="text-red-500 text-sm mt-1">{{ form.arrive_at.errors }}</p>
               </div>
 
               <div class="flex flex-col self-end xl:mb-1">
                 <div class="flex items-center gap-x-6 self-end justify-self-start">
                   <button type="submit" class="rounded-md bg-[#4e5ea9] hover:bg-[#3c488d] active:bg-[#313a73] px-3 py-2 text-sm font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2">Reserve</button>
-                  <button type="reset" class="text-sm font-semibold leading-6">Cancel</button>
+                  <button type="reset" onclick="cancel_reserve()" class="text-sm font-semibold leading-6">Cancel</button>
                 </div>
               </div>
             </div>
@@ -111,7 +111,9 @@
         
         if (changed){
           inp_cost.classList.toggle("scale-110")
-          setTimeout(()=>inp_cost.classList.toggle("scale-110"),200)
+          setTimeout(()=>{
+            inp_cost.classList.toggle("scale-110")
+          },400)
         }
     }
 
@@ -132,6 +134,15 @@
       origin_cost = cost
       inp_cost.value = origin_cost
       check_service(false)
+    }
+
+    function cancel_reserve(){
+      form_size.classList.toggle('opacity-0')
+      form_size.classList.toggle('-translate-y-full')
+      form_reserve.classList.toggle('opacity-0')
+      
+      absolute_size.classList.toggle('w-[100vw]')
+      absolute_size.classList.toggle('w-[0vw]')
     }
 
   </script>

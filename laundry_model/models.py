@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.models import BaseUserManager
-
+from django.utils.timezone import timedelta
 
 # Create your models here.
 class CustomUserManager(BaseUserManager):
@@ -44,6 +44,9 @@ class Users(AbstractUser):
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['first_name', 'last_name']
     
+    def get_full_name(self):
+        return "%s %s"%(self.first_name, self.last_name)
+    
     def display_role(self):
         return self.ROLES[self.role]
 
@@ -53,6 +56,9 @@ class Service(models.Model):
     
     def __str__(self):
         return "%s +%d"%(self.name, self.price)
+    
+    def display_name(self):
+        return self.name
 
 class Machine_Size(models.Model):
     size = models.CharField(max_length=15)
@@ -89,6 +95,9 @@ class Reserve_Machine(models.Model):
 
     def status_context(self):
         return self.STATUS[self.status]
+    
+    def working_til(self):
+        return self.work_at + timedelta(minutes=self.machine.duration)
 
 class Review_Reserve(models.Model):
     RATING = ((1,1), (2,2), (3,3), (4,4), (5,5))
