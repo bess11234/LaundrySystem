@@ -224,9 +224,6 @@
 
   
   function resetTime(machine_code){
-    var storedReserveCode = localStorage.getItem(machine_code + '_reserveCode');
-    console.log(storedReserveCode)
-  
     fetch("", {
       method:"POST",
       headers: {
@@ -234,7 +231,7 @@
         'x-CSRFToken': '{{csrf_token}}'
       },
       body: JSON.stringify({
-        'reserveCode': storedReserveCode})
+        'resetMachine': machine_code})
     })
     
     clearInterval(countdownIntervals[machine_code+'-duration']);

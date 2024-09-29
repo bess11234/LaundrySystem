@@ -179,9 +179,9 @@ class ManageReserve(View):
             get_machine.status_available = 1
             get_machine.save()
 
-        if 'reserveCode' in data:
-            reserve_code = data.get('reserveCode')
-            change_working= Reserve_Machine.objects.get(code=reserve_code)
+        if 'resetMachine' in data:
+            machine_id = data.get('resetMachine')
+            change_working= Reserve_Machine.objects.filter(machine_id=machine_id, status=2)
             change_working.status = 1
             change_working.save()
             
