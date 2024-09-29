@@ -230,9 +230,14 @@ class AddMachineView(LoginRequiredMixin, View):
     def put(self, request):
         content = loads(request.body)
         try:
-            machine = Machine.objects.get(pk=content['machine_id'])
-            machine.machine_size = Machine_Size.objects.get(pk=content['size'])
-            machine.save()
+            with transaction.atomic():
+                machine = Machine.objects.get(pk=content['machine_id'])
+                if (content['size'] != ""):
+                    machine.machine_size = Machine_Size.objects.get(pk=content['size'])
+                else:
+                    machine.machine_size = None
+                machine.status_health = content['status']
+                machine.save()
         except Machine.DoesNotExist:
             return JsonResponse({"success": False}, status=500)
         except Machine_Size.DoesNotExist:
@@ -285,7 +290,7 @@ class AddSizeView(LoginRequiredMixin, View):
     def put(self, request):
         data = loads(request.body)
         cost = data.get('price')
-        size_id = data.get('content_id')
+        size_id = data.get('size_id')
 
         print("cost =", cost, " size_id =", size_id)
 

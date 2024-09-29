@@ -62,18 +62,25 @@
           <table class="w-full text-sm text-left rtl:text-right">
             <thead class="text-xs uppercase shadow-sm bg-white dark:bg-[#4c569b] text-[#4c569b] dark:text-white/60">
               <tr>
+                <!-- column name : Status Available -->
+                <th scope="col" class="p-3 max-w-10">
+                  <div class="w-fit m-auto">Available</div>
+                </th>
                 <!-- column name : Machine Code -->
-                <th scope="col" class="pl-6 py-3 max-w-10">
+                <th scope="col" class="p-3 max-w-10">
                   <div class="flex items-center">Machine Code</div>
                 </th>
                 <!-- column name : Size -->
-                <th scope="col" class="pl-6 py-3 w-30 min-w-30">
+                <th scope="col" class="p-3 max-w-20">
                   <div class="flex items-center">Size</div>
                 </th>
-
                 <!-- column name : Duration -->
-                <th scope="col" class="pl-6 py-3">
+                <th scope="col" class="p-3 max-w-10">
                   <div class="flex items-center">Duration</div>
+                </th>
+                <!-- column name : Status Health -->
+                <th scope="col" class="p-3 max-w-10">
+                  <div class="flex items-center">Health</div>
                 </th>
                 
                 <th></th>
@@ -83,19 +90,27 @@
               <!-- show machine data -->
               {% for machine in machines %}
                 <tr class="border-b border-black/10 dark:border-white/10 bg-[#fafdff]/40 dark:bg-[#3b4682]/80">
-                  <th scope="row" class="pl-6 py-4 font-medium whitespace-nowrap ">{{ machine.code }}</th>
+                  <td class=""><div class="m-auto text-center size-3 left-0 rounded-full animate-pulse {%if machine.status_available %}bg-green-300{%else%}bg-red-300{%endif%}"></div></td>
 
-                  <td class="pl-6">
-                    <select onblur="update_machine({{ machine.id }}, this.value, {{ machine.machine_size.id }})" id="" class="rounded-lg shadow-sm bg-[#f9fbfc] dark:bg-[#353a55] border border-gray-300 dark:border-gray-600 focus:border-[#4c569b] focus:ring-1 focus:ring-[#4c569b] py-2 px-3 transition read-only:border-opacity-50 read-only:bg-opacity-50 read-only:text-opacity-70">
+                  <td class="p-3 font-medium whitespace-nowrap ">{{ machine.code }}</td>
+
+                  <td class="p-3">
+                    <select onblur="update_machine({{ machine.id }}, this.value, {{ machine.machine_size.id }}, document.getElementById('select_health').checked, {{ machine.status_health|lower }})" id="select_size" class="rounded-lg shadow-sm bg-[#f9fbfc] dark:bg-[#353a55] border border-gray-300 dark:border-gray-600 focus:border-[#4c569b] focus:ring-1 focus:ring-[#4c569b] py-2 px-3 transition read-only:border-opacity-50 read-only:bg-opacity-50 read-only:text-opacity-70">
+                      <option value="">------</option>
                       {% for size in machine_size %}
                       <option value="{{ size.id }}" {% if machine.machine_size == size %}selected{%endif%}>{{ size }}</option>
                       {% endfor %}
                     </select>
                   </td>
 
-                  <td class="pl-6">{{ machine.duration }}</td>
+                  <td class="p-3">{{ machine.duration }}</td>
 
-                  <td class="text-center">
+                  <td class="p-3">
+                    <input onclick="update_machine({{ machine.id }}, document.getElementById('select_size').value, {{ machine.machine_size.id }}, this.checked, {{ machine.status_health|lower }})" class="rounded" type="checkbox" name="status_health" id="select_health"
+                          {% if machine.status_health %}checked{% endif %}>
+                      </td>
+
+                  <td class="p-3 text-center">
                     <a onclick="delete_machine({{ machine.id }})" class="cursor-pointer py-1 px-2 font-medium rounded-lg text-white bg-red-600 hover:bg-red-400">Delete</a>
                   </td>
                 </tr>
@@ -111,16 +126,16 @@
 
 {% block script %}
 <script>
-  function update_machine(machine_id, size, origin_size){
-    if (size != origin_size){
-      show_alert("Update machine size successful.")
+  function update_machine(machine_id, size, origin_size, status, origin_status){
+    if (size != origin_size || status != origin_status){
+      show_alert("Update machine successful.")
       fetch("", {
         method: "PUT",
         headers: {
           'Content-Type': 'application/json',
           'X-CSRFToken': '{{ csrf_token }}'
         },
-        body: JSON.stringify({machine_id, size})
+        body: JSON.stringify({machine_id, size, status})
       })
       .then(response => response.json())
       //.then(setTimeout(()=>location.reload(), 1000))
