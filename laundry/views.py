@@ -128,10 +128,12 @@ class ReserveMachineView(LoginRequiredMixin, View):
 # Staff
 class ManageReserve(View):
     def get(self, request):
+        getMachines = Machine.objects.annotate(group=F("code")[0]).annotate(number=F("code")[2:]).annotate(number_int=Cast("number", output_field=IntegerField())).order_by("machine_size__capacity", "group", "number_int")
+        
         machine_size = Machine_Size.objects.order_by("capacity")
         reserved = Reserve_Machine.objects.filter(status__range=(0 , 2)).order_by("actual_arrive" ,"arrive_at")
         print(reserved)
-        return render(request, "staff/manage_reserve.html", {"machine_size": machine_size, "reserved": reserved})
+        return render(request, "staff/manage_reserve.html", {"machine_size": machine_size, 'machines': getMachines, "reserved": reserved})
 
 # Manager
 
@@ -212,7 +214,7 @@ class AddMachineView(LoginRequiredMixin, View):
         getMachines = Machine.objects.annotate(group=F("code")[0]).annotate(number=F("code")[2:]).annotate(number_int=Cast("number", output_field=IntegerField())).order_by("machine_size__capacity", "group", "number_int")
         form = AddMachineForm()
         show = self.show_data(getMachines, form)
-        show['machine_size'] = Machine_Size.objects.all()
+        show['machine_size'] = Machine_Size.objects.order_by("capacity")
         return render(request, "manager/add_machine.html", show)
     
     def post(self, request):
