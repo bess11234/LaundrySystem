@@ -41,7 +41,9 @@
                                         {% if machine.status_available %}
                                         <p id="{{ machine.code }}-duration" class="w-20 md:w-24 lg:w-36 text-center">TREM: {{machine.duration}}</p>
                                         {% else %}
-                                        <p id="{{ machine.code }}-duration" class="w-20 md:w-24 lg:w-36 text-center">TREM: {{ machine|current_reserve_work_til }}</p>
+                                          {% with reserve_working_until=machine|current_reserve_work_til%}
+                                          <p id="{{ machine.code }}-duration" class="w-20 md:w-24 lg:w-36 text-center">TREM: {{ reserve_working_until|timeuntil:time_now }}</p>
+                                          {% endwith %}
                                         {% endif %}
 
                                         <input type="text" name="name" id="{{machine.code}}-input" 
@@ -169,6 +171,21 @@
 
 {% block script %}
 <script>
+  function updateStatus(reserveId){
+    console.log(reserveId)
+    fetch("", {
+      method:"PUT",
+      headers: {
+        'Content-Type': 'application/json',
+        'x-CSRFToken': '{{csrf_token}}'
+      },
+      body: JSON.stringify({
+        'reserve_id': reserveId})
+    })
+    .then(response => response.json())
+    .then(data => {location.reload();})
+    .catch(error => {console.error('Error:', error);});
+  }
   //copy code
   function copyFunction(reserved_code){
     show_alert("Copy code successful.")
@@ -178,7 +195,7 @@
   
   function changeMachineAvaliable(machine_code){
     fetch("", {
-      method:"POST",
+      method:"PUT",
       headers: {
         'Content-Type': 'application/json',
         'x-CSRFToken': '{{csrf_token}}'
@@ -195,7 +212,7 @@
     var reserve_code = document.getElementById(inputID).value;
     console.log("Reserve Code: ", reserve_code);
     fetch("", {
-      method:"POST",
+      method:"PUT",
       headers: {
         'Content-Type': 'application/json',
         'x-CSRFToken': '{{csrf_token}}'
@@ -225,7 +242,7 @@
   
   function resetTime(machine_code){
     fetch("", {
-      method:"POST",
+      method:"PUT",
       headers: {
         'Content-Type': 'application/json',
         'x-CSRFToken': '{{csrf_token}}'

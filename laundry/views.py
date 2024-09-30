@@ -31,13 +31,17 @@ from .decorators import access_only
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils.decorators import method_decorator
 
+@transaction.atomic
 def reserve_check_working():
-    for reserve_m in Reserve_Machine.objects.filter(status=3):
-        reserve_work = reserve_m.work_at + timedelta(minutes=reserve_m.machine.duration)
-        if now() > reserve_work:
-            reserve_m.machine.status_available = True
-            reserve_m.status = 3
-            reserve_m.save()
+    for reserve_m in Reserve_Machine.objects.filter(status=2):
+        if reserve_m.machine != None:
+            reserve_work = reserve_m.working_til()
+            machine = Machine.objects.get(pk=reserve_m.machine.id)
+            if now() > reserve_work:
+                machine.status_available = True
+                reserve_m.status = 3
+                reserve_m.save()
+                machine.save()
 
 def random_string(length=0):
     text = ""
@@ -64,7 +68,7 @@ class ViewReserve(LoginRequiredMixin, View):
         reserve_check_working()
         review = ReviewReserveForm()
         
-        reserve_machine = Reserve_Machine.objects.filter(user=request.user).order_by("status", "arrive_at")
+        reserve_machine = Reserve_Machine.objects.filter(user=request.user).order_by("status", "-arrive_at", '-work_at')
         return render(request, "customer/view_reserve.html", {
             "reserve_machine": reserve_machine, "sidebar": "sidebar_item/customer.html", "time_now": now(),
             "form_review": review
@@ -142,9 +146,50 @@ class ManageReserve(View):
         getMachines = Machine.objects.annotate(group=F("code")[0]).annotate(number=F("code")[2:]).annotate(number_int=Cast("number", output_field=IntegerField())).order_by("machine_size__capacity", "group", "number_int")
 
         machine_size = Machine_Size.objects.order_by("capacity")
-        reserved = Reserve_Machine.objects.filter(status__range=(0 , 2)).order_by("actual_arrive" ,"arrive_at")
-        print(reserved)
-        return render(request, "staff/manage_reserve.html", {"machine_size": machine_size, "reserved": reserved})
+        reserved = Reserve_Machine.objects.filter(status__range=(0 , 2)).order_by("-status", "actual_arrive" ,"arrive_at")
+        
+        return render(request, "staff/manage_reserve.html", {"machine_size": machine_size, 'machines': getMachines, "reserved": reserved, 'time_now': now()})
+    
+    def put(self, request):
+        data = loads(request.body)     
+        if 'reserve_id' in data:
+            reserve_id = data.get('reserve_id')
+            change_wating= Reserve_Machine.objects.get(pk=reserve_id)
+            change_wating.status = 1
+            change_wating.save()
+            return JsonResponse({'success': True, 'id': change_wating.id}, status=200)
+        
+        if 'reserve_code_workable' in data:
+            reserve_code = data.get('reserve_code_workable')
+            machine_code = data.get('machine_code')
+
+            if reserve_code in Reserve_Machine.objects.filter(status=1).values_list('code', flat=True):
+                get_machine = Machine.objects.get(code=machine_code)
+                get_machine.status_available = 0
+                get_machine.save()
+
+                change_workable = Reserve_Machine.objects.get(code=reserve_code)
+
+                change_workable.work_at = datetime.now()
+                change_workable.machine = get_machine
+                change_workable.status = 2
+                change_workable.save()
+
+                return JsonResponse({'valid': True, 'reserve_code': reserve_code}, status=200)
+
+        if 'machine_code_avaliable' in data:
+            machine_code = data.get('machine_code_avaliable')
+            get_machine = Machine.objects.get(code=machine_code)
+            get_machine.status_available = 1
+            get_machine.save()
+
+        if 'resetMachine' in data:
+            machine_id = data.get('resetMachine')
+            change_working= Reserve_Machine.objects.filter(machine_id=machine_id, status=2)
+            change_working.status = 1
+            change_working.save()
+            
+        return JsonResponse({'valid': True}, status=200)
 
 # Manager
 ## count all data (use in sidebar)

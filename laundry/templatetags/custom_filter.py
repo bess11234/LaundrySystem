@@ -25,4 +25,8 @@ def reserve_sort(reserve):
 
 @register.filter
 def current_reserve_work_til(machine):
-    return Reserve_Machine.objects.get(machine=machine, status=3).working_til()
+    return Reserve_Machine.objects.get(machine=machine, status=2).working_til()
+
+@register.filter
+def machine_not_in_state_working(machine):
+    return Reserve_Machine.objects.get(machine=machine)
