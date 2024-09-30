@@ -70,7 +70,7 @@ class ViewReserve(LoginRequiredMixin, View):
         
         reserve_machine = Reserve_Machine.objects.filter(user=request.user).order_by("status", "-arrive_at", '-work_at')
         return render(request, "customer/view_reserve.html", {
-            "reserve_machine": reserve_machine, "sidebar": "sidebar_item/customer.html", "time_now": now(),
+            "reserve_machine": reserve_machine, "sidebar": "sidebar_item/customer.html",
             "form_review": review
         })
     
@@ -140,7 +140,9 @@ class ReserveMachineView(LoginRequiredMixin, View):
         return render(request, "customer/reserve.html", self.data(form))
 
 # Staff
-class ManageReserve(View):
+@method_decorator(access_only(["stf", "mgr"]), name="get")
+@method_decorator(access_only(["stf", "mgr"]), name="put")
+class ManageReserve(LoginRequiredMixin, View):
     def get(self, request):
         reserve_check_working()
         getMachines = Machine.objects.annotate(group=F("code")[0]).annotate(number=F("code")[2:]).annotate(number_int=Cast("number", output_field=IntegerField())).order_by("machine_size__capacity", "group", "number_int")

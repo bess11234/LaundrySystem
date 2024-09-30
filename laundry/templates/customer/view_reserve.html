@@ -74,7 +74,7 @@
                     <span>Status</span>
                     <div class="flex flex-row place-items-center gap-1">
                         <div class="size-3 left-0 rounded-full {% if i.status != 3 and i.status != 4 %}animate-pulse{%endif%} {% if i.status == 0 %}bg-yellow-300{%elif i.status == 1%}bg-yellow-600{%elif i.status == 2%}bg-blue-300{%elif i.status == 3%}bg-green-300{%elif i.status == 4%}bg-red-300{%endif%}"></div>
-                        <span class="text-right">{{ i.status_context|title }} {% if i.status == 2 %}({{ i.working_til|timeuntil:time_now }}){% endif %}</span>
+                        <span class="text-right">{{ i.status_context|title }} {% if i.status == 2 %}({{ i.working_til|timeuntil }}){% endif %}</span>
                     </div>
                 </div>
                 {% if i.service.count %}

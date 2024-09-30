@@ -6,7 +6,10 @@ from django.core.exceptions import PermissionDenied
  
 def is_role(role, user):
     try:
-        if user.role == role:
+        if type(role) == tuple or type(role) == list:    
+            if user.role in role:
+                return True
+        elif user.role == role:
             return True
     except AttributeError:
         return False
