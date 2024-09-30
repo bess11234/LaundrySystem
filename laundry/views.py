@@ -2,6 +2,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 from django.http import JsonResponse
+from django.db.models import Count
 
 ## Exception
 from django.core.exceptions import PermissionDenied
@@ -30,6 +31,14 @@ from .decorators import access_only
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils.decorators import method_decorator
 
+def reserve_check_working():
+    for reserve_m in Reserve_Machine.objects.filter(status=3):
+        reserve_work = reserve_m.work_at + timedelta(minutes=reserve_m.machine.duration)
+        if now() > reserve_work:
+            reserve_m.machine.status_available = True
+            reserve_m.status = 3
+            reserve_m.save()
+
 def random_string(length=0):
     text = ""
     random_ = ascii_letters+"0123456789"
@@ -52,6 +61,7 @@ class Index(View):
 @method_decorator(access_only("cus"), name="put")
 class ViewReserve(LoginRequiredMixin, View):
     def get(self, request):
+        reserve_check_working()
         review = ReviewReserveForm()
         
         reserve_machine = Reserve_Machine.objects.filter(user=request.user).order_by("status", "arrive_at")
@@ -128,15 +138,15 @@ class ReserveMachineView(LoginRequiredMixin, View):
 # Staff
 class ManageReserve(View):
     def get(self, request):
+        reserve_check_working()
         getMachines = Machine.objects.annotate(group=F("code")[0]).annotate(number=F("code")[2:]).annotate(number_int=Cast("number", output_field=IntegerField())).order_by("machine_size__capacity", "group", "number_int")
-        
+
         machine_size = Machine_Size.objects.order_by("capacity")
         reserved = Reserve_Machine.objects.filter(status__range=(0 , 2)).order_by("actual_arrive" ,"arrive_at")
         print(reserved)
-        return render(request, "staff/manage_reserve.html", {"machine_size": machine_size, 'machines': getMachines, "reserved": reserved})
+        return render(request, "staff/manage_reserve.html", {"machine_size": machine_size, "reserved": reserved})
 
 # Manager
-
 ## count all data (use in sidebar)
 def count_all_data():
     count_data = {

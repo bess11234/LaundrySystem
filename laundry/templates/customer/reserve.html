@@ -13,7 +13,7 @@
   <div class="p-4 md:px-32 lg:px-52 relative">
     {% comment %}Select Size{% endcomment %}
     <div class="absolute left-0 top-0 w-[100vw] z-20" id="absolute_size">
-      <div class="flex flex-row justify-items-center m-4 md:mx-32 lg:mx-52 gap-1 bg-[#ced2e9] border-black/10 dark:bg-[#0c0d18] border dark:border-[#2c3360] rounded-xl transition-all duration-500" id="form_size">
+      <div class="flex flex-row flex-wrap justify-items-center m-4 md:mx-32 lg:mx-52 gap-1 bg-[#ced2e9] border-black/10 dark:bg-[#0c0d18] border dark:border-[#2c3360] rounded-xl transition-all duration-500" id="form_size">
         {% for size in machine_size %}
           <div onclick="select_size({{ size.id }}, '{{ size.size }}', {{ size.cost }})"
             class="flex flex-col justify-items-center grow p-3 py-12 cursor-pointer hover:bg-[#a2abd7]/50 dark:hover:bg-[#2c3360] transition-colors duration-300 {% if forloop.first %}

@@ -11,7 +11,7 @@
 
       <div class="w-fit m-auto my-3">
         <a href="{% url 'reserve_machine' %}">
-          <button {%if machine_size.count == 0 %}disabled{%endif%} class="bg-[#4e5ea9] hover:bg-[#3c488d] active:bg-[#313a73] disabled:bg-[#e9eaf5] disabled:dark:bg-[#292d51] disabled:text-[#707ec0] px-4 py-2 rounded-lg">
+          <button {%if machine_size.count == 0 %}disabled{%endif%} class="text-white bg-[#4e5ea9] hover:bg-[#3c488d] active:bg-[#313a73] disabled:bg-[#e9eaf5] disabled:dark:bg-[#292d51] disabled:text-[#707ec0] px-4 py-2 rounded-lg">
             {%if machine_size.count == 0 %}No machine avaliable{%else%}Reserve machine{%endif%}
           </button>
         </a>
@@ -37,6 +37,7 @@
                       <div class="mt-2 flex flex-row flex-wrap gap-x-10 gap-y-12 justify-items-center">
                           {% comment %}Machine{% endcomment %}
                           {% for machine in size.machine_set.all %}
+                          {% if machine.status_health %}
                           <div>
                               <div class="relative">
                               <div class="absolute z-0 {% if machine.status_available %}
@@ -51,6 +52,7 @@
                               <p class="text-center">{{ machine.machine_size.size }}</p>
                               </div>
                           </div>
+                          {% endif %}
                           {% endfor %}
                       </div>
                     </div>

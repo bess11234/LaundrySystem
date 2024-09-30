@@ -95,7 +95,7 @@
                   <td class="p-3 font-medium whitespace-nowrap ">{{ machine.code }}</td>
 
                   <td class="p-3">
-                    <select onblur="update_machine({{ machine.id }}, this.value, {{ machine.machine_size.id }}, document.getElementById('select_health').checked, {{ machine.status_health|lower }})" id="select_size" class="rounded-lg shadow-sm bg-[#f9fbfc] dark:bg-[#353a55] border border-gray-300 dark:border-gray-600 focus:border-[#4c569b] focus:ring-1 focus:ring-[#4c569b] py-2 px-3 transition read-only:border-opacity-50 read-only:bg-opacity-50 read-only:text-opacity-70">
+                    <select onblur="update_machine({{ machine.id }}, this.value, {{ machine.machine_size.id|default:"''" }}, document.getElementById('select_health').checked, {{ machine.status_health|lower }})" id="select_size" class="rounded-lg shadow-sm bg-[#f9fbfc] dark:bg-[#353a55] border border-gray-300 dark:border-gray-600 focus:border-[#4c569b] focus:ring-1 focus:ring-[#4c569b] py-2 px-3 transition read-only:border-opacity-50 read-only:bg-opacity-50 read-only:text-opacity-70">
                       <option value="">------</option>
                       {% for size in machine_size %}
                       <option value="{{ size.id }}" {% if machine.machine_size == size %}selected{%endif%}>{{ size }}</option>

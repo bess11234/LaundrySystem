@@ -56,7 +56,7 @@
           {% endif %}
 
         {% comment %} Staff {% endcomment %}
-          {% if user.role == "stf" %}
+          {% if user.role == "stf" or user.role == "mgr" %}
             {% include 'nav_item/staff.html' %}
           {% endif %}
 
