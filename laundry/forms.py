@@ -52,7 +52,7 @@ class AddMachineForm(ModelForm):
     code = forms.CharField(widget=forms.TextInput(attrs={"class": myclass, "placeholder": "X-XXXXXXXX"}), min_length=3,max_length=10, help_text="ex.'A-0', 'A-1', ..., 'B-0'")
     machine_size = forms.ModelChoiceField(
         queryset=Machine_Size.objects.order_by("capacity"),
-        widget=forms.Select(attrs={"class": "mt-2 w-full rounded-lg shadow-md bg-[#f9fbfc] dark:bg-[#353a55] border border-gray-300 dark:border-gray-600 focus:border-[#4c569b] focus:ring-2 focus:ring-[#4c569b] py-2 px-3 text-gray-900 dark:text-white transition ease-in-out duration-150 appearance-none cursor-pointer", "required":True}))
+        widget=forms.Select(attrs={"class": "mt-2 w-full rounded-lg shadow-md bg-[#f9fbfc] dark:bg-[#353a55] border border-gray-300 dark:border-gray-600 focus:border-[#4c569b] focus:ring-2 focus:ring-[#4c569b] py-2 px-3 transition ease-in-out duration-150 appearance-none cursor-pointer", "required":True}))
     duration = forms.IntegerField(widget=forms.NumberInput(attrs={"class":myclass, "placeholder": "Operation time (Minutes)"}), min_value=0)
     class Meta:
         model = Machine

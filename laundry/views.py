@@ -52,12 +52,8 @@ def random_string(length=0):
 
 class Index(View):
     def get(self, request):
-        user = request.user
-        if user.is_authenticated:
-            if user.role == "cus":
-                machine_size = Machine_Size.objects.order_by("capacity")
-                return render(request, "index.html", {"machine_size": machine_size})
-        return render(request, "index.html")
+        machine_size = Machine_Size.objects.order_by("capacity")
+        return render(request, "index.html", {"machine_size": machine_size})
 
 # Customer
 @method_decorator(access_only("cus"), name="get")
