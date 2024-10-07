@@ -46,7 +46,9 @@
 
                                         <input type="text" name="name" id="{{machine.code}}-input" 
                                         class="mt-2 w-20 md:w-24 lg:w-36 rounded-lg shadow-sm bg-[#f9fbfc] dark:bg-[#353a55] border border-gray-300 dark:border-gray-600 focus:border-[#4c569b] focus:ring-1 focus:ring-[#4c569b] py-2 px-3 text-gray-900 dark:text-white transition read-only:border-opacity-50 read-only:bg-opacity-50 read-only:text-opacity-70" 
-                                        placeholder="Code">
+                                        placeholder="Code"
+                                        {% if not machine.status_available %}
+                                        value="{{machine|machine_working}}" readonly {% endif %}> 
 
                                     </div>
                                     <div class="mt-3 w-20 md:w-24 lg:w-36 text-center">
@@ -149,9 +151,9 @@
                                     {% if reserve.status == 0 %}
                                       <a onclick="updateStatus({{reserve.id}})" class="cursor-pointer py-1 px-2 font-medium rounded-lg text-white bg-green-500 hover:bg-green-600 active:bg-green-700">Accept</a>
                                     {% else %}
-                                      <a onclick="" class="cursor-pointer py-1 px-2 font-medium rounded-lg text-white bg-red-500 hover:bg-red-600 active:bg-red-700">Cancel</a>
-                                    </td>
+                                      <a onclick="deleteReservation({{reserve.id}})" class="cursor-pointer py-1 px-2 font-medium rounded-lg text-white bg-red-500 hover:bg-red-600 active:bg-red-700">Cancel</a>
                                     {% endif %}
+                                    </td>
                                 </tr>
                               {% endfor %}
                             </tbody>
@@ -169,6 +171,22 @@
 
 {% block script %}
 <script>
+  function deleteReservation(reserve_id){
+    show_alert("Delete service successful.")
+    fetch("",{
+      method: "DELETE",
+      headers:  {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': '{{ csrf_token }}'  // Send CSRF token in the request header
+      },
+      body: JSON.stringify({reserve_id})
+    })
+    .then(response => response.json())
+    .then(setTimeout(()=>location.reload(true), 1200))
+    .catch((error)=>{
+      console.log(error)
+    })
+  }
   function updateStatus(reserveId){
     console.log(reserveId)
     fetch("", {
@@ -181,7 +199,7 @@
         'reserve_id': reserveId})
     })
     .then(response => response.json())
-    .then(data => {location.reload();})
+    .then(data => {location.reload(true);})
     .catch(error => {console.error('Error:', error);});
   }
   //copy code
@@ -202,7 +220,7 @@
         'machine_code_avaliable': machine_code})
     })
     .then(response => response.json())
-    .then(data => {location.reload();})
+    .then(data => {location.reload(true);})
     .catch(error => {console.error('Error:', error);});
   }
 
@@ -222,15 +240,7 @@
     .then(response => response.json())
     .then(data => {
       if (data.valid) {
-          location.reload();
-          //countdown(data.element_duration, data.machine_duration, data.inputID);
-          var endTime = new Date().getTime() + machine_duration * 60000;
-            // Store the end time in localStorage for this machine
-            //localStorage.setItem(machine_code + '_reserveCode', reserve_code);
-            localStorage.setItem(element_duration + '_endTime', endTime);
-            localStorage.setItem(machine_code + '_reserveCode', reserve_code);
-
-            //countdown(element_duration, machine_duration, machine_code);
+          location.reload(true);
       } else {
           console.error('Invalid reserve code:', reserve_code);
       }})
@@ -248,16 +258,11 @@
       body: JSON.stringify({
         'resetMachine': machine_code})
     })
-    
-    clearInterval(countdownIntervals[machine_code+'-duration']);
-    
-    localStorage.removeItem(machine_code+'-duration' + '_endTime');
-    localStorage.removeItem(machine_code + '_reserveCode');
-  
-    changeMachineAvaliable(machine_code);
-    
-    location.reload();
-  
+    .then(data=>{
+      changeMachineAvaliable(machine_code);
+      location.reload(true);
+    })
+
   }
 
 </script>

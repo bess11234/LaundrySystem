@@ -30,3 +30,7 @@ def current_reserve_work_til(machine):
 @register.filter
 def machine_not_in_state_working(machine):
     return Reserve_Machine.objects.get(machine=machine)
+
+@register.filter
+def machine_working(machine):
+    return Reserve_Machine.objects.get(machine=machine, status=2).code

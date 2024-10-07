@@ -186,12 +186,20 @@ class ManageReserve(LoginRequiredMixin, View):
             get_machine.save()
 
         if 'resetMachine' in data:
-            machine_id = data.get('resetMachine')
-            change_working= Reserve_Machine.objects.filter(machine_id=machine_id, status=2)
+            machine_code = data.get('resetMachine')
+            change_working= Reserve_Machine.objects.get(machine__code=machine_code, status=2)
             change_working.status = 1
             change_working.save()
             
         return JsonResponse({'valid': True}, status=200)
+
+    def delete(self, request):
+        data = loads(request.body)
+        reserve_id = data.get('reserve_id')
+        reserve = get_object_or_404(Reserve_Machine, id=reserve_id)
+        reserve.status = 4
+        reserve.save()
+        return JsonResponse({'success': True}, status=204)
 
 # Manager
 ## count all data (use in sidebar)

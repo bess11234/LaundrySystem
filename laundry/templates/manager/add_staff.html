@@ -90,7 +90,7 @@
                             <tr class="border-black/10 dark:border-white/10 {% if user == user_ or user_.is_superuser %}bg-green-200/50 dark:bg-green-300/50{%else%} dark:bg-green-300/70{%endif%}">
                             {% comment %} <tr class="border-black/10 dark:border-white/10 {% if user == user_ or user_.is_superuser %}bg-green-200/50 dark:bg-green-300/50{%else%}bg-green-200 dark:bg-green-300/70{%endif%}"> {% endcomment %}
                             {% else %}
-                            <tr class="text-gray-200 border-black/10 dark:border-white/10 {% if user == user_ or user_.is_superuser %}bg-red-200/50 dark:bg-red-300/50{%else%}bg-wh dark:bg-red-300/70{%endif%}">
+                            <tr class="text-gray-200 border-black/10 dark:border-white/10 {% if user == user_ or user_.is_superuser %}bg-red-200/50 dark:bg-red-300/50{%else%}dark:bg-red-300/70{%endif%}">
                             {% comment %} <tr class="text-gray-200 border-black/10 dark:border-white/10 {% if user == user_ or user_.is_superuser %}bg-red-200/50 dark:bg-red-300/50{%else%}bg-red-200 dark:bg-red-300/70{%endif%}"> {% endcomment %}
                             {% endif %}
                                 <td class="px-6 py-4 text-center">
