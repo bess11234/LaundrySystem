@@ -188,6 +188,7 @@
     })
   }
   function updateStatus(reserveId){
+    show_alert("Update status successful.")
     console.log(reserveId)
     fetch("", {
       method:"PUT",
@@ -199,7 +200,12 @@
         'reserve_id': reserveId})
     })
     .then(response => response.json())
-    .then(data => {location.reload(true);})
+    .then(data => {
+      console.log(data.valid)
+      if (!data.valid){
+        show_alert("Reserve code should be in workable status.")
+      }
+      location.reload(true);})
     .catch(error => {console.error('Error:', error);});
   }
   //copy code

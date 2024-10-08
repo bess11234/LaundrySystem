@@ -149,7 +149,8 @@ class ManageReserve(LoginRequiredMixin, View):
         return render(request, "staff/manage_reserve.html", {"machine_size": machine_size, 'machines': getMachines, "reserved": reserved, 'time_now': now()})
     
     def put(self, request):
-        data = loads(request.body)     
+        data = loads(request.body)
+        # change waiting to workable
         if 'reserve_id' in data:
             reserve_id = data.get('reserve_id')
             change_wating= Reserve_Machine.objects.get(pk=reserve_id)
@@ -157,30 +158,33 @@ class ManageReserve(LoginRequiredMixin, View):
             change_wating.save()
             return JsonResponse({'success': True, 'id': change_wating.id}, status=200)
         
+        def changeMachineStatus(machine_code, new_status):
+            get_machine = Machine.objects.get(code=machine_code)
+            get_machine.status_available = new_status
+            get_machine.save()
+            return get_machine
+
+        # put workable to machine
         if 'reserve_code_workable' in data:
             reserve_code = data.get('reserve_code_workable')
-            machine_code = data.get('machine_code')
 
             if reserve_code in Reserve_Machine.objects.filter(status=1).values_list('code', flat=True):
-                get_machine = Machine.objects.get(code=machine_code)
-                get_machine.status_available = 0
-                get_machine.save()
-
+                
                 change_workable = Reserve_Machine.objects.get(code=reserve_code)
 
                 change_workable.work_at = datetime.now()
-                change_workable.machine = get_machine
+                change_workable.machine = changeMachineStatus(data.get('machine_code'), 0)
                 change_workable.status = 2
                 change_workable.save()
 
                 return JsonResponse({'valid': True, 'reserve_code': reserve_code}, status=200)
+            return JsonResponse({'valid': False}, status=400)
 
+        # change machine to avalible
         if 'machine_code_avaliable' in data:
-            machine_code = data.get('machine_code_avaliable')
-            get_machine = Machine.objects.get(code=machine_code)
-            get_machine.status_available = 1
-            get_machine.save()
+            changeMachineStatus(data.get('machine_code_avaliable'), 1)
 
+        # reset machine status
         if 'resetMachine' in data:
             machine_code = data.get('resetMachine')
             change_working= Reserve_Machine.objects.get(machine__code=machine_code, status=2)
