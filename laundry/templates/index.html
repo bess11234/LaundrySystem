@@ -6,7 +6,24 @@
 {% endblock %}
 
 {% block main %}
-  {% if user.is_authenticated %}
+<div class="flex items-center justify-center flex-col my-12"> <!-- Flex column for vertical stacking -->
+  <h1 class="text-4xl font-bold text-center mb-8">Welcome to Laundry System!</h1> <!-- Main heading above the cards -->
+
+  <div class="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-8"> <!-- Responsive flex container -->
+      <div class="transition-transform hover:scale-110 bg-lapiz-50 border-lapiz-300 dark:bg-lapiz-950 dark:border-lapiz-800 border p-8 rounded-lg shadow-lg max-w-md">  <!-- Enhanced card styles -->
+          <h2 class="text-3xl font-bold text-center">Reserve Laundry Machine</h2> <!-- Adjusted title -->
+          <p class="text-center mt-4 text-lapiz-800 dark:text-lapiz-100">Easily book available laundry machines for your preferred time. View real-time availability and secure your slot for a smooth, hassle-free laundry experience.</p>
+      </div>
+      <div class="transition-transform hover:scale-110 bg-lapiz-50 border-lapiz-300 dark:bg-lapiz-950 p-8 dark:border-lapiz-800 border rounded-lg shadow-lg max-w-md">  <!-- Enhanced card styles -->
+          <h2 class="text-3xl font-bold text-center">Manage Reservation</h2> <!-- Adjusted title -->
+          <p class="text-center mt-4 text-lapiz-800 dark:text-lapiz-100">Update, modify, or cancel your existing reservations with ease. Keep track of your bookings and make changes as needed.</p>
+      </div>
+      <div class="transition-transform hover:scale-110 bg-lapiz-50 border-lapiz-300 dark:bg-lapiz-950 dark:border-lapiz-800 border p-8 rounded-lg shadow-lg max-w-md">  <!-- Enhanced card styles -->
+          <h2 class="text-3xl font-bold text-center">Review Our Service</h2> <!-- Adjusted title -->
+          <p class="text-center mt-4 text-lapiz-800 dark:text-lapiz-100">Share your feedback and rate the quality of our service to help us improve and serve you better.</p>
+      </div>
+  </div>
+</div>
     {% if user.role == 'cus' %}
 
       <div class="w-fit m-auto my-3">
@@ -16,6 +33,7 @@
           </button>
         </a>
       </div>
+    {% endif %}
 
       <div class="space-y-6 p-4 md:px-32 lg:px-52">
         {% for size in machine_size %}
@@ -61,6 +79,4 @@
             {% endif %}
         {% endfor %}
     </div>
-    {% endif %}
-  {% endif %}
 {% endblock %}
