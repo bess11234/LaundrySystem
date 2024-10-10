@@ -149,6 +149,13 @@ class ManageReserve(LoginRequiredMixin, View):
         return render(request, "staff/manage_reserve.html", {"machine_size": machine_size, 'machines': getMachines, "reserved": reserved, 'time_now': now()})
     
     def put(self, request):
+        
+        def changeMachineStatus(machine_code, new_status):
+            get_machine = Machine.objects.get(code=machine_code)
+            get_machine.status_available = new_status
+            get_machine.save()
+            return get_machine
+        
         data = loads(request.body)
         # change waiting to workable
         if 'reserve_id' in data:
@@ -157,12 +164,6 @@ class ManageReserve(LoginRequiredMixin, View):
             change_wating.status = 1
             change_wating.save()
             return JsonResponse({'success': True, 'id': change_wating.id}, status=200)
-        
-        def changeMachineStatus(machine_code, new_status):
-            get_machine = Machine.objects.get(code=machine_code)
-            get_machine.status_available = new_status
-            get_machine.save()
-            return get_machine
 
         # put workable to machine
         if 'reserve_code_workable' in data:
@@ -178,7 +179,7 @@ class ManageReserve(LoginRequiredMixin, View):
                 change_workable.save()
 
                 return JsonResponse({'valid': True, 'reserve_code': reserve_code}, status=200)
-            return JsonResponse({'valid': False}, status=400)
+            return JsonResponse({'valid': False})
 
         # change machine to avalible
         if 'machine_code_avaliable' in data:
