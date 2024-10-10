@@ -50,6 +50,10 @@ def random_string(length=0):
         text += random_[randint(0, 62)]
     return text
 
+class TestView(View):
+    def get(self, requset):
+        return render(requset, "test.html")
+
 class Index(View):
     def get(self, request):
         machine_size = Machine_Size.objects.order_by("capacity")

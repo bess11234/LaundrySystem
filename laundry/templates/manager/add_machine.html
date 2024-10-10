@@ -111,7 +111,7 @@
                       </td>
 
                   <td class="p-3 text-center">
-                    <a onclick="delete_machine({{ machine.id }})" class="cursor-pointer py-1 px-2 font-medium rounded-lg text-white bg-red-600 hover:bg-red-400">Delete</a>
+                    <a onclick="delete_machine({{ machine.id }}, '{{machine.code}}')" class="cursor-pointer py-1 px-2 font-medium rounded-lg text-white bg-red-600 hover:bg-red-400">Delete</a>
                   </td>
                 </tr>
               {% endfor %}
@@ -125,38 +125,48 @@
 {% endblock %}
 
 {% block script %}
-<script>
-  function update_machine(machine_id, size, origin_size, status, origin_status){
-    if (size != origin_size || status != origin_status){
-      show_alert("Update machine successful.")
-      fetch("", {
-        method: "PUT",
-        headers: {
-          'Content-Type': 'application/json',
-          'X-CSRFToken': '{{ csrf_token }}'
-        },
-        body: JSON.stringify({machine_id, size, status})
-      })
-      .then(response => response.json())
-      //.then(setTimeout(()=>location.reload(), 1000))
-      .catch((error)=>console.log(error))
+  <script>
+    function update_machine(machine_id, size, origin_size, status, origin_status){
+      if (size != origin_size || status != origin_status){
+        show_alert("Update machine successful.")
+        fetch("", {
+          method: "PUT",
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': '{{ csrf_token }}'
+          },
+          body: JSON.stringify({machine_id, size, status})
+        })
+        .then(response => response.json())
+        //.then(setTimeout(()=>location.reload(), 1000))
+        .catch((error)=>console.log(error))
+      }
     }
-  }
-  function delete_machine(machine_id){
-    show_alert("Delete machine successful.")
-    fetch("",{
-      method: "DELETE",
-      headers:  {
-        'Content-Type': 'application/json',
-        'X-CSRFToken': '{{ csrf_token }}'  // Send CSRF token in the request header
-      },
-      body: JSON.stringify({machine_id})
-    })
-    .then(response => response.json())
-    .then(setTimeout(()=>location.reload(true), 1200))
-    .catch((error)=>{
-      console.log(error)
-    })
-  }
-</script>
+    function delete_machine(machine_id, machine_code){
+      // show warning
+      console.log(machine_code);
+      openModal("Are you sure to delete machine code '"+ machine_code + "'?")
+      
+      // confirm delete
+      document.getElementById("confirm-delete").addEventListener("click", 
+        function(){
+          console.log(1)
+          fetch("",{
+            method: "DELETE",
+            headers:  {
+              'Content-Type': 'application/json',
+              'X-CSRFToken': '{{ csrf_token }}'  // Send CSRF token in the request header
+            },
+            body: JSON.stringify({machine_id})
+          })
+          .then(response => response.json())
+          .then(setTimeout(()=>location.reload(true), 200))
+          .catch((error)=>{
+            console.log(error)
+          })
+        }
+      );
+    }
+
+  </script>
 {% endblock %}

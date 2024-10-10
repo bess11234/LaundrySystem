@@ -17,4 +17,7 @@ urlpatterns = [
     path("manager/addmachine/", views.AddMachineView.as_view(), name="add_machine"),
     path("manager/addsize/", views.AddSizeView.as_view(), name="add_size"),
     path("manager/addoption/", views.AddOptionView.as_view(), name="add_option"),
+
+    ## Test
+    path("test/", views.TestView.as_view(), name="test"),
 ]
