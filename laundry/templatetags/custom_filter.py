@@ -12,7 +12,7 @@ def order_toggle(order):
 
 @register.filter
 def machine_is_available_count(variable):
-    return variable.filter(status_available=True).count()
+    return variable.filter(status_available=True, status_health=True).count()
 
 # Reserve_machine
 @register.filter
