@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Sum
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.models import BaseUserManager
 from django.utils.timezone import timedelta
@@ -76,6 +77,13 @@ class Machine(models.Model):
     status_available = models.BooleanField(default=1)
     status_health = models.BooleanField(default=1)
     create_at = models.DateTimeField(auto_now_add=True)
+
+    def usage_count(self):
+        return Reserve_Machine.objects.filter(machine=self, status=3).count()
+    
+    def revenue(self):
+        result = Reserve_Machine.objects.filter(machine=self, status=3).aggregate(totol_cost=Sum("cost"))
+        return result['totol_cost'] if result['totol_cost'] is not None else 0
 
 class Reserve_Machine(models.Model):
     # "waiting","workable","working","complete","retrivable"

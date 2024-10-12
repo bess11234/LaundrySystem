@@ -285,6 +285,7 @@ class AddMachineView(LoginRequiredMixin, View):
         form = AddMachineForm()
         show = self.show_data(getMachines, form)
         show['machine_size'] = Machine_Size.objects.order_by("capacity")
+        print(Reserve_Machine.objects.count())
         return render(request, "manager/add_machine.html", show)
     
     def post(self, request):
