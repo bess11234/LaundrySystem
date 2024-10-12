@@ -151,7 +151,7 @@
                                     {% if reserve.status == 0 %}
                                       <a onclick="updateStatus({{reserve.id}})" class="cursor-pointer py-1 px-2 font-medium rounded-lg text-white bg-green-500 hover:bg-green-600 active:bg-green-700">Accept</a>
                                     {% else %}
-                                      <a onclick="deleteReservation({{reserve.id}})" class="cursor-pointer py-1 px-2 font-medium rounded-lg text-white bg-red-500 hover:bg-red-600 active:bg-red-700">Cancel</a>
+                                      <a onclick="cancelReservation({{reserve.id}}, '{{reserve.code}}')" class="cursor-pointer py-1 px-2 font-medium rounded-lg text-white bg-red-500 hover:bg-red-600 active:bg-red-700">Cancel</a>
                                     {% endif %}
                                     </td>
                                 </tr>
@@ -171,24 +171,32 @@
 
 {% block script %}
 <script>
-  function deleteReservation(reserve_id){
-    show_alert("Delete service successful.")
-    fetch("",{
-      method: "DELETE",
-      headers:  {
-        'Content-Type': 'application/json',
-        'X-CSRFToken': '{{ csrf_token }}'  // Send CSRF token in the request header
-      },
-      body: JSON.stringify({reserve_id})
-    })
-    .then(response => response.json())
-    .then(setTimeout(()=>location.reload(true), 1200))
-    .catch((error)=>{
-      console.log(error)
-    })
-  }
+  function cancelReservation(reserve_id, reserve_code){
+    console.log("reserve_code")
+    //show warning
+    openModal("Are you sure you want to cancel '"+ reserve_code +"' ?")
+
+    // confirm Reset
+    document.getElementById("confirm-delete").addEventListener("click", 
+      function(){
+        fetch("",{
+          method: "DELETE",
+          headers:  {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': '{{ csrf_token }}'  // Send CSRF token in the request header
+          },
+          body: JSON.stringify({reserve_id})
+        })
+        .then(response => response.json())
+        .then(setTimeout(()=>location.reload(true), 200))
+        .catch((error)=>{
+          console.log(error)
+        })
+      }
+    )
+}
   function updateStatus(reserveId){
-    show_alert("Update status successful.")
+    show_alert("Update status successfully.")
     console.log(reserveId)
     fetch("", {
       method:"PUT",
@@ -200,7 +208,7 @@
         'reserve_id': reserveId})
     })
     .then(response => response.json())
-    .then(data => {location.reload(true);})
+    .then(setTimeout(()=>location.reload(true), 1200))
     .catch(error => {console.error('Error:', error);});
   }
   //copy code
@@ -210,6 +218,7 @@
     navigator.clipboard.writeText(copy_text)
   }
   
+  // Change machine status
   function changeMachineAvaliable(machine_code){
     fetch("", {
       method:"PUT",
@@ -224,7 +233,8 @@
     .then(data => {location.reload(true);})
     .catch(error => {console.error('Error:', error);});
   }
-
+   
+  // Confirm for Laundry
   function confirmFunction(machine_code, inputID, element_duration, machine_duration) {
     var reserve_code = document.getElementById(inputID).value;
     console.log("Reserve Code: ", reserve_code);
@@ -249,23 +259,30 @@
     .catch(error => {console.error('Error:', error);});
   }
 
-  
   function resetTime(machine_code){
-    fetch("", {
-      method:"PUT",
-      headers: {
-        'Content-Type': 'application/json',
-        'x-CSRFToken': '{{csrf_token}}'
-      },
-      body: JSON.stringify({
-        'resetMachine': machine_code})
-    })
-    .then(data=>{
-      changeMachineAvaliable(machine_code);
-      location.reload(true);
-    })
+    // show warning
+    openModal("Are you sure you want to reset the process?")
 
-  }
+    // confirm Reset
+    document.getElementById("confirm-delete").addEventListener("click", 
+      function(){
+        fetch("", {
+          method:"PUT",
+          headers: {
+            'Content-Type': 'application/json',
+            'x-CSRFToken': '{{csrf_token}}'
+          },
+          body: JSON.stringify({
+            'resetMachine': machine_code})
+        })
+        .then(data=>{
+          changeMachineAvaliable(machine_code);
+          location.reload(true);
+        })
+
+      }
+    )
+}
 
 </script>
 {% endblock %}

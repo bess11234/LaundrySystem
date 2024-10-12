@@ -99,7 +99,7 @@
                             </form>
                         </td>
                         <td class="text-center">
-                            <a onclick="delete_option({{option.id}})" class="cursor-pointer py-1 px-2 font-medium rounded-lg text-white bg-red-600 hover:bg-red-400">Delete</a>
+                            <a onclick="delete_option({{option.id}}, '{{option.name}}')" class="cursor-pointer py-1 px-2 font-medium rounded-lg text-white bg-red-600 hover:bg-red-400">Delete</a>
                           </td>
                     </tr>
                     {% endfor %}
@@ -115,21 +115,29 @@
 {% block script %}
 <script src="{% static 'edit_price.js' %}"></script>
 <script>
-  function delete_option(option_id){
-    show_alert("Delete service successful.")
-    fetch("",{
-      method: "DELETE",
-      headers:  {
-        'Content-Type': 'application/json',
-        'X-CSRFToken': '{{ csrf_token }}'  // Send CSRF token in the request header
-      },
-      body: JSON.stringify({option_id})
-    })
-    .then(response => response.json())
-    .then(setTimeout(()=>location.reload(true), 1200))
-    .catch((error)=>{
-      console.log(error)
-    })
-  }
+  function delete_option(option_id, option_name){
+    // show warning
+    openModal("Are you sure to delete '"+ option_name + "'?")
+
+    // confirm deletion
+    document.getElementById("confirm-delete").addEventListener("click", 
+        function(){
+            fetch("",{
+            method: "DELETE",
+            headers:  {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'  // Send CSRF token in the request header
+            },
+            body: JSON.stringify({option_id})
+            })
+            .then(response => response.json())
+            .then(setTimeout(()=>location.reload(true), 200))
+            .catch((error)=>{
+            console.log(error)
+            })
+        }
+    )
+}
+  
 </script>
 {% endblock %}

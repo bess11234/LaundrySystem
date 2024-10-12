@@ -128,7 +128,7 @@
   <script>
     function update_machine(machine_id, size, origin_size, status, origin_status){
       if (size != origin_size || status != origin_status){
-        show_alert("Update machine successful.")
+        show_alert("Update machine successfully.")
         fetch("", {
           method: "PUT",
           headers: {
@@ -144,13 +144,11 @@
     }
     function delete_machine(machine_id, machine_code){
       // show warning
-      console.log(machine_code);
       openModal("Are you sure to delete machine code '"+ machine_code + "'?")
       
-      // confirm delete
+      // confirm deletion
       document.getElementById("confirm-delete").addEventListener("click", 
         function(){
-          console.log(1)
           fetch("",{
             method: "DELETE",
             headers:  {

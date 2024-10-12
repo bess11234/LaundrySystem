@@ -105,7 +105,7 @@
                     </form>
                   </td>
                   <td class="text-center">
-                    <a onclick="delete_size({{size.id}})" class="cursor-pointer py-1 px-2 font-medium rounded-lg text-white bg-red-600 hover:bg-red-400">Delete</a>
+                    <a onclick="delete_size({{size.id}}, '{{size.size}}')" class="cursor-pointer py-1 px-2 font-medium rounded-lg text-white bg-red-600 hover:bg-red-400">Delete</a>
                   </td>
                 </tr>
               {% endfor %}
@@ -134,21 +134,28 @@
       console.log(error)
     })
   }
-  function delete_size(size_id){
-    show_alert("Delete size successful.")
-    fetch("",{
-      method: "DELETE",
-      headers:  {
-        'Content-Type': 'application/json',
-        'X-CSRFToken': '{{ csrf_token }}'  // Send CSRF token in the request header
-      },
-      body: JSON.stringify({size_id})
-    })
-    .then(response => response.json())
-    .then(setTimeout(()=>location.reload(true), 1200))
-    .catch((error)=>{
-      console.log(error)
-    })
-  }
+  function delete_size(size_id, size_name){
+    // show warning
+    openModal("Are you sure to delete size '"+ size_name + "' ?")
+
+    // confirm deletaion
+    document.getElementById("confirm-delete").addEventListener("click", 
+    function(){
+      fetch("",{
+        method: "DELETE",
+        headers:  {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': '{{ csrf_token }}'  // Send CSRF token in the request header
+        },
+        body: JSON.stringify({size_id})
+      })
+      .then(response => response.json())
+      .then(setTimeout(()=>location.reload(true), 200))
+      .catch((error)=>{
+        console.log(error)
+      })
+    }
+  )
+}
 </script>
 {% endblock %}
