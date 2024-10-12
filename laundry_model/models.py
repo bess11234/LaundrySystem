@@ -102,6 +102,6 @@ class Reserve_Machine(models.Model):
 class Review_Reserve(models.Model):
     RATING = ((1,1), (2,2), (3,3), (4,4), (5,5))
     reserve = models.OneToOneField(Reserve_Machine, on_delete=models.CASCADE)
-    rating = models.IntegerField(choices=RATING, default=0)
+    rating = models.IntegerField(choices=RATING)
     description = models.TextField(null=True, blank=True)
     create_at = models.DateTimeField(auto_now_add = True)
