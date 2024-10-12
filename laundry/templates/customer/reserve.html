@@ -88,6 +88,68 @@
         </form>
       </div>
     </div>
+
+        <div id="queueTable" style="display:none;" class="xl:px-36">
+          <div class="w-full relative overflow-x-auto shadow-md sm:rounded-lg m-3 mt-10">
+            <table class="w-full text-sm text-left rtl:text-right">
+              <thead class="text-xs uppercase shadow-sm bg-gray-200 dark:bg-[#4c569b] text-white dark:text-white/60">
+                <tr>
+                  <!-- column name : Service Name  -->
+                  <th scope="col" class="px-6 py-3">
+                    <div class="flex items-center">
+                      Queue
+                    </div>
+                  </th>
+                  <th scope="col" class="px-6 py-3">
+                      <div class="flex items-center">
+                        Reserve Time
+                      </div>
+                  </th>
+                  <th scope="col" class="px-6 py-3">
+                      <div class="flex items-center">
+                        Customer Name
+                      </div>
+                  </th>
+                  <th scope="col" class="px-6 py-3">
+                      <div class="flex items-center">
+                        Reserve Status
+                      </div>
+                  </th>
+                  <th scope="col" class="px-6 py-3"></th>
+                </tr>
+              </thead>
+              <tbody class="text-[#4c569b]/80 dark:text-white/80">
+                <!-- show service data -->
+                  {% for reserve in Reserve_Machine.objects.filter(machine_size__size = ) %}
+                    <tr class="border-b border-black/10 dark:border-white/10 bg-[#fafdff]/40 dark:bg-[#3b4682]/80">
+                        <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                          {{forloop.counter}}
+                        </td>
+                        <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                         {{reserve.arrive_at|date:"j M Y, H:i"}}
+                        </td>
+                        <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                          {{reserve.user.get_full_name}}
+                        </td>
+                        <td id=""class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                          <div class="flex flex-row place-items-center gap-1">
+                            <div class="size-3 left-0 rounded-full {% if reserve.status != 3 and reserve.status != 4 %}animate-pulse{%endif%} {% if reserve.status == 0 %}bg-yellow-300{%elif reserve.status == 1%}bg-yellow-600{%elif reserve.status == 2%}bg-blue-300{%elif reserve.status == 3%}bg-green-300{%elif reserve.status == 4%}bg-red-300{%endif%}"></div>
+                            <span class="text-right">{{ reserve.status_context|title }}</span>
+                          </div>
+                        </td>
+                        <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                        {% if reserve.status == 0 %}
+                          <a onclick="updateStatus({{reserve.id}})" class="cursor-pointer py-1 px-2 font-medium rounded-lg text-white bg-green-500 hover:bg-green-600 active:bg-green-700">Accept</a>
+                        {% else %}
+                          <a onclick="cancelReservation({{reserve.id}}, '{{reserve.code}}')" class="cursor-pointer py-1 px-2 font-medium rounded-lg text-white bg-red-500 hover:bg-red-600 active:bg-red-700">Cancel</a>
+                        {% endif %}
+                        </td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+            </table>
+          </div>
+        </div>
   </div>
 {% endblock %}
 {% block script %}
@@ -99,6 +161,7 @@
     const inp_service = document.getElementsByName("service")
     let origin_cost = 0
     
+    // คิดเงินว่ามีการกด service รึเปล่า
     function check_service(changed=true){
         let addition = 0
         for (let i=0; i<inp_service.length;i++){
@@ -127,6 +190,8 @@
         absolute_size.classList.toggle('w-[100vw]')
         absolute_size.classList.toggle('w-[0vw]')
       }, 550)
+
+      showTable()
     
       document.getElementById('{{ form.machine_size.id_for_label }}_display').value = size
       document.getElementById('{{ form.machine_size.id_for_label }}').value = id
@@ -143,6 +208,17 @@
       
       absolute_size.classList.toggle('w-[100vw]')
       absolute_size.classList.toggle('w-[0vw]')
+      showTable()
+    }
+
+    function showTable(){
+      table = document.getElementById("queueTable");
+      console.log(table.style.display)
+      if (table.style.display === "none"){
+        table.style.display = "block"
+      } else {
+        table.style.display = "none"
+      }
     }
 
   </script>
