@@ -137,20 +137,28 @@
 {% block script %}
 <script>
     function cancel_reserve(machine_id){
-        show_alert("Cancel your reserve from sytem.")
-        fetch("", {
-            method: "PUT",
-            headers:  {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': '{{ csrf_token }}'  // Send CSRF token in the request header
-            },
-            body: JSON.stringify({machine_id})
-        })
-        .then(response => response.json())
-        .then(setTimeout(()=>{location.reload(true)}, 1200))
-        .catch((error)=>{
-        console.log(error)
-        })
+        //show warning
+        openModal("Are you sure you want to cancel?")
+
+        // confirm Reset
+        document.getElementById("confirm-delete").addEventListener("click", 
+            function(){
+                // show_alert("Cancel your reserve from sytem.")
+                fetch("", {
+                    method: "PUT",
+                    headers:  {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': '{{ csrf_token }}'  // Send CSRF token in the request header
+                    },
+                    body: JSON.stringify({machine_id})
+                })
+                .then(response => response.json())
+                .then(setTimeout(()=>{location.reload(true)}, 200))
+                .catch((error)=>{
+                console.log(error)
+                })
+            }
+        )
     }
 
     function show_review(counter){
