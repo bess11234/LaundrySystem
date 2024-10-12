@@ -11,7 +11,7 @@
     <h1 class="text-3xl font-bold">Reserve Machine</h1>
   </div>
   <div class="p-4 md:px-32 lg:px-52 relative">
-    {% comment %}Select Size{% endcomment %}
+    <!-- Select size -->
     <div class="absolute left-0 top-0 w-[100vw] z-20" id="absolute_size">
       <div class="flex flex-row flex-wrap justify-items-center m-4 md:mx-32 lg:mx-52 gap-1 bg-[#ced2e9] border-black/10 dark:bg-[#0c0d18] border dark:border-[#2c3360] rounded-xl transition-all duration-500" id="form_size">
         {% for size in machine_size %}
@@ -31,7 +31,7 @@
       </div>
     </div>
 
-    {% comment %}Form reserve{% endcomment %}
+    <!-- Form reserve -->
     <div class="p-4 transition-opacity opacity-0 duration-700" id="form_reserve">
       <div class="p-4 py-6 border-2 border-[#a2abd7] dark:border-[#3b4682] bg-[#ced2e9] dark:bg-[#292d51] border-dashed rounded-lg">
         <form method="POST" id="machine-form">
@@ -39,8 +39,6 @@
 
           <div class="space-y-12 md:px-16 lg:px-40 xl:px-56">
             <div class="border-b border-[#707ec0] border-opacity-10 pb-7">
-              {% comment %} <h2 class="text-base font-semibold leading-7">Manage Machine</h2>
-              <p class="mt-1 text-sm leading-6 text-[#4c569b]">This information will be displayed publicly so be careful what you share.</p> {% endcomment %}
 
               <div class="grid grid-cols-2 gap-x-6">
                 <div class="flex flex-col">
@@ -76,7 +74,7 @@
               <div class="flex flex-col self-end xl:mb-1">
                 <div class="flex items-center gap-x-6 self-end justify-self-start">
                   <button type="submit" class="rounded-md bg-[#4e5ea9] hover:bg-[#3c488d] active:bg-[#313a73] px-3 py-2 text-sm font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2">Reserve</button>
-                  <button type="reset" onclick="cancel_reserve()" class="text-sm font-semibold leading-6">Cancel</button>
+                  <button type="button" onclick="cancel_reserve(this)" class="text-sm font-semibold leading-6">Cancel</button>
                 </div>
               </div>
             </div>
@@ -136,13 +134,14 @@
       check_service(false)
     }
 
-    function cancel_reserve(){
+    function cancel_reserve(button){
       form_size.classList.toggle('opacity-0')
       form_size.classList.toggle('-translate-y-full')
       form_reserve.classList.toggle('opacity-0')
       
       absolute_size.classList.toggle('w-[100vw]')
       absolute_size.classList.toggle('w-[0vw]')
+      setTimeout(()=>button.form.reset(), 200)
     }
 
   </script>

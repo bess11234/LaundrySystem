@@ -31,6 +31,16 @@ from .decorators import access_only
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils.decorators import method_decorator
 
+# Utils
+from django.utils.timezone import now, timedelta
+
+def reserve_cancel():
+    reserve_m = Reserve_Machine.objects.filter(status=0, arrive_at__lt=now())
+    for i in reserve_m:
+        if timedelta(hours=1) <= now()-i.arrive_at:
+            i.status = 4
+            i.save()
+
 @transaction.atomic
 def reserve_check_working():
     for reserve_m in Reserve_Machine.objects.filter(status=2):
@@ -66,12 +76,13 @@ class Index(View):
 class ViewReserve(LoginRequiredMixin, View):
     def get(self, request):
         reserve_check_working()
+        reserve_cancel()
         review = ReviewReserveForm()
         
         reserve_machine = Reserve_Machine.objects.filter(user=request.user).order_by("status", "-arrive_at", '-work_at')
         return render(request, "customer/view_reserve.html", {
             "reserve_machine": reserve_machine, "sidebar": "sidebar_item/customer.html",
-            "form_review": review
+            "form_review": review, 'time_now': now()
         })
     
     def post(self, request):
@@ -96,11 +107,8 @@ class ViewReserve(LoginRequiredMixin, View):
 class ReserveMachineView(LoginRequiredMixin, View):
     def data(self, form = ReserveMachineForm()):
         machine_size = Machine_Size.objects.order_by("capacity")
-        machine = []
-        for i in machine_size:
-            machine.append(i.machine_set.filter(status_available=True))
         time = now() + timedelta(minutes=30)
-        return {"form": form, "machine_size": machine_size, "machine":machine, "min_time_reserve": time}
+        return {"form": form, "machine_size": machine_size, "min_time_reserve": time}
     
     def get(self, request):
         return render(request, "customer/reserve.html", self.data())
@@ -145,6 +153,7 @@ class ReserveMachineView(LoginRequiredMixin, View):
 class ManageReserve(LoginRequiredMixin, View):
     def get(self, request):
         reserve_check_working()
+        reserve_cancel()
         getMachines = Machine.objects.annotate(group=F("code")[0]).annotate(number=F("code")[2:]).annotate(number_int=Cast("number", output_field=IntegerField())).order_by("machine_size__capacity", "group", "number_int")
 
         machine_size = Machine_Size.objects.order_by("capacity")
