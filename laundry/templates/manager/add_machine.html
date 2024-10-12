@@ -78,6 +78,14 @@
                 <th scope="col" class="p-3 max-w-10">
                   <div class="flex items-center">Duration</div>
                 </th>
+                <!-- column name : Usage Count -->
+                <th scope="col" class="p-3 max-w-10">
+                  <div class="flex items-center">Uses</div>
+                </th>
+                <!-- column name : Revenue -->
+                <th scope="col" class="p-3 max-w-10">
+                  <div class="flex items-center">Revenue</div>
+                </th>
                 <!-- column name : Status Health -->
                 <th scope="col" class="p-3 max-w-10">
                   <div class="flex items-center">Health</div>
@@ -104,6 +112,10 @@
                   </td>
 
                   <td class="p-3">{{ machine.duration }}</td>
+
+                  <td class="p-3">{{ machine.usage_count}}</td>
+
+                  <td class="p-3">{{ machine.revenue}}</td>
 
                   <td class="p-3">
                     <input onclick="update_machine({{ machine.id }}, document.getElementById('select_size').value, {{ machine.machine_size.id }}, this.checked, {{ machine.status_health|lower }})" class="rounded" type="checkbox" name="status_health" id="select_health"
