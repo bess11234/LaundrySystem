@@ -34,3 +34,7 @@ def machine_not_in_state_working(machine):
 @register.filter
 def machine_working(machine):
     return Reserve_Machine.objects.get(machine=machine, status=2).code
+
+@register.filter
+def calculate_piece(capacity):
+    return (capacity-1)*5

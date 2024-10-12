@@ -5,6 +5,7 @@ from django.contrib.auth.models import BaseUserManager
 from django.utils.timezone import timedelta
 
 # Create your models here.
+# จัดการ การ registor ให้ username ตาม email
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
         if not email:
@@ -27,7 +28,7 @@ class Users(AbstractUser):
     CUSTOMER = "cus"
     ROLES = {CUSTOMER: "customer", STAFF: "staff", MANAGER: "manager"}
     
-    username = models.CharField(max_length=50, blank=True, null=True, unique=False) # ของ AbstractUser
+    username = models.CharField(max_length=50, blank=True, null=True, unique=False) # ของ AbstractUser blank != null
     
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
@@ -110,6 +111,6 @@ class Reserve_Machine(models.Model):
 class Review_Reserve(models.Model):
     RATING = ((1,1), (2,2), (3,3), (4,4), (5,5))
     reserve = models.OneToOneField(Reserve_Machine, on_delete=models.CASCADE)
-    rating = models.IntegerField(choices=RATING, default=0)
+    rating = models.IntegerField(choices=RATING)
     description = models.TextField(null=True, blank=True)
     create_at = models.DateTimeField(auto_now_add = True)
