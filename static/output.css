@@ -705,16 +705,6 @@ video {
   margin-bottom: 0.75rem;
 }
 
-.my-8 {
-  margin-top: 2rem;
-  margin-bottom: 2rem;
-}
-
-.mx-8 {
-  margin-left: 2rem;
-  margin-right: 2rem;
-}
-
 .mb-1 {
   margin-bottom: 0.25rem;
 }
@@ -2182,6 +2172,11 @@ body {
   .sm\:text-\[3vw\] {
     font-size: 3vw;
   }
+
+  .sm\:text-lg {
+    font-size: 1.125rem;
+    line-height: 1.75rem;
+  }
 }
 
 @media (min-width: 768px) {
@@ -2292,6 +2287,11 @@ body {
     line-height: 1;
   }
 
+  .md\:text-xl {
+    font-size: 1.25rem;
+    line-height: 1.75rem;
+  }
+
   .md\:text-\[\#0c0d18\] {
     --tw-text-opacity: 1;
     color: rgb(12 13 24 / var(--tw-text-opacity));
@@ -2381,6 +2381,11 @@ body {
   .lg\:text-9xl {
     font-size: 8rem;
     line-height: 1;
+  }
+
+  .lg\:text-2xl {
+    font-size: 1.5rem;
+    line-height: 2rem;
   }
 }
 
