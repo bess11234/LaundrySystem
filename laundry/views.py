@@ -224,19 +224,13 @@ class ManageReserve(LoginRequiredMixin, View):
 ## count all data (use in sidebar)
 def count_all_data():
     count_data = {
-        "count_staff": Users.objects.exclude(status=0).count(), #Users.objects.filter(role__in = ("stf", "mgr")).exclude(status=0).count()
-        "count_machine": Machine.objects.count(),
-        "count_size": Machine_Size.objects.count(),
-        "count_service": Service.objects.count(),
+        "count_staff": Users.objects.exclude(status=0).count(), # นับจำนวนผู้ใช้ทุกคนที่บัญชียัง Active
+        "count_machine": Machine.objects.count(), # นับจำนวนเครื่องที่ถูกเพิ่มแล้ว
+        "count_size": Machine_Size.objects.count(), # นับจำนวนไซส์ที่ถูกเพิ่มแล้ว
+        "count_service": Service.objects.count(), # นับจำนวนบริการเสริมที่ถูกเพิ่มเข้าไปแล้ว
         "sidebar": "sidebar_item/manager.html"
         }
     return count_data
-
-## Report
-class ReportView(View):
-    # @method_decorator(login_required)
-    def get(self, request):
-        return render(request, "manager/report.html")
 
 ## Manage User
 @method_decorator(access_only("mgr"), name="get")
@@ -253,7 +247,7 @@ class AddStaffView(LoginRequiredMixin, View):
         form = AddStaffForm()
         show = {'users': getUsers, 
                 'form': form,
-                **count_data}
+                **count_data} # ใส่ ** เพื่อเอา dict ออกจะได้ไม่เป็น dict ซ้อน dict
         return render(request, 'manager/add_staff.html', show)
     
     def post(self, request):

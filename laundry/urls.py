@@ -12,7 +12,6 @@ urlpatterns = [
 
     # Manager
     ## show data
-    path("report/", views.ReportView.as_view(), name="report"),
     path("manager/addstaff/", views.AddStaffView.as_view(), name="add_staff"),
     path("manager/addmachine/", views.AddMachineView.as_view(), name="add_machine"),
     path("manager/addsize/", views.AddSizeView.as_view(), name="add_size"),
