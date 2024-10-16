@@ -22,6 +22,9 @@ class CustomUserManager(BaseUserManager):
 
         return self.create_user(email, password, **extra_fields)
 
+# Overide class User ที่ Django มีให้
+# extend มาจากสิ่งที่ django มีให้ 
+# override เมื่อชื่อ field ใน django เหมือนกัน
 class Users(AbstractUser):
     MANAGER = "mgr"
     STAFF = "stf"
@@ -36,10 +39,10 @@ class Users(AbstractUser):
     phone = models.CharField(max_length=10)
     
     password = models.TextField()
-    role = models.CharField(choices=ROLES, default=CUSTOMER)
+    role = models.CharField(choices=ROLES, default=CUSTOMER) # เพิ่ม attribute
     status = models.BooleanField(default=1) # 0=suspend 1=active
     create_at = models.DateTimeField(auto_now_add = True)
-    reserveMachine = models.ManyToManyField("laundry_model.Machine", through="Reserve_Machine")
+    reserveMachine = models.ManyToManyField("laundry_model.Machine", through="Reserve_Machine")# overide
     
     objects = CustomUserManager()
 
@@ -82,6 +85,7 @@ class Machine(models.Model):
     def usage_count(self):
         return Reserve_Machine.objects.filter(machine=self, status=3).count()
     
+    # นำไปใช้แสดงรายได้ในหน้า Machine
     def revenue(self):
         result = Reserve_Machine.objects.filter(machine=self, status=3).aggregate(totol_cost=Sum("cost"))
         return result['totol_cost'] if result['totol_cost'] is not None else 0
