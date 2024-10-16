@@ -109,11 +109,13 @@ class ViewReserve(LoginRequiredMixin, View):
 @method_decorator(access_only("cus"), name="post")
 class ReserveMachineView(LoginRequiredMixin, View):
     def data(self, form = ReserveMachineForm()):
-        machine_size = Machine_Size.objects.order_by("capacity")
+        size_ = tuple(Machine.objects.exclude(machine_size__id=None, status_health=False).distinct("machine_size").values_list("machine_size__id", flat=True))
+        machine_size = Machine_Size.objects.filter(id__in=size_).order_by("capacity")
         time = now() + timedelta(minutes=30)
         return {"form": form, "machine_size": machine_size, "min_time_reserve": time}
     
     def get(self, request):
+        reserve_cancel()
         return render(request, "customer/reserve.html", self.data())
     
     def post(self, request):
@@ -147,7 +149,7 @@ class ReserveMachineView(LoginRequiredMixin, View):
                     
                     return redirect("view_reserve")
             except Exception:
-                raise PermissionDenied()
+                return render(request, "customer/reserve.html", self.data(form))
         return render(request, "customer/reserve.html", self.data(form))
 
 # Staff

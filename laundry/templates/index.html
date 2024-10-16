@@ -35,6 +35,7 @@
       </div>
     {% endif %}
 
+    {% if user.role != 'mgr' or user.role != 'stf' %}
       <div class="space-y-6 p-4 md:px-32 lg:px-52">
         {% for size in machine_size %}
             {% if size.machine_set.count %}
@@ -79,4 +80,5 @@
             {% endif %}
         {% endfor %}
     </div>
+    {% endif %}
 {% endblock %}
