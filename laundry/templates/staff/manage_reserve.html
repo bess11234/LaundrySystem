@@ -44,17 +44,18 @@
                                           <p id="{{ machine.code }}-duration" class="w-20 md:w-24 lg:w-36 text-center">TREM: {{ machine|current_reserve_work_til|timeuntil }}</p>
                                         {% endif %}
 
-                                        <input type="text" name="name" id="{{machine.code}}-input" 
+                                        <input 
+                                        type="text" name="code" id="{{machine.code}}-input" 
                                         class="mt-2 w-20 md:w-24 lg:w-36 rounded-lg shadow-sm bg-[#f9fbfc] dark:bg-[#353a55] border border-gray-300 dark:border-gray-600 focus:border-[#4c569b] focus:ring-1 focus:ring-[#4c569b] py-2 px-3 text-gray-900 dark:text-white transition read-only:border-opacity-50 read-only:bg-opacity-50 read-only:text-opacity-70" 
                                         placeholder="Code"
                                         {% if not machine.status_available %}
-                                        value="{{machine|machine_working}}" readonly {% endif %}> 
+                                        value="{{machine|machine_working}}" readonly {% endif %}>
 
                                     </div>
                                     <div class="mt-3 w-20 md:w-24 lg:w-36 text-center">
                                       {% if machine.status_available %}
                                       <a id="{{ machine.code }}-button" 
-                                      onclick="confirmFunction('{{machine.code}}', '{{machine.code}}-input', '{{ machine.code }}-duration', {{machine.duration}})" 
+                                      onclick="confirmFunction('{{machine.code}}')" 
                                       class="cursor-pointer py-1 px-2 rounded-lg text-white bg-teal-500 hover:bg-teal-600 activebg-teal-700">Confirm</a>
                                       {% else %}
                                       <a id="{{ machine.code }}-reset" 
@@ -79,13 +80,13 @@
                                     <!-- column name : Service Name  -->
                                     <th scope="col" class="px-6 py-3">
                                       <div class="flex items-center">
-                                      Queue
+                                        Queue
                                       </div>
                                     </th>
                                     <th scope="col" class="px-6 py-3">
-                                        <div class="flex items-center">
+                                      <div class="flex items-center">
                                         Reserve Code
-                                        </div>
+                                      </div>
                                     </th>
                                     <th scope="col" class="px-6 py-3">
                                       <div class="flex items-center">
@@ -118,11 +119,10 @@
                                     <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                       {{forloop.counter}}
                                     </td>
-                                    <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white flex place-items-center gap-x-1">
+                                    <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                         <span id="{{reserve.code}}">{{reserve.code}}</span>
                                         {% comment %} copy icon {% endcomment %}
                                         {% if reserve.status == 1 %}
-                                        {% comment %} <img class="w-4 inline rounded-sm cursor-pointer" src="{% static 'images/Copy-icon.png' %}"> {% endcomment %}
                                         <svg onclick="copyFunction('{{reserve.code}}')" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4 inline cursor-pointer hover:opacity-70 hover:bg-black/20 dark:hover:bg-black/50 rounded-full" >
                                           <path stroke-linecap="round" stroke-linejoin="round" d="M15.666 3.888A2.25 2.25 0 0 0 13.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 0 1-.75.75H9a.75.75 0 0 1-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.646.049 1.288.11 1.927.184 1.1.128 1.907 1.077 1.907 2.185V19.5a2.25 2.25 0 0 1-2.25 2.25H6.75A2.25 2.25 0 0 1 4.5 19.5V6.257c0-1.108.806-2.057 1.907-2.185a48.208 48.208 0 0 1 1.927-.184" />
                                         </svg>
@@ -235,8 +235,8 @@
   }
    
   // Confirm for Laundry
-  function confirmFunction(machine_code, inputID, element_duration, machine_duration) {
-    var reserve_code = document.getElementById(inputID).value;
+  function confirmFunction(machine_code) {
+    var reserve_code = document.getElementById(machine_code+'-input').value;
     console.log("Reserve Code: ", reserve_code);
     fetch("", {
       method:"PUT",
@@ -253,8 +253,8 @@
       if (data.valid) {
           location.reload(true);
       } else {
-          // show_alert("Reserve code should be in workable status.")
-          console.error('Invalid reserve code:', reserve_code);
+          document.getElementById(machine_code+"-input").value = "Invalid"
+          document.getElementById(machine_code+"-input").classList.add("text-red-500")
       }})
     .catch(error => {console.error('Error:', error);});
   }

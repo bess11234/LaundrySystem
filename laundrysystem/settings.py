@@ -34,7 +34,7 @@ ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 # Application definition
 
 INSTALLED_APPS = [
-    'laundry_user',
+    'laundry_user', # เพื่อนำ template change password ไปทับของ django.contrib.auth
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -138,8 +138,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Authentication
 
-LOGOUT_REDIRECT_URL = "index"
-LOGIN_REDIRECT_URL = "index"
+LOGOUT_REDIRECT_URL = "index" # กำหนดเป็น path หรือชื่อ path ก็ได้
+LOGIN_REDIRECT_URL = "index" # กำหนดเป็น path หรือชื่อ path ก็ได้
 LOGIN_URL = "login" # หากยังไม่ได้ Login จะเข้าไปหน้านี้
 
 AUTH_USER_MODEL = "laundry_model.Users"

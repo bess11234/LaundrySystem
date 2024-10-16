@@ -42,10 +42,11 @@ def reserve_cancel():
             i.save()
 
 @transaction.atomic
+# ช่วยให้ทั้งก้อนเป็น transaction เดียวกัน เพราะมีการ save สองอย่าง
 def reserve_check_working():
     for reserve_m in Reserve_Machine.objects.filter(status=2):
         if reserve_m.machine != None:
-            reserve_work = reserve_m.working_til()
+            reserve_work = reserve_m.working_til() #หมดเวลากี่โมง
             machine = Machine.objects.get(pk=reserve_m.machine.id)
             if now() > reserve_work:
                 machine.status_available = True
@@ -66,6 +67,8 @@ class TestView(View):
 
 class Index(View):
     def get(self, request):
+        if request.user.is_authenticated and (request.user.role == 'stf' or request.user.role == 'mgr'):
+            return redirect("manage_reserve")
         machine_size = Machine_Size.objects.order_by("capacity")
         return render(request, "index.html", {"machine_size": machine_size})
 
@@ -161,6 +164,7 @@ class ManageReserve(LoginRequiredMixin, View):
         
         return render(request, "staff/manage_reserve.html", {"machine_size": machine_size, 'machines': getMachines, "reserved": reserved, 'time_now': now()})
     
+    @transaction.atomic
     def put(self, request):
         
         def changeMachineStatus(machine_code, new_status):
@@ -169,6 +173,7 @@ class ManageReserve(LoginRequiredMixin, View):
             get_machine.save()
             return get_machine
         
+        # load data from JavaScript
         data = loads(request.body)
         # change waiting to workable
         if 'reserve_id' in data:
@@ -191,7 +196,7 @@ class ManageReserve(LoginRequiredMixin, View):
                 change_workable.status = 2
                 change_workable.save()
 
-                return JsonResponse({'valid': True, 'reserve_code': reserve_code}, status=200)
+                return JsonResponse({'valid': True}, status=200)
             return JsonResponse({'valid': False})
 
         # change machine to avalible
