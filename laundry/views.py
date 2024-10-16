@@ -157,7 +157,8 @@ class ManageReserve(LoginRequiredMixin, View):
     def get(self, request):
         reserve_check_working()
         reserve_cancel()
-        getMachines = Machine.objects.annotate(group=F("code")[0]).annotate(number=F("code")[2:]).annotate(number_int=Cast("number", output_field=IntegerField())).order_by("machine_size__capacity", "group", "number_int")
+        # cast ให้ char_field เป็น integer field
+        getMachines = Machine.objects.annotate(group=F("code")[0]).annotate(number=F("code")[2:]).annotate(number_int=Cast("number", output_field=IntegerField())).order_by("machine_size__capacity", "group", "number_int") #เรียงตาม 
 
         machine_size = Machine_Size.objects.order_by("capacity")
         reserved = Reserve_Machine.objects.filter(status__range=(0 , 2)).order_by("-status", "actual_arrive" ,"arrive_at")
@@ -228,7 +229,7 @@ def count_all_data():
         "count_machine": Machine.objects.count(), # นับจำนวนเครื่องที่ถูกเพิ่มแล้ว
         "count_size": Machine_Size.objects.count(), # นับจำนวนไซส์ที่ถูกเพิ่มแล้ว
         "count_service": Service.objects.count(), # นับจำนวนบริการเสริมที่ถูกเพิ่มเข้าไปแล้ว
-        "sidebar": "sidebar_item/manager.html"
+        "sidebar": "sidebar_item/manager.html" # เพื่อบอกว่าเอาตัวไหนใน sidebar_item
         }
     return count_data
 
