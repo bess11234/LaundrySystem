@@ -186,12 +186,12 @@ class ManageReserve(LoginRequiredMixin, View):
             change_wating.save()
             return JsonResponse({'success': True, 'id': change_wating.id}, status=200)
 
-        # put workable to machine
+        # put reserve code to machine
         if 'reserve_code_workable' in data:
             reserve_code = data.get('reserve_code_workable')
 
+            # check that workable
             if reserve_code in Reserve_Machine.objects.filter(status=1).values_list('code', flat=True):
-                
                 change_workable = Reserve_Machine.objects.get(code=reserve_code)
 
                 change_workable.work_at = datetime.now()
@@ -248,7 +248,7 @@ class AddStaffView(LoginRequiredMixin, View):
 
         count_data = count_all_data()
         form = AddStaffForm()
-        show = {'users': getUsers, 
+        show = {'users': getUsers, # send result of searching
                 'form': form,
                 **count_data} # ใส่ ** เพื่อเอา dict ออกจะได้ไม่เป็น dict ซ้อน dict
         return render(request, 'manager/add_staff.html', show)
@@ -261,18 +261,12 @@ class AddStaffView(LoginRequiredMixin, View):
         # Check for status update
         if 'status' in data:
             new_status = data.get('status')
-            print("update_status user_id", user_id, "new_status value", new_status)
             getUser.status = new_status
-            # Update user status in the database here
-            # Example: User.objects.filter(id=user_id).update(status=status)
 
         # Check for role update
         if 'role' in data:
             new_role = data.get('role')
-            print("update_role user_id", user_id, "new_role value", new_role)
             getUser.role = new_role
-            # Update user role in the database here
-            # Example: User.objects.filter(id=user_id).update(role=role)
         getUser.save()
         return JsonResponse({'message': 'User updated successfully!'})
 
@@ -282,11 +276,11 @@ class AddStaffView(LoginRequiredMixin, View):
 @method_decorator(access_only("mgr"), name="put")
 class AddMachineView(LoginRequiredMixin, View):
     
-    def show_data(self, get_getMachine, get_form): ##use this method because when there is an error -> table will disappear
+    def show_data(self, machine, form): ##use this method because when there is an error -> table will disappear
         count_data = count_all_data()
         show = {
-            "machines" : get_getMachine,
-            "form" : get_form,
+            "machines" : machine,
+            "form" : form,
             **count_data 
             }
         return show
@@ -294,9 +288,9 @@ class AddMachineView(LoginRequiredMixin, View):
     def get(self, request):
         getMachines = Machine.objects.annotate(group=F("code")[0]).annotate(number=F("code")[2:]).annotate(number_int=Cast("number", output_field=IntegerField())).order_by("machine_size__capacity", "group", "number_int")
         form = AddMachineForm()
+
         show = self.show_data(getMachines, form)
-        show['machine_size'] = Machine_Size.objects.order_by("capacity")
-        print(Reserve_Machine.objects.count())
+        show['machine_size'] = Machine_Size.objects.order_by("capacity") # add key 'machine_size', display in select option
         return render(request, "manager/add_machine.html", show)
     
     def post(self, request):
@@ -307,7 +301,7 @@ class AddMachineView(LoginRequiredMixin, View):
 
         getMachines = Machine.objects.annotate(group=F("code")[0]).annotate(number=F("code")[2:]).annotate(number_int=Cast("number", output_field=IntegerField())).order_by("machine_size__capacity", "group", "number_int")
         show = self.show_data(getMachines, form)
-        show['machine_size'] = Machine_Size.objects.all()
+        show['machine_size'] = Machine_Size.objects.all()# when form error size option will not displayed if doesn't have this command
         return render(request, "manager/add_machine.html", show)
     
     
@@ -343,7 +337,6 @@ class AddMachineView(LoginRequiredMixin, View):
 @method_decorator(access_only("mgr"), name="get")
 @method_decorator(access_only("mgr"), name="post")
 class AddSizeView(LoginRequiredMixin, View):
-    # @method_decorator(login_required)
     def get(self, request):
         # check order (asc, desc) request
         order = request.GET.get('order', 'asc') # first order
@@ -360,8 +353,7 @@ class AddSizeView(LoginRequiredMixin, View):
                 **count_data
                 }
         return render(request, "manager/add_size.html", show)
-    
-    # @method_decorator(login_required)
+ 
     def post(self, request):
         form = AddSizeForm(request.POST)
         if form.is_valid():
@@ -375,8 +367,6 @@ class AddSizeView(LoginRequiredMixin, View):
         data = loads(request.body)
         cost = data.get('price')
         size_id = data.get('size_id')
-
-        print("cost =", cost, " size_id =", size_id)
 
         try:
             # Fetch the option and update its price

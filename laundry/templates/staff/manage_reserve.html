@@ -15,14 +15,13 @@
             {% if size.machine_set.count %}
             {% comment %} div for space when using sidebar {% endcomment %}
             <div id="manager-reserve-size-{{size.size}}" class="h-1"></div> 
-            {% comment %} <div id="manager-reserve-size-{{size.size}}" class="p-4 border-2 border-[#3b4682]/50 dark:border-[#3b4682] bg-[#4c579b0b] dark:bg-[#4c569b]/20 border-dashed rounded-lg"> {% endcomment %}
               <div class="p-4 border-2 border-[#3b4682]/50 dark:border-[#3b4682]  dark:bg-[#4c569b]/20 border-dashed rounded-lg">
                 <form method="POST" id="machine-form">
                     {% csrf_token %}
 
                     <div class="space-y-12">
                         <div class="border-b border-gray-900/10 pb-7">
-                            <h2 class="text-base font-semibold leading-7">Size {{ size.size }} ({{ size.capacity }})KG</h2>
+                            <h2 class="text-base font-semibold leading-7">Size {{ size.size }} ({{ size.capacity }} KG)</h2>
                             <p class="mt-1 text-sm leading-6 text-[#4c569b]">This information will be displayed publicly so be careful what you share.</p>
                         </div>
                     </div>

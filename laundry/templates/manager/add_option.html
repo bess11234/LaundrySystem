@@ -113,7 +113,6 @@
 {% endblock %}
 
 {% block script %}
-<script src="{% static 'edit_price.js' %}"></script>
 <script>
   function delete_option(option_id, option_name){
     // show warning
@@ -138,6 +137,37 @@
         }
     )
 }
+    document.querySelectorAll('input[name="price"]').forEach(input => {
+        input.addEventListener('blur', function() {
+            const optionId = this.dataset.optionId;  // Get the option ID from the data attribute
+            const contentId = this.dataset.contentId;  // Get the option ID from the data attribute
+            const newValue = this.value;  // Get the updated value
+    
+            // Fetch the CSRF token from the cookie
+            const csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
+            // Send the PUT request
+            fetch('', {
+                method: 'PUT',
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}',
+                    document.querySelectorAll('input[name="price"]').forEach(input => {
+                },
+                body: JSON.stringify({
+                    'price': newValue,
+                    'option_id': optionId
+                    'content_id': contentId
+                })
+            )
+            .then(response => response.json())
+            .then(setTimeout(()=>location.reload(true), 200))
+            .catch((error)=>{
+            console.log(error)
+            })
+        }}
+        )}
+        )}
+    )
   
 </script>
 {% endblock %}
