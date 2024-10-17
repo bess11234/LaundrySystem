@@ -139,6 +139,7 @@
 }
 document.querySelectorAll('input[name="price"]').forEach(input => {
     input.addEventListener('blur', function() {
+        show_alert("Change option price.");
         const contentId = this.dataset.contentId;  // Get the option ID from the data attribute
         const newValue = this.value;  // Get the updated value
 
